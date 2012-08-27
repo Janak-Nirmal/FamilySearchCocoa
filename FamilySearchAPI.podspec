@@ -6,10 +6,10 @@ Pod::Spec.new do |s|
 					You need to get a developer key from https://devnet.familysearch.org/ first. Then you can easily get the current user, add
 					parents, children, spouses and modify a persons events like birth, death, marriage date, etc. More is coming soon.
                    DESC
-  s.homepage     = "https://github.com/FamilySearch/FamilySearchAPI"
+  s.homepage     = "https://github.com/atomkirk/FamilySearchAPI"
   s.license      = 'BSD'
   s.author       = { "Adam Kirk" => "atomkirk@gmail.com" }
-  s.source       = { :git => "https://github.com/FamilySearch/FamilySearchAPI.git", :tag => "0.0.1" }
+  s.source       = { :git => "https://github.com/atomkirk/FamilySearchAPI.git", :tag => "0.0.1" }
   s.platform     = :ios, '5.0'
   s.platform	 = :osx, '10.7'
   s.source_files = 'FamilySearchAPI/*.{h,m}'
