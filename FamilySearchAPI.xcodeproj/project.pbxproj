@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		BA531EB170B54EFCBFC52A13 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CE02C144AAA4DCF9A89ABBA /* libPods.a */; };
+		C2058CDC15EC168B0040F234 /* FSMarriage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E85B15E41F1D00107376 /* FSMarriage.h */; };
+		C2058CDE15EC168F0040F234 /* FSOrdinance.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E85F15E41F6200107376 /* FSOrdinance.h */; };
+		C2058CDF15EC16940040F234 /* config.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C29BFED615DD4041004B71D0 /* config.h */; };
+		C2058CE015EC169A0040F234 /* private.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E87015E56B0B00107376 /* private.h */; };
+		C2058CE115EC169F0040F234 /* FSEvent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E85615E41EF800107376 /* FSEvent.h */; };
 		C232766915D585C7004EDE08 /* FSAuth.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B715D5744F000A34A1 /* FSAuth.h */; };
 		C232766A15D585C7004EDE08 /* FSPerson.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B915D5744F000A34A1 /* FSPerson.h */; };
 		C26EEDB015E7D90E00C7714F /* FSMarriageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C26EEDAF15E7D90E00C7714F /* FSMarriageTests.m */; };
@@ -43,6 +48,11 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				C2058CE115EC169F0040F234 /* FSEvent.h in CopyFiles */,
+				C2058CE015EC169A0040F234 /* private.h in CopyFiles */,
+				C2058CDF15EC16940040F234 /* config.h in CopyFiles */,
+				C2058CDE15EC168F0040F234 /* FSOrdinance.h in CopyFiles */,
+				C2058CDC15EC168B0040F234 /* FSMarriage.h in CopyFiles */,
 				C232766915D585C7004EDE08 /* FSAuth.h in CopyFiles */,
 				C232766A15D585C7004EDE08 /* FSPerson.h in CopyFiles */,
 			);

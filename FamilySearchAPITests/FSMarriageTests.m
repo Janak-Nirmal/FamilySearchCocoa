@@ -23,7 +23,7 @@
 
 - (void)setUp
 {
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY];
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY sandboxed:SANDBOXED];
 	_sessionID = [auth sessionIDFromLoginWithUsername:USERNAME password:PASSWORD].body;
 
 	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];

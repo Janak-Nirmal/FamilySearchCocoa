@@ -16,7 +16,7 @@
 
 - (void)testGetSessionID
 {
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY];
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY sandboxed:SANDBOXED];
 	MTPocketResponse *response = [auth sessionIDFromLoginWithUsername:USERNAME password:PASSWORD];
 
 	STAssertNotNil(response.body, @"sessionID was nil");
@@ -25,7 +25,7 @@
 
 - (void)testLogout
 {
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY];
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY sandboxed:SANDBOXED];
 	[auth sessionIDFromLoginWithUsername:USERNAME password:PASSWORD];
 	MTPocketResponse *response = [auth logout];
 

@@ -16,7 +16,7 @@
 
 
 #pragma mark - Public Methods
-- (id)initWithDeveloperKey:(NSString *)devKey;
+- (id)initWithDeveloperKey:(NSString *)devKey sandboxed:(BOOL)sandboxed;
 - (MTPocketResponse *)sessionIDFromLoginWithUsername:(NSString *)un password:(NSString *)pw;
 - (MTPocketResponse *)logout;
 

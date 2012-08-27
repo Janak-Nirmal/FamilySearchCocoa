@@ -232,7 +232,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	if (_identifier) path = [path stringByAppendingFormat:@"/%@", _identifier];
 	NSString *params = queryStringWithParameters( defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics );
 	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL(__fs_sandboxed)];
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
 	if (response.success) {
@@ -383,7 +383,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	NSString *path = [NSString stringWithFormat:@"person"];
 	if (_identifier) path = [path stringByAppendingFormat:@"/%@", _identifier];
 	NSString *query = [NSString stringWithFormat:@"sessionId=%@&agent=%@", _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL(__fs_sandboxed)];
 
 	NSMutableDictionary *personDict = [NSMutableDictionary dictionary];
 	if (_identifier)				[personDict setObject:_identifier forKey:@"id"];
@@ -743,7 +743,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 	NSString *path = [NSString stringWithFormat:@"person/%@/parent/%@", self.child.identifier, self.parent.identifier];
 	NSString *query = [NSString stringWithFormat:@"sessionId=%@&agent=%@", self.child.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL(__fs_sandboxed)];
 
 	NSDictionary *body = @{
 							@"persons" : @[ @{
@@ -779,7 +779,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	NSString *path = [NSString stringWithFormat:@"person/%@/parent/%@", self.child.identifier, self.parent.identifier];
 	NSString *params = queryStringWithParameters( defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors );
 	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, self.parent.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL(__fs_sandboxed)];
 
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
@@ -846,7 +846,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	NSString *path = [NSString stringWithFormat:@"person/%@/spouse/%@", self.husband.identifier, self.wife.identifier];
 	NSString *params = queryStringWithParameters( defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics );
 	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, self.husband.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL(__fs_sandboxed)];
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
 	if (response.success) {
@@ -980,7 +980,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 	NSString *path = [NSString stringWithFormat:@"person/%@/spouse/%@", self.husband.identifier, self.wife.identifier];
 	NSString *query = [NSString stringWithFormat:@"sessionId=%@&agent=%@", self.husband.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL(__fs_sandboxed)];
 
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
@@ -997,7 +997,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	NSString *path = [NSString stringWithFormat:@"person/%@/spouse/%@", self.husband.identifier, self.wife.identifier];
 	NSString *params = queryStringWithParameters( defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors );
 	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, self.husband.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:TREE_URL(__fs_sandboxed)];
 
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
