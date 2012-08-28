@@ -65,12 +65,12 @@ Add/Remove a parent:
 	father.gender = @"Male";
 	
 	[person addParent:father withLineage:FSLineageTypeBiological];
-	response = [person save];
+	[person save];
 	
 	person.parents.count	// => 1
 	
 	[person removeParent:father];
-	response = [person save];
+	[person save];
 	
 	person.parents.count	// => 0
 
@@ -83,12 +83,12 @@ Add/Remove a child:
 	child.gender = @"Male";
 	
 	[person addChild:child withLineage:FSLineageTypeAdoptive];
-	response = [person save];
+	[person save];
 	
 	person.children.count	// => 1
 	
 	[person removeChild:child];
-	response = [person save];
+	[person save];
 	
 	person.children.count	// => 0
 
@@ -123,12 +123,12 @@ Add/Remove an Event:
 	event.date = [NSDate dateFromYear:1994 month:8 day:11 hour:10 minute:0];
 	event.place = @"Kennewick, WA";
 	[person addEvent:event];
-	response = [person save];
+	[person save];
 	
 	person.events.count		// => 2
 	
 	[person removeEvent:event];
-	response = [person save];
+	[person save];
 	
 	person.events.count		// => 1
 
@@ -147,7 +147,7 @@ Add/Read Marriage Properties:
 	[person save];
 	
 	FSPerson *p = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
-	response = [p fetch];
+	[p fetch];
 	FSMarriage *m = [p marriageWithSpouse:spouse];
 	[m propertyForKey:FSMarriagePropertyTypeNumberOfChildren]	// => @"2"
 	[m propertyForKey:FSMarriagePropertyTypeCommonLawMarriage]	// => @"True"
@@ -178,7 +178,7 @@ Add/Remove a Marriage Event:
 	[person save];
 	
 	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
-	response = [person fetch];
+	[person fetch];
 	FSMarriage *m = [person marriageWithSpouse:spouse];
 	
 	m.events.count			// => 0
