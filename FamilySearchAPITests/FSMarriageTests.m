@@ -42,7 +42,7 @@
 
 	// add a spouse
 	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
-	spouse.name = @"Heidi Guest";
+	spouse.name = @"She Guest";
 	spouse.gender = @"Female";
 	FSMarriage *marriage = [_person addSpouse:spouse];
 	response = [_person save];
@@ -85,7 +85,7 @@
 
 	// add a spouse
 	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
-	spouse.name = @"Heidi Guest";
+	spouse.name = @"She Guest";
 	spouse.gender = @"Female";
 	FSMarriage *marriage = [_person addSpouse:spouse];
 	response = [_person save];

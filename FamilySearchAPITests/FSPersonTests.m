@@ -210,7 +210,7 @@
 
 	// create and add the spouse
 	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
-	spouse.name = @"Heidi Kirk";
+	spouse.name = @"She Kirk";
 	spouse.gender = @"Female";
 
 	[_person addSpouse:spouse];
