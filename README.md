@@ -11,6 +11,17 @@ In your Podfile, add this line:
 
 pod? => https://github.com/CocoaPods/CocoaPods/
 
+### Notes
+
+All communication with the server is done in batches. Make a bunch of modifications to properties, relationships, etc and then call "save" and it will commit all
+of it to the server.
+
+Fetch does the same in reverse. It will fetch all properties and relationships from the server all at once.
+
+Make sure you do not call save/fetch on the main thread.
+
+See the header files for the full API and more documentation.
+
 ### Usage
 
 Use FSAuth to log in and get a session id:
