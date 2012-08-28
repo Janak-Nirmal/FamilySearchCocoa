@@ -26,10 +26,10 @@ Get information about yourself:
 	FSPerson *me = [FSPerson currentUserWithSessionID:_sessionID];
 	MTPocketResponse *response = [me fetch];
 	if (response.success) {
-		me.name 					// => @"Adam Kirk"
-		me.isAlive					// => YES
-		me.gender 					// => @"Male"
-		me.parents.count				// => 2
+		me.name 									// => @"Adam Kirk"
+		me.isAlive									// => YES
+		me.gender 									// => @"Male"
+		me.parents.count							// => 2
 		[me getProperty:FSPropertyTypeOccupation];	// => @"Saint"
 	}
 
@@ -38,9 +38,9 @@ Get information about someone else:
 	FSPerson *you = [FSPerson personWithSessionID:_sessionID identifier:@"BLAH-BLAH"];
 	MTPocketResponse *response = [you fetch];
 	if (response.success) {
-		you.name 		// => @"Gamima Smitty"
-		you.gender 		// => @"Female"
-		you.parents.count	// => 1
+		you.name 				// => @"Gamima Smitty"
+		you.gender 				// => @"Female"
+		you.parents.count		// => 1
 	}
 
 Create a person:
@@ -112,7 +112,7 @@ Add/Remove a spouse:
 
 Add/Remove an Event:
 
-	person.events.count	// => 0
+	person.events.count		// => 0
 	
 	FSEvent *death = [FSEvent eventWithType:FSPersonEventTypeDeath identifier:nil];
 	death.date = [NSDate dateFromYear:1995 month:8 day:11 hour:10 minute:0];
@@ -125,12 +125,12 @@ Add/Remove an Event:
 	[person addEvent:event];
 	response = [person save];
 	
-	person.events.count	// => 2
+	person.events.count		// => 2
 	
 	[person removeEvent:event];
 	response = [person save];
 	
-	person.events.count	// => 1
+	person.events.count		// => 1
 
 Add/Read Marriage Properties:
 
@@ -181,7 +181,7 @@ Add/Remove a Marriage Event:
 	response = [person fetch];
 	FSMarriage *m = [person marriageWithSpouse:spouse];
 	
-	m.events.count		// => 0
+	m.events.count			// => 0
 
 ### Properties
 
