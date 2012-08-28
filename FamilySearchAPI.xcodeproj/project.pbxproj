@@ -10,9 +10,9 @@
 		BA531EB170B54EFCBFC52A13 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CE02C144AAA4DCF9A89ABBA /* libPods.a */; };
 		C2058CDC15EC168B0040F234 /* FSMarriage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E85B15E41F1D00107376 /* FSMarriage.h */; };
 		C2058CDE15EC168F0040F234 /* FSOrdinance.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E85F15E41F6200107376 /* FSOrdinance.h */; };
-		C2058CDF15EC16940040F234 /* config.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C29BFED615DD4041004B71D0 /* config.h */; };
 		C2058CE015EC169A0040F234 /* private.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E87015E56B0B00107376 /* private.h */; };
 		C2058CE115EC169F0040F234 /* FSEvent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E85615E41EF800107376 /* FSEvent.h */; };
+		C21C9D1015ECFAC800311404 /* FSURL.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C9D0F15ECFAC800311404 /* FSURL.m */; };
 		C232766915D585C7004EDE08 /* FSAuth.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B715D5744F000A34A1 /* FSAuth.h */; };
 		C232766A15D585C7004EDE08 /* FSPerson.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B915D5744F000A34A1 /* FSPerson.h */; };
 		C26EEDB015E7D90E00C7714F /* FSMarriageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C26EEDAF15E7D90E00C7714F /* FSMarriageTests.m */; };
@@ -50,7 +50,6 @@
 			files = (
 				C2058CE115EC169F0040F234 /* FSEvent.h in CopyFiles */,
 				C2058CE015EC169A0040F234 /* private.h in CopyFiles */,
-				C2058CDF15EC16940040F234 /* config.h in CopyFiles */,
 				C2058CDE15EC168F0040F234 /* FSOrdinance.h in CopyFiles */,
 				C2058CDC15EC168B0040F234 /* FSMarriage.h in CopyFiles */,
 				C232766915D585C7004EDE08 /* FSAuth.h in CopyFiles */,
@@ -63,13 +62,14 @@
 /* Begin PBXFileReference section */
 		874EC83EE4E246B8AF0AF3BC /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		8CE02C144AAA4DCF9A89ABBA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C21C9D0E15ECFAC800311404 /* FSURL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSURL.h; sourceTree = "<group>"; };
+		C21C9D0F15ECFAC800311404 /* FSURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSURL.m; sourceTree = "<group>"; };
 		C23276E215D58F1F004EDE08 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		C23276E315D58F1F004EDE08 /* FamilySearchAPITests-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "FamilySearchAPITests-Info.plist"; sourceTree = "<group>"; };
 		C26EEDAE15E7D90E00C7714F /* FSMarriageTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSMarriageTests.h; sourceTree = "<group>"; };
 		C26EEDAF15E7D90E00C7714F /* FSMarriageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSMarriageTests.m; sourceTree = "<group>"; };
 		C27BC94615E69B9B00D7E01F /* FSEventTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEventTests.h; sourceTree = "<group>"; };
 		C27BC94715E69B9B00D7E01F /* FSEventTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSEventTests.m; sourceTree = "<group>"; };
-		C29BFED615DD4041004B71D0 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		C2ABA77F15D573EF000A34A1 /* libFamilySearchAPI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFamilySearchAPI.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2ABA78215D573EF000A34A1 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C2ABA78615D573EF000A34A1 /* FamilySearchAPI-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FamilySearchAPI-Prefix.pch"; sourceTree = "<group>"; };
@@ -179,7 +179,8 @@
 				C2D9E85C15E41F1D00107376 /* FSMarriage.m */,
 				C2D9E85F15E41F6200107376 /* FSOrdinance.h */,
 				C2D9E86015E41F6200107376 /* FSOrdinance.m */,
-				C29BFED615DD4041004B71D0 /* config.h */,
+				C21C9D0E15ECFAC800311404 /* FSURL.h */,
+				C21C9D0F15ECFAC800311404 /* FSURL.m */,
 				C2D9E87015E56B0B00107376 /* private.h */,
 				C2ABA78515D573EF000A34A1 /* Supporting Files */,
 			);
@@ -328,6 +329,7 @@
 				C2D9E85815E41EF800107376 /* FSEvent.m in Sources */,
 				C2D9E85D15E41F1D00107376 /* FSMarriage.m in Sources */,
 				C2D9E86115E41F6200107376 /* FSOrdinance.m in Sources */,
+				C21C9D1015ECFAC800311404 /* FSURL.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

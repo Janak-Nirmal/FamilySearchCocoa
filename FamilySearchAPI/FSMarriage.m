@@ -8,7 +8,6 @@
 
 #import "FSMarriage.h"
 #import "FSPerson.h"
-#import "config.h"
 #import "private.h"
 
 

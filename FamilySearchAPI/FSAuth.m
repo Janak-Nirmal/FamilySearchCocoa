@@ -7,7 +7,7 @@
 //
 
 #import "FSAuth.h"
-#import "config.h"
+#import "FSURL.h"
 
 
 
@@ -31,7 +31,7 @@
     self = [super init];
     if (self) {
 		_devKey = devKey;
-		__fs_sandboxed = sandboxed;
+		[FSURL setSandboxed:sandboxed];
     }
     return self;
 }
@@ -40,7 +40,7 @@
 {	
 	NSString *path = [NSString stringWithFormat:@"identity/v2/login"];
 	NSString *query = [NSString stringWithFormat:@"key=%@&agent=%@", _devKey, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:AUTH_URL(__fs_sandboxed)];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL authURL]];
 
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:un password:pw body:nil];
 	_sessionID = [response.body valueForKeyPath:@"session.id"];
@@ -53,7 +53,7 @@
 {
 	NSString *path = [NSString stringWithFormat:@"logout"];
 	NSString *query = [NSString stringWithFormat:@"sessionId=%@&agent=%@", _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:AUTH_URL(__fs_sandboxed)];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL authURL]];
 	return [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 }
 
