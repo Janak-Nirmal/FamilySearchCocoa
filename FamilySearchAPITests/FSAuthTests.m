@@ -14,22 +14,22 @@
 
 @implementation FSAuthTests
 
-//- (void)testGetSessionID
-//{
-//	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY sandboxed:SANDBOXED];
-//	MTPocketResponse *response = [auth sessionIDFromLoginWithUsername:USERNAME password:PASSWORD];
-//
-//	STAssertNotNil(response.body, @"sessionID was nil");
-//	STAssertFalse([response.body isEqualToString:@""], @"sessionID was empty");
-//}
-//
-//- (void)testLogout
-//{
-//	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY sandboxed:SANDBOXED];
-//	[auth sessionIDFromLoginWithUsername:USERNAME password:PASSWORD];
-//	MTPocketResponse *response = [auth logout];
-//
-//	STAssertTrue(response.success, nil);
-//}
+- (void)testGetSessionID
+{
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY sandboxed:YES];
+	MTPocketResponse *response = [auth sessionIDFromLoginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+
+	STAssertNotNil(response.body, @"sessionID was nil");
+	STAssertFalse([response.body isEqualToString:@""], @"sessionID was empty");
+}
+
+- (void)testLogout
+{
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY sandboxed:YES];
+	[auth sessionIDFromLoginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	MTPocketResponse *response = [auth logout];
+
+	STAssertTrue(response.success, nil);
+}
 
 @end

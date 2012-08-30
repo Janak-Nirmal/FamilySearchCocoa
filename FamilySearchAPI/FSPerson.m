@@ -177,7 +177,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 + (FSPerson *)currentUserWithSessionID:(NSString *)sessionID
 {
 	static FSPerson *__me;
-	if (!__me) __me = [[FSPerson alloc] initWithSessionID:sessionID identifier:@"me"];
+	if (!__me || ![__me.sessionID isEqualToString:sessionID]) __me = [[FSPerson alloc] initWithSessionID:sessionID identifier:@"me"];
 	return __me;
 }
 
@@ -383,7 +383,8 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	// SAVE
 	NSString *path = [NSString stringWithFormat:@"person"];
 	if (_identifier) path = [path stringByAppendingFormat:@"/%@", _identifier];
-	NSString *query = [NSString stringWithFormat:@"sessionId=%@&agent=%@", _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
+	NSString *params = queryStringWithParameters( defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics );
+	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
 
 	NSMutableDictionary *personDict = [NSMutableDictionary dictionary];
@@ -438,7 +439,41 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
 	if (response.success) {
-		NSLog(@"%@",@"adam");
+		NSDictionary *pedigree = [response.body valueForComplexKeyPath:@"pedigrees[first]"];
+		NSArray *people = [pedigree objectForKey:@"persons"];
+		for (NSDictionary *personDict in people) {
+			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:[personDict objectForKey:@"id"]];
+
+			// GENERAL
+			person.name		= [personDict valueForComplexKeyPath:@"assertions.names[first].value.forms[first].fullText"];
+			person.gender	= [personDict valueForComplexKeyPath:@"assertions.genders[first].value.type"];
+
+			// PARENTS
+			NSArray *parents = [personDict valueForComplexKeyPath:@"parents[first].parent"];
+			for (NSDictionary *parentDict in parents) {
+				FSPerson *parent = [FSPerson personWithSessionID:_sessionID identifier:[parentDict objectForKey:@"id"]];
+				parent.gender = [parentDict objectForKey:@"gender"];
+				[person addParent:parent withLineage:FSLineageTypeBiological];
+			}
+
+			// EVENTS
+			NSString *birth = [personDict valueForComplexKeyPath:@"properties.lifespan.birth.text"];
+			NSString *death = [personDict valueForComplexKeyPath:@"properties.lifespan.death.text"];
+
+			if ([birth isKindOfClass:[NSString class]]) {
+				FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeBirth identifier:nil];
+				event.date = [NSDate dateFromString:birth usingFormat:@"dd MMM yyyy"];
+				event.place = nil;
+				[person addEvent:event];
+			}
+
+			if ([death isKindOfClass:[NSString class]]) {
+				FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeDeath identifier:nil];
+				event.date = [NSDate dateFromString:death usingFormat:@"dd MMM yyyy"];
+				event.place = nil;
+				[person addEvent:event];
+			}
+		}
 	}
 
 	return response;

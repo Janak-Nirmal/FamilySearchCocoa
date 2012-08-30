@@ -301,7 +301,10 @@ Add/Remove a Marriage Event:
 
 To run the unit tests, you need to create the missing "constant.h" file with the following contents:
 
-	#define SANDBOXED	YES
-	#define DEV_KEY		(SANDBOXED ? @"<sandboxed dev key>" : @"<live dev key>")
-	#define USERNAME	(SANDBOXED ? @"<sandboxed username>" : @"<live username>")
-	#define PASSWORD	(SANDBOXED ? @"<sandboxed password>" : @"<live password>")
+	#define SANDBOXED_DEV_KEY	@"<sandboxed dev key>"
+	#define SANDBOXED_USERNAME	@"<sandboxed username>"
+	#define SANDBOXED_PASSWORD	@"<sandboxed password>"
+		
+	#define PRODUCTION_DEV_KEY	@"<live dev key>"
+	#define PRODUCTION_USERNAME	@"<live username>"
+	#define PRODUCTION_PASSWORD	@"<live password>"
