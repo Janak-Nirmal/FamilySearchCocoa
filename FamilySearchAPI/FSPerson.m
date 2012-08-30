@@ -72,6 +72,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 						ALL_OR_NONE(parameters, FSQIdentifiers,		nil),
 						ALL_OR_NONE(parameters, FSQDispositions,	@"affirming"),
 						ALL_OR_NONE(parameters, FSQContributors,	nil)];
+
 	return string;
 }
 
@@ -420,6 +421,24 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 				[marriage save];
 			}
 		}
+	}
+
+	return response;
+}
+
+- (MTPocketResponse *)fetchAncestors:(NSUInteger)generations
+{
+	if (!_identifier) [[NSException exceptionWithName:@"Nil identifier" reason:@"You cannot fetch on a person with a nil identifier." userInfo:nil] raise];
+
+	NSString *path = [NSString stringWithFormat:@"pedigree"];
+	if (_identifier) path = [path stringByAppendingFormat:@"/%@", _identifier];
+	NSString *params = @"properties=all"; //queryStringWithParameters( defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics );
+	NSString *query = [NSString stringWithFormat:@"ancestors=%d&%@&sessionId=%@&agent=%@", generations, params, _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+
+	if (response.success) {
+		NSLog(@"%@",@"adam");
 	}
 
 	return response;

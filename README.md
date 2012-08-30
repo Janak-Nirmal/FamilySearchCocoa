@@ -296,3 +296,12 @@ Add/Remove a Marriage Event:
 	FSMarriageEventTypeSeperation		
 	FSMarriageEventTypeTimeOnlyMarriage	
 	FSMarriageEventTypeOther
+
+### Testing
+
+To run the unit tests, you need to create the missing "constant.h" file with the following contents:
+
+	#define SANDBOXED	YES
+	#define DEV_KEY		(SANDBOXED ? @"<sandboxed dev key>" : @"<live dev key>")
+	#define USERNAME	(SANDBOXED ? @"<sandboxed username>" : @"<live username>")
+	#define PASSWORD	(SANDBOXED ? @"<sandboxed password>" : @"<live password>")

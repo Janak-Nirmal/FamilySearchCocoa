@@ -87,6 +87,7 @@ typedef NSString * FSLineageType;
 #pragma mark - Syncing
 - (MTPocketResponse *)fetch;												// If called when identifier is (not nil => reset w server info)	| (nil => throws an exception)
 - (MTPocketResponse *)save;													// If called when identifier is (not nil => update person)			| (nil => create new person)
+- (MTPocketResponse *)fetchAncestors:(NSUInteger)generations;
 
 #pragma mark - Parents
 - (void)addParent:(FSPerson *)person withLineage:(FSLineageType)lineage;
