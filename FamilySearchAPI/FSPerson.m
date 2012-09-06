@@ -8,73 +8,8 @@
 
 #import <NSDate+MTDates.h>
 #import <NSDictionary+MTJSONDictionary.h>
-#import "FSPerson.h"
-#import "FSEvent.h"
-#import "FSMarriage.h"
-#import "FSOrdinance.h"
-#import "FSURL.h"
 #import "private.h"
-
-
-#define IN_MASK(a, b) ((a & b) == b)
-#define ALL_OR_NONE(a, b, c) (IN_MASK(a, b) ? @"all" : (c ? c : @"none"))
-
-
-// FSQueryParameter (Bitwise OR these together to generate a query string)
-typedef enum {
-	FSQNames				= 1UL << 1,
-	FSQGenders				= 1UL << 2,
-	FSQEvents				= 1UL << 3,
-	FSQCharacteristics		= 1UL << 4,
-	FSQExists				= 1UL << 5,
-	FSQValues				= 1UL << 6,
-	FSQOrdinances			= 1UL << 7,
-	FSQAssertions			= 1UL << 8,
-	FSQFamilies				= 1UL << 9,
-	FSQChildren				= 1UL << 10,
-	FSQParents				= 1UL << 11,
-	FSQPersonas				= 1UL << 12,
-	FSQProperties			= 1UL << 13,
-	FSQIdentifiers			= 1UL << 14,
-	FSQDispositions			= 1UL << 15,
-	FSQContributors			= 1UL << 16
-} FSQueryParameter;
-
-
-
-
-FSQueryParameter defaultQueryParameters()
-{
-	return FSQNames | FSQGenders | FSQEvents | FSQValues | FSQAssertions | FSQIdentifiers;
-}
-
-FSQueryParameter familyQueryParameters()
-{
-	return FSQFamilies | FSQChildren | FSQParents;
-}
-
-NSString *queryStringWithParameters(FSQueryParameter parameters)
-{
-	NSString *string = [NSString stringWithFormat:@"names=%@&genders=%@&events=%@&characteristics=%@&exists=%@&values=%@&ordinances=%@&assertions=%@&families=%@&children=%@&parents=%@&personas=%@&properties=%@&identifiers=%@&dispositions=%@&contributors=%@",
-						ALL_OR_NONE(parameters, FSQNames,			nil),
-						ALL_OR_NONE(parameters, FSQGenders,			nil),
-						ALL_OR_NONE(parameters, FSQEvents,			nil),
-						ALL_OR_NONE(parameters, FSQCharacteristics,	nil),
-						ALL_OR_NONE(parameters, FSQExists,			nil),
-						ALL_OR_NONE(parameters, FSQValues,			@"summary"),
-						ALL_OR_NONE(parameters, FSQOrdinances,		nil),
-						ALL_OR_NONE(parameters, FSQAssertions,		nil),
-						ALL_OR_NONE(parameters, FSQFamilies,		nil),
-						ALL_OR_NONE(parameters, FSQChildren,		nil),
-						ALL_OR_NONE(parameters, FSQParents,			nil),
-						ALL_OR_NONE(parameters, FSQPersonas,		nil),
-						ALL_OR_NONE(parameters, FSQProperties,		nil),
-						ALL_OR_NONE(parameters, FSQIdentifiers,		nil),
-						ALL_OR_NONE(parameters, FSQDispositions,	@"affirming"),
-						ALL_OR_NONE(parameters, FSQContributors,	nil)];
-
-	return string;
-}
+#import "FSPerson.h"
 
 
 
@@ -83,10 +18,10 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 
 @interface FSPerson ()
-@property (readonly)				NSString			*sessionID;
-@property (strong, nonatomic)		NSMutableDictionary	*properties;
-@property (strong, nonatomic)		NSMutableArray		*relationships;
-@property (strong, nonatomic)		NSMutableArray		*marriages;
+@property (strong, nonatomic)	FSURL				*url;
+@property (strong, nonatomic)	NSMutableDictionary	*properties;
+@property (strong, nonatomic)	NSMutableArray		*relationships;
+@property (strong, nonatomic)	NSMutableArray		*marriages;
 @end
 
 
@@ -94,6 +29,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 
 @interface FSRelationship : NSObject
+@property (strong, nonatomic)	FSURL			*url;
 @property (readonly)			FSPerson		*parent;
 @property (readonly)			FSPerson		*child;
 @property (readonly)			FSLineageType	lineage;
@@ -124,14 +60,6 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 
 
-
-
-
-
-
-
-
-
 @implementation FSPerson
 
 @synthesize events = _events;
@@ -147,7 +75,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	if (!__people) __people = [[NSMutableArray alloc] initWithCapacity:0];
 
 	for (FSPerson *person in __people) {
-		if ([person.sessionID isEqualToString:sessionID] && [person.identifier isEqualToString:identifier]) {
+		if ([person.identifier isEqualToString:identifier]) {
 			return person;
 		}
 	}
@@ -155,6 +83,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	self = [super init];
 	if (self) {
 		_sessionID		= sessionID;
+		_url			= [[FSURL alloc] initWithSessionID:sessionID];
 		_identifier		= identifier;
 		_name			= nil;
 		_gender			= @"Male";
@@ -184,36 +113,6 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 
 
-#pragma mark - Properties
-
-- (NSString *)propertyForKey:(FSPropertyType)key
-{
-	FSProperty *property = [_properties objectForKey:key];
-	return property.value;
-}
-
-- (void)setProperty:(NSString *)property forKey:(FSPropertyType)key
-{
-	FSProperty *p = [_properties objectForKey:key];
-	if (!p) {
-		p = [[FSProperty alloc] init];
-		p.identifier = nil;
-		p.key = key;
-		[_properties setObject:p forKey:key];
-	}
-	p.value = property;
-}
-
-- (void)reset
-{
-	for (FSProperty *property in [_properties allValues]) {
-		[property reset];
-	}
-}
-
-
-
-
 #pragma mark - Syncing
 
 - (BOOL)isNew
@@ -223,92 +122,18 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 - (MTPocketResponse *)fetch
 {
-	if (!_identifier) [[NSException exceptionWithName:@"Nil identifier" reason:@"You cannot fetch on a person with a nil identifier." userInfo:nil] raise];
+	if (!_identifier) raiseException(@"Nil 'identifier'", @"You cannot fetch on a person with a nil identifier." );
 	if ([_identifier isEqualToString:@"me"]) _identifier = nil;
 
-	// empty out this object so it only contains what's on the server
-	[self empty];
+	MTPocketResponse *response = [FSPerson batchFetchPeople:@[ self ]];
 
-	NSString *path = [NSString stringWithFormat:@"person"];
-	if (_identifier) path = [path stringByAppendingFormat:@"/%@", _identifier];
-	NSString *params = queryStringWithParameters( defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics );
-	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
-
+	// Fetch marriage properties and events
 	if (response.success) {
-
-		// GENERAL INFO
-		NSDictionary *person = [response.body valueForComplexKeyPath:@"persons[first]"];
-		_identifier			= [person objectForKey:@"id"];
-		_name				= [person valueForComplexKeyPath:@"assertions.names[first].value.forms[first].fullText"];
-		_gender				= [person valueForComplexKeyPath:@"assertions.genders[first].value.type"];
-		_isAlive			= [[person valueForComplexKeyPath:@"properties.living"] intValue] == YES;
-		_isModifiable		= [[person valueForComplexKeyPath:@"properties.modifiable"] intValue] == YES;
-		_lastModifiedDate	= [NSDate dateWithTimeIntervalSince1970:[[person valueForComplexKeyPath:@"properties.modified"] intValue]];
-
-
-		// PROPERTIES
-		NSArray *characteristics = [person valueForComplexKeyPath:@"assertions.characteristics"];
-		if (![characteristics isKindOfClass:[NSNull class]])
-			for (NSDictionary *characteristic in characteristics) {
-				FSProperty *property = [[FSProperty alloc] init];
-				property.identifier = [characteristic valueForComplexKeyPath:@"value.id"];
-				property.key		= [characteristic valueForComplexKeyPath:@"value.type"];
-				property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
-				property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
-				property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
-				property.date		= [NSDate dateFromString:[characteristic valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
-				property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
-				[_properties setObject:property forKey:property.key];
-			}
-
-		
-		// EVENTS
-		NSArray *events = [person valueForKeyPath:@"assertions.events"];
-		if (![events isKindOfClass:[NSNull class]])
-			for (NSDictionary *eventDict in events) {
-				FSPersonEventType type = [eventDict valueForKeyPath:@"value.type"];
-				NSString *identifier = [eventDict valueForKeyPath:@"value.id"];
-				FSEvent *event = [FSEvent eventWithType:type identifier:identifier];
-				event.date = [NSDate dateFromString:[eventDict valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
-				event.place = [eventDict valueForKeyPath:@"value.place.normalized.value"];
-				[self addEvent:event];
-			}
-
-
-		// RELATIONSHIPS
-		NSArray *parents = [person valueForComplexKeyPath:@"parents"];
-		for (NSDictionary *parent in parents) {
-			NSArray *coupledParents = [parent valueForKey:@"parent"];
-			for (NSDictionary *coupledParent in coupledParents) {
-				FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:[coupledParent objectForKey:@"id"]];
-				NSString *lineage = [coupledParent valueForComplexKeyPath:@"characteristics[first].value.lineage"];
-				FSRelationship *relationship = [FSRelationship relationshipWithParent:p child:self lineage:lineage];
-				[self addRelationship:relationship];
-			}
-		}
-
-		NSArray *families = [person valueForComplexKeyPath:@"families"];
-		for (NSDictionary *family in families) {
-			NSArray *children = [family valueForComplexKeyPath:@"child"];
-			for (NSDictionary *child in children) {
-				FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:[child objectForKey:@"id"]];
-				FSRelationship *relationship = [FSRelationship relationshipWithParent:self child:p lineage:FSLineageTypeBiological];
-				[self addRelationship:relationship];
-			}
-			NSArray *spouses = [family valueForComplexKeyPath:@"parent"];
-			for (NSDictionary *spouse in spouses) {
-				FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:[spouse objectForKey:@"id"]];
-				if ([p isSamePerson:self]) continue;
-				FSMarriage *marriage = [self addSpouse:p];
-				id version = [spouse objectForKey:@"version"];
-				marriage.version = version == [NSNull null] ? 1 : [version intValue];
-				[marriage fetch];
-			}
+		for (FSPerson *spouse in self.spouses) {
+			FSMarriage *marriage = [self marriageWithSpouse:spouse];
+			[marriage fetch];
 		}
 	}
-
 	return response;
 }
 
@@ -381,11 +206,12 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	if (events.count > 0) [assertions addEntriesFromDictionary: @{ @"events" : events } ];
 
 	// SAVE
-	NSString *path = [NSString stringWithFormat:@"person"];
-	if (_identifier) path = [path stringByAppendingFormat:@"/%@", _identifier];
-	NSString *params = queryStringWithParameters( defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics );
-	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
+	NSURL *url = [_url urlWithModule:@"familytree"
+							 version:2
+							resource:@"person"
+						 identifiers:(_identifier ? @[ _identifier ] : nil)
+							  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+								misc:nil];
 
 	NSMutableDictionary *personDict = [NSMutableDictionary dictionary];
 	if (_identifier)				[personDict setObject:_identifier forKey:@"id"];
@@ -429,13 +255,15 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 - (MTPocketResponse *)fetchAncestors:(NSUInteger)generations
 {
-	if (!_identifier) [[NSException exceptionWithName:@"Nil identifier" reason:@"You cannot fetch on a person with a nil identifier." userInfo:nil] raise];
+	if (!_identifier) raiseException(@"Nil identifier", @"You cannot fetch ancestors when the persons 'identifier' is nil");
 
-	NSString *path = [NSString stringWithFormat:@"pedigree"];
-	if (_identifier) path = [path stringByAppendingFormat:@"/%@", _identifier];
-	NSString *params = @"properties=all"; //queryStringWithParameters( defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics );
-	NSString *query = [NSString stringWithFormat:@"ancestors=%d&%@&sessionId=%@&agent=%@", generations, params, _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
+	NSURL *url = [_url urlWithModule:@"familytree"
+							  version:2
+							 resource:@"pedigree"
+						  identifiers:(_identifier ? @[ _identifier ] : nil)
+							   params:0
+								 misc:[NSString stringWithFormat:@"ancestors=%d&properties=all", generations]];
+	
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
 	if (response.success) {
@@ -462,14 +290,14 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 			if ([birth isKindOfClass:[NSString class]]) {
 				FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeBirth identifier:nil];
-				event.date = [NSDate dateFromString:birth usingFormat:@"dd MMM yyyy"];
+				event.date = [NSDate dateFromString:birth usingFormat:DATE_FORMAT];
 				event.place = nil;
 				[person addEvent:event];
 			}
 
 			if ([death isKindOfClass:[NSString class]]) {
 				FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeDeath identifier:nil];
-				event.date = [NSDate dateFromString:death usingFormat:@"dd MMM yyyy"];
+				event.date = [NSDate dateFromString:death usingFormat:DATE_FORMAT];
 				event.place = nil;
 				[person addEvent:event];
 			}
@@ -477,6 +305,36 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	}
 
 	return response;
+}
+
+
+
+
+#pragma mark - Properties
+
+- (NSString *)propertyForKey:(FSPropertyType)key
+{
+	FSProperty *property = [_properties objectForKey:key];
+	return property.value;
+}
+
+- (void)setProperty:(NSString *)property forKey:(FSPropertyType)key
+{
+	FSProperty *p = [_properties objectForKey:key];
+	if (!p) {
+		p = [[FSProperty alloc] init];
+		p.identifier = nil;
+		p.key = key;
+		[_properties setObject:p forKey:key];
+	}
+	p.value = property;
+}
+
+- (void)reset
+{
+	for (FSProperty *property in [_properties allValues]) {
+		[property reset];
+	}
 }
 
 
@@ -495,19 +353,19 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	return parents;
 }
 
-- (void)addParent:(FSPerson *)person withLineage:(FSLineageType)lineage
+- (void)addParent:(FSPerson *)parent withLineage:(FSLineageType)lineage
 {
-	if (!person) [[NSException exceptionWithName:@"Nil Person" reason:@"The parent paramater cannot be nil." userInfo:nil] raise];
-	FSRelationship *relationship = [FSRelationship relationshipWithParent:person child:self lineage:lineage];
+	if (!parent) raiseParamException(@"parent");
+
+	FSRelationship *relationship = [FSRelationship relationshipWithParent:parent child:self lineage:lineage];
 	relationship.changed = YES;
 	[self addRelationship:relationship];
 }
 
-- (void)removeParent:(FSPerson *)person
+- (void)removeParent:(FSPerson *)parent
 {
-	if (!person) [[NSException exceptionWithName:@"Nil Person" reason:@"The person paramater cannot be nil." userInfo:nil] raise];
 	for (FSRelationship *relationship in _relationships) {
-		if ([relationship.parent isSamePerson:person]) {
+		if ([relationship.parent isSamePerson:parent]) {
 			relationship.deleted = YES;
 		}
 	}
@@ -529,9 +387,12 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	return children;
 }
 
-- (void)addChild:(FSPerson *)person withLineage:(FSLineageType)lineage
+- (void)addChild:(FSPerson *)child withLineage:(FSLineageType)lineage
 {
-	[person addParent:self withLineage:lineage];
+	if (!child) raiseParamException(@"spouse");
+	if (!lineage) raiseParamException(@"lineage");
+
+	[child addParent:self withLineage:lineage];
 }
 
 - (void)removeChild:(FSPerson *)person
@@ -560,7 +421,8 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 - (FSMarriage *)addSpouse:(FSPerson *)spouse
 {
-	if (!spouse) [[NSException exceptionWithName:@"Nil Spouse" reason:@"The spouse paramater cannot be nil." userInfo:nil] raise];
+	if (!spouse) raiseParamException(@"spouse");
+
 	FSMarriage *marriage = [FSMarriage marriageWithHusband:([self isMale] ? self : spouse)	wife:([self isMale] ? spouse : self)];
 	marriage.changed = YES;
 	[self addMarriage:marriage];
@@ -578,7 +440,8 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 - (void)removeSpouse:(FSPerson *)spouse;
 {
-	if (!spouse) [[NSException exceptionWithName:@"Nil Spouse" reason:@"The spouse paramater cannot be nil." userInfo:nil] raise];
+	if (!spouse) raiseParamException(@"spouse");
+
 	for (FSMarriage *marriage in _marriages) {
 		if ([marriage.wife isSamePerson:spouse] || [marriage.husband isSamePerson:spouse]) {
 			marriage.deleted = YES;
@@ -602,6 +465,8 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 - (void)addEvent:(FSEvent *)event
 {
+	if (!event) raiseParamException(@"event");
+
 	for (FSEvent *e in _events) {
 		if ([e isEqualToEvent:event]) {
 			[(NSMutableArray *)_events replaceObjectAtIndex:[_events indexOfObject:e] withObject:event];
@@ -625,12 +490,90 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 #pragma mark - Ordinances
 
 - (void)addOrdinance:(FSOrdinance *)ordinance {
+	if (!ordinance) raiseParamException(@"ordinance");
 
+	// TODO
 }
 
 - (void)removeOrdinance:(FSOrdinance *)ordinance {
-	
+	// TODO
 }
+
+
+
+
+#pragma mark - Misc
+
+- (NSArray *)duplicates
+{
+	return nil; // TODO
+}
+
+
+- (MTPocketResponse *)combineWithPerson:(FSPerson *)person
+{
+	NSURL *url = [_url urlWithModule:@"familytree"
+							 version:2
+							resource:@"person"
+						 identifiers:nil
+							  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics | FSQOrdinances
+								misc:nil];
+
+	NSDictionary *body =	@{	@"persons" : @[ @{
+	@"personas" : @[ @{
+	@"id" : _identifier
+	}, @{
+	@"id" : person.identifier
+	}]
+	}]
+	};
+
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+
+	if (response.success) {
+		NSDictionary *combinedPersonDictionary = [response.body valueForComplexKeyPath:@"persons[first]"];
+		_identifier = [combinedPersonDictionary objectForKey:@"id"];
+		[self fetch];
+	}
+
+	return response;
+}
+
++ (MTPocketResponse *)batchFetchPeople:(NSArray *)people
+{
+	if (people.count == 0) return nil;
+	FSPerson *anyPerson = [people lastObject];
+	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in people must have a valid 'sessionID'");
+
+
+	NSMutableArray *identifiers = [NSMutableArray array];
+	for (FSPerson *person in people) {
+		if (person.identifier) [identifiers addObject:person.identifier];
+	}
+
+	FSURL *fsURL = [[FSURL alloc] initWithSessionID:anyPerson.sessionID];
+	NSURL *url = [fsURL urlWithModule:@"familytree"
+							  version:2
+							 resource:@"person"
+						  identifiers:identifiers
+							   params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics | FSQOrdinances
+								 misc:nil];
+
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+
+	if (response.success) {
+
+		NSArray *peopleDictionaries = [response.body objectForKey:@"persons"];
+		for (NSDictionary *personDictionary in peopleDictionaries) {
+			NSString *id = [personDictionary objectForKey:@"id"];
+			FSPerson *person = people.count == 1 ? anyPerson : [FSPerson personWithSessionID:anyPerson.sessionID identifier:id];
+			[person populateFromPersonDictionary:personDictionary];
+		}
+	}
+
+	return response;
+}
+
 
 
 
@@ -742,6 +685,80 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	[self removeAllEvents];
 }
 
+- (void)populateFromPersonDictionary:(NSDictionary *)person
+{
+	// empty out this object so it only contains what's on the server
+	[self empty];
+	
+	// GENERAL INFO
+	_identifier			= [person objectForKey:@"id"];
+	_name				= [person valueForComplexKeyPath:@"assertions.names[first].value.forms[first].fullText"];
+	_gender				= [person valueForComplexKeyPath:@"assertions.genders[first].value.type"];
+	_isAlive			= [[person valueForComplexKeyPath:@"properties.living"] intValue] == YES;
+	_isModifiable		= [[person valueForComplexKeyPath:@"properties.modifiable"] intValue] == YES;
+	_lastModifiedDate	= [NSDate dateWithTimeIntervalSince1970:[[person valueForComplexKeyPath:@"properties.modified"] intValue]];
+
+
+	// PROPERTIES
+	NSArray *characteristics = [person valueForComplexKeyPath:@"assertions.characteristics"];
+	if (![characteristics isKindOfClass:[NSNull class]])
+		for (NSDictionary *characteristic in characteristics) {
+			FSProperty *property = [[FSProperty alloc] init];
+			property.identifier = [characteristic valueForComplexKeyPath:@"value.id"];
+			property.key		= [characteristic valueForComplexKeyPath:@"value.type"];
+			property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
+			property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
+			property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
+			property.date		= [NSDate dateFromString:[characteristic valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+			property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
+			[_properties setObject:property forKey:property.key];
+		}
+
+
+	// EVENTS
+	NSArray *events = [person valueForKeyPath:@"assertions.events"];
+	if (![events isKindOfClass:[NSNull class]])
+		for (NSDictionary *eventDict in events) {
+			FSPersonEventType type = [eventDict valueForKeyPath:@"value.type"];
+			NSString *identifier = [eventDict valueForKeyPath:@"value.id"];
+			FSEvent *event = [FSEvent eventWithType:type identifier:identifier];
+			event.date = [NSDate dateFromString:[eventDict valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+			event.place = [eventDict valueForKeyPath:@"value.place.normalized.value"];
+			[self addEvent:event];
+		}
+
+
+	// RELATIONSHIPS
+	NSArray *parents = [person valueForComplexKeyPath:@"parents"];
+	for (NSDictionary *parent in parents) {
+		NSArray *coupledParents = [parent valueForKey:@"parent"];
+		for (NSDictionary *coupledParent in coupledParents) {
+			FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:[coupledParent objectForKey:@"id"]];
+			NSString *lineage = [coupledParent valueForComplexKeyPath:@"characteristics[first].value.lineage"];
+			FSRelationship *relationship = [FSRelationship relationshipWithParent:p child:self lineage:lineage];
+			[self addRelationship:relationship];
+		}
+	}
+
+	NSArray *families = [person valueForComplexKeyPath:@"families"];
+	for (NSDictionary *family in families) {
+		NSArray *children = [family valueForComplexKeyPath:@"child"];
+		for (NSDictionary *child in children) {
+			FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:[child objectForKey:@"id"]];
+			FSRelationship *relationship = [FSRelationship relationshipWithParent:self child:p lineage:FSLineageTypeBiological];
+			[self addRelationship:relationship];
+		}
+		NSArray *spouses = [family valueForComplexKeyPath:@"parent"];
+		for (NSDictionary *spouse in spouses) {
+			FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:[spouse objectForKey:@"id"]];
+			if ([p isSamePerson:self]) continue;
+			FSMarriage *marriage = [self addSpouse:p];
+			id version = [spouse objectForKey:@"version"];
+			marriage.version = version == [NSNull null] ? 1 : [version intValue];
+		}
+	}
+}
+
 @end
 
 
@@ -758,6 +775,7 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 {
     self = [super init];
     if (self) {
+		_url		= [[FSURL alloc] initWithSessionID:parent.sessionID];
         _parent		= parent;
 		_child		= child;
 		_lineage	= lineage ? lineage : FSLineageTypeBiological;
@@ -795,9 +813,12 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	if (self.child.isNew)
 		return [self.child save];
 
-	NSString *path = [NSString stringWithFormat:@"person/%@/parent/%@", self.child.identifier, self.parent.identifier];
-	NSString *query = [NSString stringWithFormat:@"sessionId=%@&agent=%@", self.child.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
+	NSURL *url = [_url urlWithModule:@"familytree"
+							 version:2
+							resource:[NSString stringWithFormat:@"person/%@/parent", self.child.identifier]
+						 identifiers:(self.parent.identifier ? @[ self.parent.identifier ] : nil)
+							  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics | FSQOrdinances
+								misc:nil];
 
 	NSDictionary *body = @{
 							@"persons" : @[ @{
@@ -830,10 +851,12 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 - (MTPocketResponse *)deleteRelationship
 {
-	NSString *path = [NSString stringWithFormat:@"person/%@/parent/%@", self.child.identifier, self.parent.identifier];
-	NSString *params = queryStringWithParameters( defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors );
-	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, self.parent.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
+	NSURL *url = [_url urlWithModule:@"familytree"
+							 version:2
+							resource:[NSString stringWithFormat:@"person/%@/parent", self.child.identifier]
+						 identifiers:(self.parent.identifier ? @[ self.parent.identifier ] : nil)
+							  params:defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors
+								misc:nil];
 
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
@@ -897,11 +920,17 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 	// empty out this object so it only contains what's on the server
 	[self empty];
 
-	NSString *path = [NSString stringWithFormat:@"person/%@/spouse/%@", self.husband.identifier, self.wife.identifier];
-	NSString *params = queryStringWithParameters( defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics );
-	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, self.husband.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
+	NSURL *url = [self.url urlWithModule:@"familytree"
+							  version:2
+							 resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+						  identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+							   params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+								 misc:nil];
+
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+	
+
+
 
 	if (response.success) {
 		NSArray *spouses = [response.body valueForComplexKeyPath:@"persons[first].relationships.spouse"];
@@ -1032,9 +1061,13 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 							}]
 						};
 
-	NSString *path = [NSString stringWithFormat:@"person/%@/spouse/%@", self.husband.identifier, self.wife.identifier];
-	NSString *query = [NSString stringWithFormat:@"sessionId=%@&agent=%@", self.husband.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
+	NSURL *url = [self.url urlWithModule:@"familytree"
+								 version:2
+								resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+							 identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+								  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+									misc:nil];
+
 
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
@@ -1048,10 +1081,13 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 - (MTPocketResponse *)deleteMarriage
 {
-	NSString *path = [NSString stringWithFormat:@"person/%@/spouse/%@", self.husband.identifier, self.wife.identifier];
-	NSString *params = queryStringWithParameters( defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors );
-	NSString *query = [NSString stringWithFormat:@"%@&sessionId=%@&agent=%@", params, self.husband.sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL treeURL]];
+	NSURL *url = [self.url urlWithModule:@"familytree"
+								 version:2
+								resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+							 identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+								  params:defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors
+									misc:nil];
+
 
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 

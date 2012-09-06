@@ -7,6 +7,7 @@
 //
 
 #import "FSOrdinance.h"
+#import "private.h"
 
 @implementation FSOrdinance
 

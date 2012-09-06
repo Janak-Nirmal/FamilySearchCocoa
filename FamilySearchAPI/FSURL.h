@@ -9,6 +9,4 @@
 
 @interface FSURL : NSObject
 + (void)setSandboxed:(BOOL)sandboxed;
-+ (NSURL *)authURL;
-+ (NSURL *)treeURL;
 @end

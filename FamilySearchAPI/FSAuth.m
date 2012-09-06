@@ -7,14 +7,15 @@
 //
 
 #import "FSAuth.h"
-#import "FSURL.h"
+#import "private.h"
+
 
 
 
 
 @interface FSAuth ()
 @property (strong, nonatomic) NSString *devKey;
-@property (strong, nonatomic) NSString *sessionID;
+@property (strong, nonatomic) FSURL *url;
 @end
 
 
@@ -25,35 +26,29 @@
 
 @implementation FSAuth
 
-
-- (id)initWithDeveloperKey:(NSString *)devKey sandboxed:(BOOL)sandboxed
+- (id)initWithDeveloperKey:(NSString *)devKey
 {
     self = [super init];
     if (self) {
-		_devKey = devKey;
-		[FSURL setSandboxed:sandboxed];
+        _devKey = devKey;
+		_url = [[FSURL alloc] initWithSessionID:nil];
     }
     return self;
 }
 
-- (MTPocketResponse *)sessionIDFromLoginWithUsername:(NSString *)un password:(NSString *)pw
+- (MTPocketResponse *)loginWithUsername:(NSString *)un password:(NSString *)pw
 {	
-	NSString *path = [NSString stringWithFormat:@"identity/v2/login"];
-	NSString *query = [NSString stringWithFormat:@"key=%@&agent=%@", _devKey, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL authURL]];
-
+	NSURL *url = [_url urlWithModule:@"identity" version:2 resource:@"login" identifiers:nil params:0 misc:[NSString stringWithFormat:@"key=%@", _devKey]];
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:un password:pw body:nil];
-	_sessionID = [response.body valueForKeyPath:@"session.id"];
-	response.body = _sessionID;
-
+	if (response.success) {
+		_sessionID = [response.body valueForKeyPath:@"session.id"];
+	}
 	return response;
 }
 
 - (MTPocketResponse *)logout
 {
-	NSString *path = [NSString stringWithFormat:@"logout"];
-	NSString *query = [NSString stringWithFormat:@"sessionId=%@&agent=%@", _sessionID, @"akirk-at-familysearch-dot-org/1.0"];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?%@", path, query] relativeToURL:[FSURL authURL]];
+	NSURL *url = [_url urlWithModule:@"identity" version:2 resource:@"logout" identifiers:nil params:0 misc:nil];
 	return [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 }
 

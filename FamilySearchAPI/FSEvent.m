@@ -7,7 +7,6 @@
 //
 
 #import "FSEvent.h"
-#import "FSPerson.h"
 #import "private.h"
 
 

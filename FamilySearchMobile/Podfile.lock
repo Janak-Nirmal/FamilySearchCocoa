@@ -1,0 +1,18 @@
+PODS:
+  - Base64 (1.0.0)
+  - FamilySearchAPI (0.0.5):
+    - MTDates
+    - MTJSONDictionary
+    - MTPocket
+  - MTControl (0.0.4)
+  - MTDates (0.3.0)
+  - MTJSONDictionary (0.0.4)
+  - MTPocket (0.4.1):
+    - Base64
+    - MTJSONDictionary (~> 0.0.4)
+    - XMLDictionary (~> 2.0.0)
+  - XMLDictionary (2.0.0)
+
+DEPENDENCIES:
+  - FamilySearchAPI
+  - MTControl

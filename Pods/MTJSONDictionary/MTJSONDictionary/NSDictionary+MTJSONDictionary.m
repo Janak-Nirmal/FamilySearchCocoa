@@ -150,7 +150,7 @@
 		}
 	}
 
-	return currentObject;
+	return [currentObject isKindOfClass:[NSNull class]] ? nil : currentObject;
 }
 
 - (NSString *)stringValueForComplexKeyPath:(NSString *)key {

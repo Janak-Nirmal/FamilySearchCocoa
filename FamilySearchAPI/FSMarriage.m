@@ -7,7 +7,6 @@
 //
 
 #import "FSMarriage.h"
-#import "FSPerson.h"
 #import "private.h"
 
 
@@ -34,8 +33,12 @@
 
 - (id)initWithHusband:(FSPerson *)husband wife:(FSPerson *)wife
 {
+	if (!husband)	raiseParamException(@"husband");
+	if (!wife)		raiseParamException(@"wife");
+
     self = [super init];
     if (self) {
+		_url			= [[FSURL alloc] initWithSessionID:husband.sessionID];
 		_husband		= husband;
 		_wife			= wife;
 		_properties		= [NSMutableDictionary dictionary];
@@ -65,6 +68,9 @@
 
 - (void)setProperty:(NSString *)property forKey:(FSMarriagePropertyType)key
 {
+	if (!property)	raiseParamException(@"property");
+	if (!key)		raiseParamException(@"key");
+
 	_changed = YES;
 	FSProperty *p = [_properties objectForKey:key];
 	if (!p) {
@@ -90,6 +96,8 @@
 
 - (void)addMarriageEvent:(FSMarriageEvent *)event
 {
+	if (!event)	raiseParamException(@"event");
+
 	_changed = YES;
 	for (FSEvent *e in _events) {
 		if ([e isEqualToEvent:event]) {

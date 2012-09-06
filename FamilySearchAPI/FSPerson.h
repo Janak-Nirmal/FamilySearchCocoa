@@ -8,7 +8,7 @@
 
 #import <MTPocket.h>
 
-@class FSEvent, FSMarriage, FSOrdinance;
+@class FSEvent, FSMarriage, FSOrdinance, FSAuth;
 
 
 // Person Properties
@@ -63,7 +63,7 @@ typedef NSString * FSLineageType;
 
 @property (readonly)		  NSString	*identifier;
 @property (strong, nonatomic) NSString	*name;
-@property (strong, nonatomic) NSString	*gender;
+@property (strong, nonatomic) NSString	*gender;							// @"Male" or @"Female"
 @property (readonly)		  BOOL		isAlive;							// Default: YES. You must add a death event for the system to return NO. Not editable by user.
 @property (readonly)		  BOOL		isModifiable;						// Can be modified by the current logged in contributor
 @property (readonly)		  BOOL		isNew;								// Has been created on the client but has not be saved to the server
@@ -75,27 +75,27 @@ typedef NSString * FSLineageType;
 @property (readonly)		  NSArray	*ordinances;						// TODO: Returns array of FSOrdinance objects
 
 
-#pragma mark - Constructor
+#pragma mark - Getting A Person
 + (FSPerson *)currentUserWithSessionID:(NSString *)sessionID;
 + (FSPerson *)personWithSessionID:(NSString *)sessionID identifier:(NSString *)identifier;
-
-#pragma mark - Properties
-- (NSString *)propertyForKey:(FSPropertyType)key;
-- (void)setProperty:(NSString *)property forKey:(FSPropertyType)key;
-- (void)reset;																// reverts all property values back to their last-saved values
 
 #pragma mark - Syncing
 - (MTPocketResponse *)fetch;												// If called when identifier is (not nil => reset w server info)	| (nil => throws an exception)
 - (MTPocketResponse *)save;													// If called when identifier is (not nil => update person)			| (nil => create new person)
 - (MTPocketResponse *)fetchAncestors:(NSUInteger)generations;
 
+#pragma mark - Properties
+- (NSString *)propertyForKey:(FSPropertyType)key;
+- (void)setProperty:(NSString *)property forKey:(FSPropertyType)key;
+- (void)reset;																// reverts all property values back to their last-saved values
+
 #pragma mark - Parents
-- (void)addParent:(FSPerson *)person withLineage:(FSLineageType)lineage;
-- (void)removeParent:(FSPerson *)person;
+- (void)addParent:(FSPerson *)parent withLineage:(FSLineageType)lineage;
+- (void)removeParent:(FSPerson *)parent;
 
 #pragma mark - Children
-- (void)addChild:(FSPerson *)person withLineage:(FSLineageType)lineage;
-- (void)removeChild:(FSPerson *)person;
+- (void)addChild:(FSPerson *)child withLineage:(FSLineageType)lineage;
+- (void)removeChild:(FSPerson *)child;
 
 #pragma mark - Spouses
 - (FSMarriage *)addSpouse:(FSPerson *)spouse;
@@ -107,8 +107,14 @@ typedef NSString * FSLineageType;
 - (void)removeEvent:(FSEvent *)event;
 
 #pragma mark - Ordinances
-- (void)addOrdinance:(FSOrdinance *)ordinance;
-- (void)removeOrdinance:(FSOrdinance *)ordinance;
+- (void)addOrdinance:(FSOrdinance *)ordinance;								// TODO
+- (void)removeOrdinance:(FSOrdinance *)ordinance;							// TODO
+
+#pragma mark - Misc
+- (NSArray *)duplicates;													// returns possible duplicates of this person (to potentially be merged)
+// TODO: - (MTPocketResponse *)combineWithPerson:(FSPerson *)person;		// Will change the identifier of ths person with the newly formed combined person
++ (MTPocketResponse *)batchFetchPeople:(NSArray *)people;					// Will fetch all properties and ordinance information for everyone in the array.
+
 
 @end
 

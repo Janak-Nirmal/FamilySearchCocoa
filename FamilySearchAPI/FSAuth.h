@@ -11,14 +11,10 @@
 
 @interface FSAuth : NSObject
 
-
-#pragma mark - Public Properties
-
-
-#pragma mark - Public Methods
-- (id)initWithDeveloperKey:(NSString *)devKey sandboxed:(BOOL)sandboxed;
-- (MTPocketResponse *)sessionIDFromLoginWithUsername:(NSString *)un password:(NSString *)pw;
+- (id)initWithDeveloperKey:(NSString *)devKey;
+- (MTPocketResponse *)loginWithUsername:(NSString *)un password:(NSString *)pw;
 - (MTPocketResponse *)logout;
 
+@property (strong, nonatomic) NSString *sessionID;
 
 @end
