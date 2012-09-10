@@ -62,7 +62,7 @@ typedef NSString * FSLineageType;
 @interface FSPerson : NSObject
 
 @property (readonly)		  NSString	*identifier;
-@property (strong, nonatomic) NSString	*name;
+@property (strong, nonatomic) NSString	*name;                              // @"Adam Kirk"
 @property (strong, nonatomic) NSString	*gender;							// @"Male" or @"Female"
 @property (readonly)		  BOOL		isAlive;							// Default: YES. You must add a death event for the system to return NO. Not editable by user.
 @property (readonly)		  BOOL		isModifiable;						// Can be modified by the current logged in contributor
@@ -72,7 +72,7 @@ typedef NSString * FSLineageType;
 @property (readonly)		  NSArray	*children;							// Returns array of FSperson objects
 @property (readonly)		  NSArray	*spouses;							// Returns array of FSMarriage objects
 @property (readonly)		  NSArray	*events;							// Returns array of FSEvent objects
-@property (readonly)		  NSArray	*ordinances;						// TODO: Returns array of FSOrdinance objects
+@property (readonly)		  NSArray	*ordinances;						// Returns array of FSOrdinance objects
 
 
 
@@ -114,15 +114,10 @@ typedef NSString * FSLineageType;
 - (void)addEvent:(FSEvent *)event;
 - (void)removeEvent:(FSEvent *)event;
 
-@property (nonatomic, strong) NSDate	*birthDate;							// These are for convenience. Does the same thing as creating an event and adding it with addEvent:
-@property (nonatomic, strong) NSString	*birthPlace;						//
-@property (nonatomic, strong) NSDate	*deathDate;							//
-@property (nonatomic, strong) NSString	*deathPlace;						//
-
-
-#pragma mark - Ordinances
-- (void)addOrdinance:(FSOrdinance *)ordinance;								// TODO
-- (void)removeOrdinance:(FSOrdinance *)ordinance;							// TODO
+@property (nonatomic, strong) NSDate	*birthDate;							/*  These are for convenience.       */
+@property (nonatomic, strong) NSString	*birthPlace;						/*  Does the same thing as           */
+@property (nonatomic, strong) NSDate	*deathDate;							/*  creating an event and            */
+@property (nonatomic, strong) NSString	*deathPlace;						/*  adding it with addEvent:         */
 
 
 #pragma mark - Misc

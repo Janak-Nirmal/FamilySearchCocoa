@@ -9,11 +9,12 @@
 
 // Ordinance Types
 typedef NSString * FSOrdinanceType;
-#define FSOrdinanceTypeBaptism			@"baptism"
-#define FSOrdinanceTypeConfirmation		@"confirmation"
-#define FSOrdinanceTypeInitiatory		@"initiatory"
-#define FSOrdinanceTypeEndowment		@"endowment"
-#define FSOrdinanceTypeSealing			@"sealingToSpouse"
+#define FSOrdinanceTypeBaptism				@"Baptism"
+#define FSOrdinanceTypeConfirmation			@"Confirmation"
+#define FSOrdinanceTypeInitiatory			@"Initiatory"
+#define FSOrdinanceTypeEndowment			@"Endowment"
+#define FSOrdinanceTypeSealingToParents		@"Sealing to Parents"
+#define FSOrdinanceTypeSealingToSpouse		@"Sealing to Spouse"
 
 typedef enum {
 	FSOrdinanceInventoryTypePersonal,
@@ -21,6 +22,16 @@ typedef enum {
 } FSOrdinanceInventoryType;
 
 
+
+
 @interface FSOrdinance : NSObject
+
+@property (readonly)			NSString		*identifier;
+@property (readonly)			FSOrdinanceType type;
+@property (nonatomic)			BOOL			official;
+@property (strong, nonatomic)	NSDate			*date;
+@property (strong, nonatomic)	NSString		*templeCode;
+
++ (FSOrdinance *)ordinanceWithType:(FSOrdinanceType)type identifier:(NSString *)identifier;
 
 @end

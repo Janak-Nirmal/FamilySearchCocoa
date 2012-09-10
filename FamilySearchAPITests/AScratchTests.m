@@ -22,45 +22,34 @@
 @implementation AScratchTests
 
 
-//- (void)setUp
-//{
-//	[FSURL setSandboxed:YES];
-//
-//	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-//	[auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-//	_sessionID = auth.sessionID;
-//
-//	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
-//	_person.name = @"Adam Kirk";
-//	_person.gender = @"Male";
-//	MTPocketResponse *response = [_person save];
-//	STAssertTrue(response.success, nil);
-//}
-//
-//- (void)testCurrentUserFetch
-//{
-//	MTPocketResponse *response = nil;
-//
-//	@try {
-//		FSPerson *p = [FSPerson personWithSessionID:_sessionID identifier:nil];
-//		[p fetch];
-//		STFail(@"Was able to fetch person with nil identifier");
-//	}
-//	@catch (NSException *exception) {
-//
-//	}
-//
-//	FSPerson *me = [FSPerson currentUserWithSessionID:_sessionID];
-//	FSPerson *me2 = [FSPerson currentUserWithSessionID:_sessionID];
-//	STAssertTrue(me == me2, nil);
-//
-//	response = [me fetch];
-//	response = [me2 fetch];
-//	STAssertTrue(me == me2, nil);
-//	STAssertTrue(response.success, nil);
-//	STAssertNotNil(me.identifier, nil);
-//	STAssertNotNil(me.name, nil);
-//	STAssertNotNil(me.gender, nil);
-//}
+- (void)setUp
+{
+	[FSURL setSandboxed:NO];
+
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
+	[auth loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
+	_sessionID = auth.sessionID;
+
+	_person = [FSPerson currentUserWithSessionID:_sessionID];
+	MTPocketResponse *response = [_person fetch];
+	STAssertTrue(response.success, nil);
+}
+
+- (void)testCurrentUserFetch
+{
+	MTPocketResponse *response = nil;
+
+    response = [_person fetchAncestors:9];
+
+    if (response.success) {
+        FSPerson *parent            = [_person.parents lastObject];
+        FSPerson *grandparent       = [parent.parents lastObject];
+        FSPerson *greatGrandParent  = [grandparent.parents lastObject];
+        FSPerson *ggGrandParent     = [greatGrandParent.parents lastObject];
+        FSPerson *gggGrandParent    = [ggGrandParent.parents lastObject];
+
+        response = [gggGrandParent fetch];
+    }
+}
 
 @end

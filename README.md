@@ -1,7 +1,7 @@
 FamilySearchAPI
 ===============
 
-An easy to use library for interacting with the FamilySearch.org API on iOS or OS X
+An easy to use library for interacting with the FamilySearch.org API on iOS or OS X.
 
 ### Installation
 
@@ -13,8 +13,9 @@ pod? => https://github.com/CocoaPods/CocoaPods/
 
 ### Notes
 
-All communication with the server is done in batches. Make a bunch of modifications to properties, relationships, etc and then call "save" and it will commit all
-of it to the server.
+FSPerson is the center of the object graph. Make all your changes to an FSPerson and then call save on that person.
+
+Make a bunch of modifications to properties, relationships, etc and then call "save" on a person and it will commit all of it to the server.
 
 Fetch does the same in reverse. It will fetch all properties and relationships from the server all at once.
 

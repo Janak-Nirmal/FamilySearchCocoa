@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
                    DESC
   s.homepage     = "https://github.com/FamilySearch/FamilySearchAPI"
   s.license      = 'BSD'
-  s.author       = { "Adam Kirk" => "atomkirk@gmail.com" }
+  s.author       = { "Adam Kirk" => "akirk@familysearch.org" }
   s.source       = { :git => "https://github.com/FamilySearch/FamilySearchAPI.git", :tag => "0.0.5" }
   s.source_files = 'FamilySearchAPI/*.{h,m}'
   s.requires_arc = true

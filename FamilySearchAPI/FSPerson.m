@@ -814,6 +814,23 @@
 			marriage.version = version == [NSNull null] ? 1 : [version intValue];
 		}
 	}
+
+	// ORDINANCES
+	NSArray *ordinances = [person valueForComplexKeyPath:@"ordinances"];
+	if (![ordinances isKindOfClass:[NSNull class]])
+		for (NSDictionary *ordinanceDictionary in ordinances) {
+			FSOrdinanceType	type		= [ordinanceDictionary valueForKeyPath:@"value.type"];
+			NSString		*identifer	= [ordinanceDictionary valueForKeyPath:@"value.id"];
+			BOOL			official	= [[ordinanceDictionary objectForKey:@"official"] boolValue];
+			NSDate			*date		= [NSDate dateFromString:[ordinanceDictionary valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+			NSString		*templeCode	= [ordinanceDictionary valueForKeyPath:@"value.temple"];
+
+			FSOrdinance *ordinance = [FSOrdinance ordinanceWithType:type identifier:identifer];
+			ordinance.official = official;
+			if (date)		ordinance.date = date;
+			if (templeCode) ordinance.templeCode = templeCode;
+			[(NSMutableArray *)_ordinances addObject:ordinance];
+		}
 }
 
 - (void)setDate:(NSDate *)date place:(NSString *)place forEventOfType:(FSPersonEventType)eventType
