@@ -26,11 +26,16 @@ See the header files for the full API and more documentation.
 
 Use FSAuth to log in and get a session id:
 
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:DEV_KEY sandboxed:SANDBOXED];
-	MTPocketResponse *response = [auth sessionIDFromLoginWithUsername:USERNAME password:PASSWORD];
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
+	MTPocketResponse *response = [auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	
 	if (response.success) {
-		_sessionID = response.body;
+		_sessionID = auth.sessionID;;
 	}
+
+If you want to use the sandbox environment:
+
+	[FSURL setSandboxed:YES];
 
 Get information about yourself:
 
@@ -141,7 +146,15 @@ Add/Remove an Event:
 	[person removeEvent:event];
 	[person save];
 	
-	person.events.count		// => 1
+	person.events.count		// => 1	
+
+Convenience Events:
+	
+	person.birthDate	= [NSDate dateFromYear:1995 month:8 day:11 hour:0 minute:0];
+	person.birthPlace	= @"Kennewick, Benton, Washington, United States";
+	person.deathDate	= [NSDate dateFromYear:1994 month:8 day:11 hour:0 minute:0];
+	person.deathPlace	= @"Pasco, Franklin, Washington, United States";
+	[person save];
 
 Add/Read Marriage Properties:
 
@@ -304,7 +317,7 @@ To run the unit tests, you need to create the missing "constant.h" file with the
 	#define SANDBOXED_DEV_KEY	@"<sandboxed dev key>"
 	#define SANDBOXED_USERNAME	@"<sandboxed username>"
 	#define SANDBOXED_PASSWORD	@"<sandboxed password>"
-		
+
 	#define PRODUCTION_DEV_KEY	@"<live dev key>"
 	#define PRODUCTION_USERNAME	@"<live username>"
 	#define PRODUCTION_PASSWORD	@"<live password>"

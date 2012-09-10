@@ -75,40 +75,55 @@ typedef NSString * FSLineageType;
 @property (readonly)		  NSArray	*ordinances;						// TODO: Returns array of FSOrdinance objects
 
 
+
+
 #pragma mark - Getting A Person
 + (FSPerson *)currentUserWithSessionID:(NSString *)sessionID;
 + (FSPerson *)personWithSessionID:(NSString *)sessionID identifier:(NSString *)identifier;
+
 
 #pragma mark - Syncing
 - (MTPocketResponse *)fetch;												// If called when identifier is (not nil => reset w server info)	| (nil => throws an exception)
 - (MTPocketResponse *)save;													// If called when identifier is (not nil => update person)			| (nil => create new person)
 - (MTPocketResponse *)fetchAncestors:(NSUInteger)generations;
 
+
 #pragma mark - Properties
 - (NSString *)propertyForKey:(FSPropertyType)key;
 - (void)setProperty:(NSString *)property forKey:(FSPropertyType)key;
 - (void)reset;																// reverts all property values back to their last-saved values
 
+
 #pragma mark - Parents
 - (void)addParent:(FSPerson *)parent withLineage:(FSLineageType)lineage;
 - (void)removeParent:(FSPerson *)parent;
 
+
 #pragma mark - Children
 - (void)addChild:(FSPerson *)child withLineage:(FSLineageType)lineage;
 - (void)removeChild:(FSPerson *)child;
+
 
 #pragma mark - Spouses
 - (FSMarriage *)addSpouse:(FSPerson *)spouse;
 - (FSMarriage *)marriageWithSpouse:(FSPerson *)spouse;						// Returns nil if there is no marriage with the spouse
 - (void)removeSpouse:(FSPerson *)spouse;
 
+
 #pragma mark - Events
 - (void)addEvent:(FSEvent *)event;
 - (void)removeEvent:(FSEvent *)event;
 
+@property (nonatomic, strong) NSDate	*birthDate;							// These are for convenience. Does the same thing as creating an event and adding it with addEvent:
+@property (nonatomic, strong) NSString	*birthPlace;						//
+@property (nonatomic, strong) NSDate	*deathDate;							//
+@property (nonatomic, strong) NSString	*deathPlace;						//
+
+
 #pragma mark - Ordinances
 - (void)addOrdinance:(FSOrdinance *)ordinance;								// TODO
 - (void)removeOrdinance:(FSOrdinance *)ordinance;							// TODO
+
 
 #pragma mark - Misc
 - (NSArray *)duplicates;													// returns possible duplicates of this person (to potentially be merged)

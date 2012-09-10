@@ -7,7 +7,7 @@
 //
 
 #import <NSDate+MTDates.h>
-#import <NSDictionary+MTJSONDictionary.h>
+#import <NSObject+MTJSONUtils.h>
 #import "private.h"
 #import "FSPerson.h"
 
@@ -484,6 +484,15 @@
 	}
 }
 
+- (NSDate *)birthDate							{ return [self dateForEventOfType:FSPersonEventTypeBirth];						}
+- (void)setBirthDate:(NSDate *)birthDate		{ [self setDate:birthDate place:nil forEventOfType:FSPersonEventTypeBirth];		}
+- (NSString *)birthPlace						{ return [self placeForEventOfType:FSPersonEventTypeBirth];						}
+- (void)setBirthPlace:(NSString *)birthPlace	{ [self setDate:nil place:birthPlace forEventOfType:FSPersonEventTypeBirth];	}
+- (NSDate *)deathDate							{ return [self dateForEventOfType:FSPersonEventTypeDeath];						}
+- (void)setDeathDate:(NSDate *)deathDate		{ [self setDate:deathDate place:nil forEventOfType:FSPersonEventTypeDeath];		}
+- (NSString *)deathPlace						{ return [self placeForEventOfType:FSPersonEventTypeDeath];						}
+- (void)setDeathPlace:(NSString *)deathPlace	{ [self setDate:nil place:deathPlace forEventOfType:FSPersonEventTypeDeath];	}
+
 
 
 
@@ -506,7 +515,55 @@
 
 - (NSArray *)duplicates
 {
-	return nil; // TODO
+	if (!_identifier) raiseException(@"Nil 'identifier'", @"The persons 'identifier' cannot be nil to find duplicates");
+	NSMutableArray *duplicates = [NSMutableArray array];
+
+	NSURL *url = [_url urlWithModule:@"familytree"
+							 version:2
+							resource:@"match"
+						 identifiers:@[ _identifier ]
+							  params:0
+								misc:nil];
+
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+
+	if (response.success) {
+		NSDictionary *search = [response.body valueForComplexKeyPath:@"matches[first]"];
+		NSArray *searches = [search valueForComplexKeyPath:@"match"];
+		for (NSDictionary *searchDictionary in searches) {
+			NSDictionary *personDictionary = [searchDictionary objectForKey:@"person"];
+			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:[personDictionary objectForKey:@"id"]];
+			[person populateFromPersonDictionary:personDictionary];
+
+			// Add parents
+			NSArray *parents = [personDictionary objectForKey:@"parent"];
+			for (NSDictionary *parentDictionary in parents) {
+				FSPerson *parent = [FSPerson personWithSessionID:_sessionID identifier:[parentDictionary objectForKey:@"id"]];
+				[parent populateFromPersonDictionary:parentDictionary];
+				[person addParent:parent withLineage:FSLineageTypeBiological];
+			}
+
+			// Add children
+			NSArray *children = [personDictionary objectForKey:@"child"];
+			for (NSDictionary *childDictionary in children) {
+				FSPerson *child = [FSPerson personWithSessionID:_sessionID identifier:[childDictionary objectForKey:@"id"]];
+				[child populateFromPersonDictionary:childDictionary];
+				[person addChild:child withLineage:FSLineageTypeBiological];
+			}
+
+			// Add spouses
+			NSArray *spouses = [personDictionary objectForKey:@"spouse"];
+			for (NSDictionary *spouseDictionary in spouses) {
+				FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:[spouseDictionary objectForKey:@"id"]];
+				[spouse populateFromPersonDictionary:spouseDictionary];
+				[person addSpouse:spouse];
+			}
+
+			[duplicates addObject:person];
+		}
+	}
+
+	return duplicates;
 }
 
 
@@ -520,13 +577,13 @@
 								misc:nil];
 
 	NSDictionary *body =	@{	@"persons" : @[ @{
-	@"personas" : @[ @{
-	@"id" : _identifier
-	}, @{
-	@"id" : person.identifier
-	}]
-	}]
-	};
+									@"personas" : @[ @{
+										@"id" : _identifier
+									}, @{
+										@"id" : person.identifier
+									}]
+								}]
+							};
 
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
@@ -757,6 +814,42 @@
 			marriage.version = version == [NSNull null] ? 1 : [version intValue];
 		}
 	}
+}
+
+- (void)setDate:(NSDate *)date place:(NSString *)place forEventOfType:(FSPersonEventType)eventType
+{
+	for (FSEvent *event in _events) {
+		if ([event.type isEqualToString:eventType]) {
+			if (date)	event.date = date;
+			if (place)	event.place = place;
+			return;
+		}
+	}
+
+	FSEvent *event = [FSEvent eventWithType:eventType identifier:nil];
+	event.date = date;
+	event.place = place;
+	[self addEvent:event];
+}
+
+- (NSDate *)dateForEventOfType:(FSPersonEventType)eventType
+{
+	for (FSEvent *event in _events) {
+		if ([event.type isEqualToString:eventType]) {
+			return event.date;
+		}
+	}
+	return nil;
+}
+
+- (NSString *)placeForEventOfType:(FSPersonEventType)eventType
+{
+	for (FSEvent *event in _events) {
+		if ([event.type isEqualToString:eventType]) {
+			return event.place;
+		}
+	}
+	return nil;
 }
 
 @end

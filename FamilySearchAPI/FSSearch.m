@@ -7,7 +7,7 @@
 //
 
 #import <NSDate+MTDates.h>
-#import <NSDictionary+MTJSONDictionary.h>
+#import <NSObject+MTJSONUtils.h>
 #import "FSSearch.h"
 #import "private.h"
 
@@ -29,6 +29,7 @@
 @property (strong, nonatomic)	NSMutableArray	*backingStore;
 @property (strong, nonatomic)	NSString		*sessionID;
 @property (strong, nonatomic)	FSURL			*url;
+@property (strong, nonatomic)	NSString		*contextID;
 @property (nonatomic)			NSUInteger		currentIndex;
 @property (nonatomic)			NSUInteger		batchSize;
 @property (nonatomic)			NSMutableArray	*criteria;
@@ -101,6 +102,7 @@
 		_sessionID		= sessionID;
         _currentIndex	= 0;
 		_url			= [[FSURL alloc] initWithSessionID:_sessionID];
+		_contextID		= nil;
     }
     return self;
 }
@@ -110,17 +112,22 @@
 	NSMutableArray *params = [NSMutableArray array];
 	[params addObject:[NSString stringWithFormat:@"maxResults=%d", _batchSize]];
 	[params addObject:[NSString stringWithFormat:@"startIndex=%d", _currentIndex]];
-	for (NSDictionary *criteriaDictionary in _criteria) {
-		NSString	*criteriaKey	= [criteriaDictionary objectForKey:@"Criteria"];
-		id			value			= [criteriaDictionary objectForKey:@"Value"];
-
-		NSString *formattedValue = (NSString *)value;
-		if ([value isKindOfClass:[NSDate class]]) {
-			formattedValue = [(NSDate *)value stringFromDateWithFormat:DATE_FORMAT];
-		}
-		[params addObject:[NSString stringWithFormat:@"%@=%@", criteriaKey, formattedValue]];
+	
+	if (_contextID) {
+		[params addObject:[NSString stringWithFormat:@"contextId=%@", _contextID]];
 	}
+	else {
+		for (NSDictionary *criteriaDictionary in _criteria) {
+			NSString	*criteriaKey	= [criteriaDictionary objectForKey:@"Criteria"];
+			id			value			= [criteriaDictionary objectForKey:@"Value"];
 
+			NSString *formattedValue = (NSString *)value;
+			if ([value isKindOfClass:[NSDate class]]) {
+				formattedValue = [(NSDate *)value stringFromDateWithFormat:DATE_FORMAT];
+			}
+			[params addObject:[NSString stringWithFormat:@"%@=%@", criteriaKey, formattedValue]];
+		}
+	}
 
 	NSURL *url = [_url urlWithModule:@"familytree"
 							 version:2
@@ -132,10 +139,16 @@
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
 	if (response.success) {
+		
 		[self removeAllObjects];
-		NSArray *searches = [response.body valueForComplexKeyPath:@"searches[first].search"];
-		for (NSDictionary *search in searches) {
-			NSDictionary *personDictionary = [search objectForKey:@"person"];
+		
+		NSDictionary *search = [response.body valueForComplexKeyPath:@"searches[first]"];
+		_contextID		= [search objectForKey:@"contextId"];
+		_totalResults	= [[search objectForKey:@"partial"] integerValue];
+		
+		NSArray *searches = [search valueForComplexKeyPath:@"search"];
+		for (NSDictionary *searchDictionary in searches) {
+			NSDictionary *personDictionary = [searchDictionary objectForKey:@"person"];
 			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:[personDictionary objectForKey:@"id"]];
 			[person populateFromPersonDictionary:personDictionary];
 

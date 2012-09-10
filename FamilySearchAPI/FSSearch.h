@@ -38,7 +38,7 @@ typedef NSString * FSSearchCriteria;
 
 
 @interface FSSearch : NSObject
-@property (nonatomic) NSUInteger batchSize;
+@property (nonatomic) NSUInteger batchSize;				// Default: 10
 - (id)initWithSessionID:(NSString *)sessionID;
 - (void)addValue:(id)value forCriteria:(FSSearchCriteria)criteria onRelative:(FSSearchRelativeType)relative matchingExactly:(BOOL)exact;
 - (FSSearchResults *)results;
@@ -50,6 +50,7 @@ typedef NSString * FSSearchCriteria;
 
 
 @interface FSSearchResults : NSMutableArray
+@property (readonly) NSUInteger totalResults;
 - (MTPocketResponse *)next;
 @end
 

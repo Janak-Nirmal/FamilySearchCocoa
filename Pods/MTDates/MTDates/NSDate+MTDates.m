@@ -248,6 +248,11 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
     return [[NSDate calendar] dateByAddingComponents:comps toDate:self options:0];
 }
 
++ (NSDate *)dateFromComponents:(NSDateComponents *)components
+{
+	return [[NSDate calendar] dateFromComponents:components];
+}
+
 
 
 
@@ -341,6 +346,11 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
     return [self timeIntervalSinceDate:[self startOfCurrentDay]];
 }
 
+- (NSDateComponents *)components
+{
+	NSCalendarUnit units = NSYearCalendarUnit | NSMonthCalendarUnit | NSWeekOfYearCalendarUnit | NSWeekdayCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSSecondCalendarUnit;
+	return [[NSDate calendar] components:units fromDate:self];
+}
 
 
 
@@ -411,6 +421,14 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
 }
 
 
+- (NSInteger)yearsUntilDate:(NSDate *)date
+{
+    NSDateComponents *comps = [[NSDate calendar] components:NSYearCalendarUnit fromDate:self toDate:date options:0];
+    NSInteger years = [comps year];
+    return years;
+}
+
+
 #pragma mark months
 
 - (NSDate *)startOfPreviousMonth
@@ -470,6 +488,14 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
 - (NSInteger)monthsSinceDate:(NSDate *)date
 {
     NSDateComponents *components = [[NSDate calendar] components:NSMonthCalendarUnit fromDate:date toDate:self options:0];
+    NSInteger months = [components month];
+    return months;
+}
+
+
+- (NSInteger)monthsUntilDate:(NSDate *)date
+{
+    NSDateComponents *components = [[NSDate calendar] components:NSMonthCalendarUnit fromDate:self toDate:date options:0];
     NSInteger months = [components month];
     return months;
 }
@@ -539,6 +565,13 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
     return weeks;
 }
 
+- (NSInteger)weeksUntilDate:(NSDate *)date
+{
+    NSDateComponents *components = [[NSDate calendar] components:NSWeekCalendarUnit fromDate:self toDate:date options:0];
+    NSInteger weeks = [components week];
+    return weeks;
+}
+
 
 #pragma mark days
 
@@ -599,6 +632,14 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
 - (NSInteger)daysSinceDate:(NSDate *)date
 {    
     NSDateComponents *comps = [[NSDate calendar] components:NSDayCalendarUnit fromDate:date toDate:self options:0];
+    NSInteger days = [comps day];
+    return days;
+}
+
+
+- (NSInteger)daysUntilDate:(NSDate *)date
+{
+    NSDateComponents *comps = [[NSDate calendar] components:NSDayCalendarUnit fromDate:self toDate:date options:0];
     NSInteger days = [comps day];
     return days;
 }
@@ -667,7 +708,12 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
 }
 
 
-
+- (NSInteger)hoursUntilDate:(NSDate *)date
+{
+    NSDateComponents *comps = [[NSDate calendar] components:NSHourCalendarUnit fromDate:self toDate:date options:0];
+    NSInteger hours = [comps hour];
+    return hours;
+}
 
 
 
@@ -733,6 +779,15 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
     return NO;
 }
 
+- (BOOL)isBetweenDate:(NSDate *)date1 andDate:(NSDate *)date2 {
+	if ([self isOnOrAfter:date1] && [self isOnOrBefore:date2])
+		return YES;
+	else if ([self isOnOrAfter:date2] && [self isOnOrBefore:date1])
+		return YES;
+	else
+		return NO;
+}
+
 
 
 
@@ -790,31 +845,31 @@ static MTDateWeekNumberingSystem	_weekNumberingSystem	= 1;
 
 	NSInteger months = floor(absInterval / (float)SECONDS_IN_MONTH);
 	if (months > 0) {
-		[s appendFormat:@"%d months, ", months];
+		[s appendFormat:@"%ld months, ", (long)months];
 		absInterval -= months * SECONDS_IN_MONTH;
 	}
 	
 	NSInteger days = floor(absInterval / (float)SECONDS_IN_DAY);
 	if (days > 0) {
-		[s appendFormat:@"%d days, ", days];
+		[s appendFormat:@"%ld days, ", (long)days];
 		absInterval -= days * SECONDS_IN_DAY;
 	}
 	
 	NSInteger hours = floor(absInterval / (float)SECONDS_IN_HOUR);
 	if (hours > 0) {
-		[s appendFormat:@"%d hours, ", hours];
+		[s appendFormat:@"%ld hours, ", (long)hours];
 		absInterval -= hours * SECONDS_IN_HOUR;
 	}
 
 	NSInteger minutes = floor(absInterval / (float)SECONDS_IN_MINUTE);
 	if (minutes > 0) {
-		[s appendFormat:@"%d minutes, ", minutes];
+		[s appendFormat:@"%ld minutes, ", (long)minutes];
 		absInterval -= minutes * SECONDS_IN_MINUTE;
 	}
 	
 	NSInteger seconds = absInterval;
 	if (seconds > 0) {
-		[s appendFormat:@"%d seconds, ", seconds];
+		[s appendFormat:@"%ld seconds, ", (long)seconds];
 	}
 	
 	NSString *preString = [s stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" ,"]];

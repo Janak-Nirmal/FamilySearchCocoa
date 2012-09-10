@@ -15,23 +15,23 @@
 
 @implementation FSAuthTests
 
-//- (void)testGetSessionID
-//{
-//	[FSURL setSandboxed:YES];
-//	
-//	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-//	MTPocketResponse *response = [auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-//
-//	STAssertNotNil(response.body, @"sessionID was nil");
-//}
-//
-//- (void)testLogout
-//{
-//	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-//	[auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-//	MTPocketResponse *response = [auth logout];
-//
-//	STAssertTrue(response.success, nil);
-//}
+- (void)testGetSessionID
+{
+	[FSURL setSandboxed:YES];
+	
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
+	MTPocketResponse *response = [auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+
+	STAssertNotNil(response.body, @"sessionID was nil");
+}
+
+- (void)testLogout
+{
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
+	[auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	MTPocketResponse *response = [auth logout];
+
+	STAssertTrue(response.success, nil);
+}
 
 @end

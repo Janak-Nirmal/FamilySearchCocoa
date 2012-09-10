@@ -61,7 +61,7 @@ typedef NSString * FSMarriageEventType;
 @property (readonly)	NSArray		*events;
 
 #pragma mark - Constructor
-// obtain marriage events by interacting with the FSPerson spouse interface.
+// obtain marriage objects by interacting with the FSPerson spouse interface.
 
 #pragma mark - Properties
 - (NSString *)propertyForKey:(FSMarriagePropertyType)key;

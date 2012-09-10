@@ -14,5 +14,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.dependency 'MTPocket'
   s.dependency 'MTDates'
-  s.dependency 'MTJSONDictionary'
+  s.dependency 'MTJSONUtils'
 end

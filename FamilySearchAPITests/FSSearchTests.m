@@ -10,6 +10,7 @@
 #import "private.h"
 #import "FSSearch.h"
 #import "constants.h"
+#import <objc/runtime.h> // TEMPORARY
 
 
 @interface FSSearchTests ()
@@ -37,16 +38,24 @@
 
 - (void)testSearch
 {
+	MTPocketResponse *response;
+
 	FSSearch *search = [[FSSearch alloc] initWithSessionID:_sessionID];
 	[search addValue:@"Nathan" forCriteria:FSSearchCriteriaName onRelative:FSSearchRelativeTypeSelf matchingExactly:NO];
 	FSSearchResults *results = [search results];
 
-	MTPocketResponse *response = [results next];
-	if (response.success) {
-		for (FSPerson *p in results) {
-			NSLog(@"%@", p.name);
-		}
-	}
+	response = [results next];
+	STAssertTrue(response.success, nil);
+	STAssertTrue(results.count == 10 || results.count == results.totalResults % 10, nil);
+	FSPerson *lastPerson = [results lastObject];
+	STAssertNotNil(lastPerson.name, nil);
+
+	response = [results next];
+	STAssertTrue(response.success, nil);
+	STAssertTrue(results.count == 10 || results.count == results.totalResults % 10, nil);
+	FSPerson *lastPerson2 = [results lastObject];
+	STAssertNotNil(lastPerson.name, nil);
+	STAssertFalse([lastPerson.name isEqualToString:lastPerson2.name], nil);
 }
 
 

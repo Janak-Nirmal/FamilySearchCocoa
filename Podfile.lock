@@ -1,14 +1,14 @@
 PODS:
   - Base64 (1.0.0)
-  - MTDates (0.0.4)
-  - MTJSONDictionary (0.0.4)
-  - MTPocket (0.4.1):
+  - MTDates (0.4.1)
+  - MTJSONUtils (0.0.1)
+  - MTPocket (0.5.0):
     - Base64
-    - MTJSONDictionary (~> 0.0.4)
+    - MTJSONUtils (~> 0.0.1)
     - XMLDictionary (~> 2.0.0)
   - XMLDictionary (2.0.0)
 
 DEPENDENCIES:
   - MTDates
-  - MTJSONDictionary
+  - MTJSONUtils
   - MTPocket

@@ -31,6 +31,7 @@
 		C2D9E86115E41F6200107376 /* FSOrdinance.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9E86015E41F6200107376 /* FSOrdinance.m */; };
 		C2E850FD15F90DE10027C027 /* FSSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E850FC15F90DE10027C027 /* FSSearch.m */; };
 		C2E8510115F922100027C027 /* FSSearchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E8510015F922100027C027 /* FSSearchTests.m */; };
+		C2F664B115FA877200999F12 /* AScratchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F664B015FA877200999F12 /* AScratchTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +99,8 @@
 		C2E850FC15F90DE10027C027 /* FSSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSSearch.m; sourceTree = "<group>"; };
 		C2E850FF15F922100027C027 /* FSSearchTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSSearchTests.h; sourceTree = "<group>"; };
 		C2E8510015F922100027C027 /* FSSearchTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSSearchTests.m; sourceTree = "<group>"; };
+		C2F664AF15FA877200999F12 /* AScratchTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AScratchTests.h; sourceTree = "<group>"; };
+		C2F664B015FA877200999F12 /* AScratchTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AScratchTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +209,8 @@
 		C2ABA79915D573EF000A34A1 /* FamilySearchAPITests */ = {
 			isa = PBXGroup;
 			children = (
+				C2F664AF15FA877200999F12 /* AScratchTests.h */,
+				C2F664B015FA877200999F12 /* AScratchTests.m */,
 				C2ABA7BF15D5745B000A34A1 /* FSAuthTests.h */,
 				C2ABA7C015D5745B000A34A1 /* FSAuthTests.m */,
 				C2ABA7C115D5745B000A34A1 /* FSPersonTests.h */,
@@ -353,6 +358,7 @@
 				C27BC94815E69B9B00D7E01F /* FSEventTests.m in Sources */,
 				C26EEDB015E7D90E00C7714F /* FSMarriageTests.m in Sources */,
 				C2E8510115F922100027C027 /* FSSearchTests.m in Sources */,
+				C2F664B115FA877200999F12 /* AScratchTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
