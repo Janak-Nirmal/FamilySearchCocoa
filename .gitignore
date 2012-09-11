@@ -11,4 +11,4 @@ build/*
 xcuserdata
 profile
 *.moved-aside
-FamilySearchAPITests/constants.h
+FamilySearchCocoaTests/constants.h

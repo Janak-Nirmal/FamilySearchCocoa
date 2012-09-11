@@ -1,4 +1,4 @@
-FamilySearchAPI
+FamilySearchCocoa
 ===============
 
 An easy to use library for interacting with the FamilySearch.org API on iOS or OS X.
@@ -7,7 +7,7 @@ An easy to use library for interacting with the FamilySearch.org API on iOS or O
 
 In your Podfile, add this line:
 
-	pod "FamilySearchAPI"
+	pod "FamilySearchCocoa"
 
 pod? => https://github.com/CocoaPods/CocoaPods/
 

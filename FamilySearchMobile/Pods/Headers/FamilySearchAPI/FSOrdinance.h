@@ -1,1 +1,0 @@
-../../FamilySearchAPI/FamilySearchAPI/FSOrdinance.h

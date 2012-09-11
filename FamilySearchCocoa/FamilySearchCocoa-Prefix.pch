@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'FamilySearchCocoa' target in the 'FamilySearchCocoa' project
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+#endif
