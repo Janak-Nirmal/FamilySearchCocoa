@@ -268,7 +268,7 @@
 							 resource:@"pedigree"
 						  identifiers:(_identifier ? @[ _identifier ] : nil)
 							   params:0
-								 misc:[NSString stringWithFormat:@"ancestors=%d&properties=all", generations]];
+								 misc:[NSString stringWithFormat:@"ancestors=%u&properties=all", generations]];
 	
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 

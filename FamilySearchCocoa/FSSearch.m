@@ -110,8 +110,8 @@
 - (MTPocketResponse *)next
 {
 	NSMutableArray *params = [NSMutableArray array];
-	[params addObject:[NSString stringWithFormat:@"maxResults=%d", _batchSize]];
-	[params addObject:[NSString stringWithFormat:@"startIndex=%d", _currentIndex]];
+	[params addObject:[NSString stringWithFormat:@"maxResults=%u", _batchSize]];
+	[params addObject:[NSString stringWithFormat:@"startIndex=%u", _currentIndex]];
 	
 	if (_contextID) {
 		[params addObject:[NSString stringWithFormat:@"contextId=%@", _contextID]];

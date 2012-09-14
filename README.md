@@ -13,15 +13,18 @@ pod? => https://github.com/CocoaPods/CocoaPods/
 
 ### Overview
 
-FSPerson is the center of the object graph. Make all your changes to an FSPerson and then call save on that person.
+`FSPerson` is the center of the object graph. Make all your changes to an `FSPerson` and then call save on that person.
 
-Make a bunch of modifications to properties, relationships, etc and then call "save" on a person and it will commit all of it to the server.
+Make a bunch of modifications to properties, relationships, etc and then call `save` on a person and it will commit all of it to the server.
 
-Fetch does the same in reverse. It will fetch all properties and relationships from the server all at once.
-
-Make sure you do not call save/fetch on the main thread.
+`fetch` does the same in reverse. It will fetch all properties and relationships from the server all at once.
 
 See the header files for the full API and more documentation.
+
+### Notes
+
+- Any method that returns an `MTPocketResponse` object is blocking and needs to be called on a background thread.
+- By adding relationships, events, etc, you create an object graph of people and events. You can call `save` on any person in the object graph to save the whole thing.
 
 ### Usage
 
@@ -215,7 +218,7 @@ The flow to move a user from adding an ancestor to their family tree and doing t
 	// create a person
 	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	
-	// add minimum info to qualify them reservation
+	// add minimum info to qualify them for reservation
 	person.name			= @"Nathan Kirk";
 	person.gender		= @"Male";
 	person.deathDate	= [NSDate dateFromYear:1970 month:11 day:11];
