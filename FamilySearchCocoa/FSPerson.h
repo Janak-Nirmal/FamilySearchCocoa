@@ -82,7 +82,8 @@ typedef NSString * FSLineageType;
 @property (readonly)		  NSArray	*spouses;				// Returns array of FSMarriage objects. See FSMarriage.h for more info.
 @property (readonly)		  NSArray	*events;				// Returns array of FSEvent objects
 @property (readonly)		  NSArray	*ordinances;			// Returns array of FSOrdinance objects. See FSOrdinance.h for more info.
-
+@property (strong, nonatomic) void (^onChange)();				// The passed in block is invoked whenever the person is changed.
+@property (strong, nonatomic) void (^onSync)();					// The passed in block is invoked whenever the person synced with the server.
 
 
 

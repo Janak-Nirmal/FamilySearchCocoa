@@ -8,6 +8,6 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface AFSOrdinanceTests : SenTestCase
+@interface FSOrdinanceTests : SenTestCase
 
 @end

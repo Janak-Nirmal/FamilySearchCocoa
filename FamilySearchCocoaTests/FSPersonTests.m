@@ -152,6 +152,31 @@
 	STAssertNotNil(p3.gender, nil);
 }
 
+- (void)testOnChangeCallback
+{
+	__block BOOL onChangeWasCalled = NO;
+	_person.onChange = ^{
+		onChangeWasCalled = YES;
+	};
+
+	_person.deathDate = [NSDate dateFromYear:1990 month:9 day:9];
+	STAssertTrue(onChangeWasCalled, nil);
+}
+
+- (void)testOnSyncCallback
+{
+	MTPocketResponse *response = nil;
+
+	__block BOOL onSyncWasCalled = NO;
+	_person.onSync = ^{
+		onSyncWasCalled = YES;
+	};
+
+	response = [_person fetch];
+	STAssertTrue(response.success, nil);
+	STAssertTrue(onSyncWasCalled, nil);
+}
+
 - (void)testAddPropertiesToPerson
 {
 	MTPocketResponse *response;

@@ -84,6 +84,8 @@
 		_marriages		= [NSMutableArray array];
 		_events			= [NSMutableArray array];
 		_ordinances		= [NSMutableArray array];
+		_onChange		= ^{};
+		_onSync			= ^{};
 		[__people addObject:self];
 	}
 	return self;
@@ -256,6 +258,7 @@
 		}
 	}
 
+	_onSync();
 	return response;
 }
 
@@ -334,6 +337,7 @@
 		_properties[key] = p;
 	}
 	p.value = property;
+	_onChange();
 }
 
 - (void)reset
@@ -341,6 +345,7 @@
 	for (FSProperty *property in [_properties allValues]) {
 		[property reset];
 	}
+	_onChange();
 }
 
 
@@ -480,6 +485,7 @@
 		}
 	}
 	[(NSMutableArray *)_events addObject:event];
+	_onChange();
 }
 
 - (void)removeEvent:(FSEvent *)event
@@ -488,6 +494,7 @@
 		if ([event isEqualToEvent:e])
 			e.deleted = YES;
 	}
+	_onChange();
 }
 
 - (NSDate *)birthDate							{ return [self dateForEventOfType:FSPersonEventTypeBirth];						}
@@ -599,6 +606,7 @@
 		[self fetch];
 	}
 
+	_onSync();
 	return response;
 }
 
@@ -631,6 +639,7 @@
 			NSString *id = personDictionary[@"id"];
 			FSPerson *person = people.count == 1 ? anyPerson : [FSPerson personWithSessionID:anyPerson.sessionID identifier:id];
 			[person populateFromPersonDictionary:personDictionary];
+			person.onSync();
 		}
 	}
 
@@ -673,6 +682,7 @@
 		}
 	}
 	[_relationships addObject:relationship];
+	_onChange();
 }
 
 - (void)removeAllRelationships
@@ -712,6 +722,7 @@
 		}
 	}
 	[_marriages addObject:marriage];
+	_onChange();
 }
 
 - (void)removeAllMarriages
@@ -746,6 +757,7 @@
 	else {
 		[(NSMutableArray *)_ordinances addObject:ordinance];
 	}
+	_onChange();
 }
 
 - (BOOL)isSamePerson:(FSPerson *)person
@@ -858,6 +870,8 @@
 			[ordinance setOfficial:official];
 			[self addOrReplaceOrdinance:ordinance];
 		}
+
+	_onChange();
 }
 
 - (void)setDate:(NSDate *)date place:(NSString *)place forEventOfType:(FSPersonEventType)eventType
@@ -1074,6 +1088,7 @@
 {
 	_previousValue = _value;
 }
+
 
 @end
 

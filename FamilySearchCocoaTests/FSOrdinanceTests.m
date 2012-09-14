@@ -15,13 +15,13 @@
 #import "FSMarriage.h"
 #import "constants.h"
 
-@interface AFSOrdinanceTests ()
+@interface FSOrdinanceTests ()
 @property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
 
-@implementation AFSOrdinanceTests
+@implementation FSOrdinanceTests
 
 - (void)setUp
 {
@@ -162,7 +162,7 @@
 	STAssertTrue(anyPerson.ordinances > 0, nil);
 }
 
-- (void)testAAFetchFamilyOrdinanceRequestPDFURL
+- (void)testFetchFamilyOrdinanceRequestPDFURL
 {
 	MTPocketResponse *response = nil;
 
