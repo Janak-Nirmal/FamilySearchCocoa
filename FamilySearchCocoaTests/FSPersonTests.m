@@ -155,7 +155,7 @@
 - (void)testOnChangeCallback
 {
 	__block BOOL onChangeWasCalled = NO;
-	_person.onChange = ^{
+	_person.onChange = ^(FSPerson *p) {
 		onChangeWasCalled = YES;
 	};
 
@@ -168,7 +168,7 @@
 	MTPocketResponse *response = nil;
 
 	__block BOOL onSyncWasCalled = NO;
-	_person.onSync = ^{
+	_person.onSync = ^(FSPerson *p) {
 		onSyncWasCalled = YES;
 	};
 

@@ -84,8 +84,8 @@
 		_marriages		= [NSMutableArray array];
 		_events			= [NSMutableArray array];
 		_ordinances		= [NSMutableArray array];
-		_onChange		= ^{};
-		_onSync			= ^{};
+		_onChange		= ^(FSPerson *p){};
+		_onSync			= ^(FSPerson *p){};
 		[__people addObject:self];
 	}
 	return self;
@@ -258,7 +258,7 @@
 		}
 	}
 
-	_onSync();
+	_onSync(self);
 	return response;
 }
 
@@ -337,7 +337,7 @@
 		_properties[key] = p;
 	}
 	p.value = property;
-	_onChange();
+	_onChange(self);
 }
 
 - (void)reset
@@ -345,7 +345,7 @@
 	for (FSProperty *property in [_properties allValues]) {
 		[property reset];
 	}
-	_onChange();
+	_onChange(self);
 }
 
 
@@ -485,7 +485,7 @@
 		}
 	}
 	[(NSMutableArray *)_events addObject:event];
-	_onChange();
+	_onChange(self);
 }
 
 - (void)removeEvent:(FSEvent *)event
@@ -494,7 +494,7 @@
 		if ([event isEqualToEvent:e])
 			e.deleted = YES;
 	}
-	_onChange();
+	_onChange(self);
 }
 
 - (NSDate *)birthDate							{ return [self dateForEventOfType:FSPersonEventTypeBirth];						}
@@ -606,7 +606,7 @@
 		[self fetch];
 	}
 
-	_onSync();
+	_onSync(self);
 	return response;
 }
 
@@ -639,7 +639,7 @@
 			NSString *id = personDictionary[@"id"];
 			FSPerson *person = people.count == 1 ? anyPerson : [FSPerson personWithSessionID:anyPerson.sessionID identifier:id];
 			[person populateFromPersonDictionary:personDictionary];
-			person.onSync();
+			person.onSync(person);
 		}
 	}
 
@@ -682,7 +682,7 @@
 		}
 	}
 	[_relationships addObject:relationship];
-	_onChange();
+	_onChange(self);
 }
 
 - (void)removeAllRelationships
@@ -722,7 +722,7 @@
 		}
 	}
 	[_marriages addObject:marriage];
-	_onChange();
+	_onChange(self);
 }
 
 - (void)removeAllMarriages
@@ -757,7 +757,7 @@
 	else {
 		[(NSMutableArray *)_ordinances addObject:ordinance];
 	}
-	_onChange();
+	_onChange(self);
 }
 
 - (BOOL)isSamePerson:(FSPerson *)person
@@ -871,7 +871,7 @@
 			[self addOrReplaceOrdinance:ordinance];
 		}
 
-	_onChange();
+	_onChange(self);
 }
 
 - (void)setDate:(NSDate *)date place:(NSString *)place forEventOfType:(FSPersonEventType)eventType
