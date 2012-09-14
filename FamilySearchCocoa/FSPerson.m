@@ -804,21 +804,21 @@
 			property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
 			property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
 			property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
-			property.date		= [NSDate dateFromString:[characteristic valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+			property.date		= [NSDate dateFromString:[characteristic valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
 			property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
 			_properties[property.key] = property;
 		}
 
 
 	// EVENTS
-	NSArray *events = [person valueForKeyPath:@"assertions.events"];
+	NSArray *events = [person valueForComplexKeyPath:@"assertions.events"];
 	if (![events isKindOfClass:[NSNull class]])
 		for (NSDictionary *eventDict in events) {
-			FSPersonEventType type = [eventDict valueForKeyPath:@"value.type"];
-			NSString *identifier = [eventDict valueForKeyPath:@"value.id"];
+			FSPersonEventType type = [eventDict valueForComplexKeyPath:@"value.type"];
+			NSString *identifier = [eventDict valueForComplexKeyPath:@"value.id"];
 			FSEvent *event = [FSEvent eventWithType:type identifier:identifier];
-			event.date = [NSDate dateFromString:[eventDict valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
-			event.place = [eventDict valueForKeyPath:@"value.place.normalized.value"];
+			event.date = [NSDate dateFromString:[eventDict valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+			event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
 			[self addEvent:event];
 		}
 
@@ -857,11 +857,11 @@
 	NSArray *ordinances = [person valueForComplexKeyPath:@"ordinances"];
 	if (![ordinances isKindOfClass:[NSNull class]])
 		for (NSDictionary *ordinanceDictionary in ordinances) {
-			NSString		*identifer	= [ordinanceDictionary valueForKeyPath:@"value.id"];
-			FSOrdinanceType	type		= [ordinanceDictionary valueForKeyPath:@"value.type"];
+			NSString		*identifer	= [ordinanceDictionary valueForComplexKeyPath:@"value.id"];
+			FSOrdinanceType	type		= [ordinanceDictionary valueForComplexKeyPath:@"value.type"];
 			BOOL			official	= [ordinanceDictionary[@"official"] boolValue];
-			NSDate			*date		= [NSDate dateFromString:[ordinanceDictionary valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
-			NSString		*templeCode	= [ordinanceDictionary valueForKeyPath:@"value.temple"];
+			NSDate			*date		= [NSDate dateFromString:[ordinanceDictionary valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+			NSString		*templeCode	= [ordinanceDictionary valueForComplexKeyPath:@"value.temple"];
 
 			FSOrdinance *ordinance = [FSOrdinance ordinanceWithType:type];
 			ordinance.identifier = identifer;

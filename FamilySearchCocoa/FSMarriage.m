@@ -144,29 +144,29 @@
 			if ([wifeID isEqualToString:self.wife.identifier]) {
 
 				// PROPERTIES
-				NSArray *characteristics = [spouse valueForKeyPath:@"assertions.characteristics"];
+				NSArray *characteristics = [spouse valueForComplexKeyPath:@"assertions.characteristics"];
 				if (![characteristics isKindOfClass:[NSNull class]])
 					for (NSDictionary *characteristic in characteristics) {
 						FSProperty *property = [[FSProperty alloc] init];
-						property.identifier = [characteristic valueForKeyPath:@"value.id"];
-						property.key		= [characteristic valueForKeyPath:@"value.type"];
-						property.value		= [characteristic valueForKeyPath:@"value.detail"];
-						property.title		= [characteristic valueForKeyPath:@"value.title"];
-						property.lineage	= [characteristic valueForKeyPath:@"value.lineage"];
-						property.date		= [NSDate dateFromString:[characteristic valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
-						property.place		= [characteristic valueForKeyPath:@"value.place.original"];
+						property.identifier = [characteristic valueForComplexKeyPath:@"value.id"];
+						property.key		= [characteristic valueForComplexKeyPath:@"value.type"];
+						property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
+						property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
+						property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
+						property.date		= [NSDate dateFromString:[characteristic valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+						property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
 						(self.properties)[property.key] = property;
 					}
 				
 				// EVENTS
-				NSArray *events = [spouse valueForKeyPath:@"assertions.events"];
+				NSArray *events = [spouse valueForComplexKeyPath:@"assertions.events"];
 				if (![events isKindOfClass:[NSNull class]])
 					for (NSDictionary *eventDict in events) {
-						FSMarriageEventType type = [eventDict valueForKeyPath:@"value.type"];
-						NSString *identifier = [eventDict valueForKeyPath:@"value.id"];
+						FSMarriageEventType type = [eventDict valueForComplexKeyPath:@"value.type"];
+						NSString *identifier = [eventDict valueForComplexKeyPath:@"value.id"];
 						FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:type identifier:identifier];
-						event.date = [NSDate dateFromString:[eventDict valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
-						event.place = [eventDict valueForKeyPath:@"value.place.normalized.value"];
+						event.date = [NSDate dateFromString:[eventDict valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+						event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
 						[self addMarriageEvent:event];
 					}
 			}

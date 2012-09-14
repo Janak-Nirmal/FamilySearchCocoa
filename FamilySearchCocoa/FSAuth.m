@@ -8,6 +8,7 @@
 
 #import "FSAuth.h"
 #import "private.h"
+#import <NSObject+MTJSONUtils.h>
 
 
 
@@ -41,7 +42,7 @@
 	NSURL *url = [_url urlWithModule:@"identity" version:2 resource:@"login" identifiers:nil params:0 misc:[NSString stringWithFormat:@"key=%@", _devKey]];
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:un password:pw body:nil];
 	if (response.success) {
-		_sessionID = [response.body valueForKeyPath:@"session.id"];
+		_sessionID = [response.body valueForComplexKeyPath:@"session.id"];
 	}
 	return response;
 }

@@ -80,7 +80,7 @@
 
 	if (response.success) {
 
-		NSArray *peopleDictionaries = [response.body valueForKeyPath:@"persons.person"];
+		NSArray *peopleDictionaries = [response.body valueForComplexKeyPath:@"persons.person"];
 		for (NSDictionary *personDictionary in peopleDictionaries) {
 			
 			FSPerson *person = [FSPerson personWithSessionID:anyPerson.sessionID identifier:personDictionary[@"ref"]];
@@ -114,11 +114,11 @@
 					if (notes) [ordinance setNotes:notes];
 
 					// DATE
-					NSString *dateString = [ordinanceDictionary valueForKeyPath:@"date.normalized"];
+					NSString *dateString = [ordinanceDictionary valueForComplexKeyPath:@"date.normalized"];
 					if (dateString) [ordinance setDate:[NSDate dateFromString:dateString usingFormat:DATE_FORMAT]];
 
 					// TEMPLE
-					NSString *templeCodeString = [ordinanceDictionary valueForKeyPath:@"temple.code"];
+					NSString *templeCodeString = [ordinanceDictionary valueForComplexKeyPath:@"temple.code"];
 					if (templeCodeString) [ordinance setTempleCode:templeCodeString];
 
 					// BORN IN THE COVENANT
@@ -147,7 +147,7 @@
 					NSArray *parents = [ordinanceDictionary valueForComplexKeyPath:@"parent"];
 					for (NSDictionary *parent in parents) {
 						FSPerson *p = [FSPerson personWithSessionID:anyPerson.sessionID identifier:parent[@"ref"]];
-						p.name = [parent valueForKeyPath:@"qualification.name.fullText"];
+						p.name = [parent valueForComplexKeyPath:@"qualification.name.fullText"];
 						[p addOrReplaceOrdinance:ordinance];
 					}
 
@@ -155,7 +155,7 @@
 					NSArray *spouses = [ordinanceDictionary valueForComplexKeyPath:@"spouses"];
 					for (NSDictionary *spouse in spouses) {
 						FSPerson *p = [FSPerson personWithSessionID:anyPerson.sessionID identifier:spouse[@"ref"]];
-						p.name = [spouse valueForKeyPath:@"qualification.name.fullText"];
+						p.name = [spouse valueForComplexKeyPath:@"qualification.name.fullText"];
 						[p addOrReplaceOrdinance:ordinance];
 					}
 					
