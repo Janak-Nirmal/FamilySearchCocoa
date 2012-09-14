@@ -16,6 +16,7 @@
 		C232766915D585C7004EDE08 /* FSAuth.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B715D5744F000A34A1 /* FSAuth.h */; };
 		C232766A15D585C7004EDE08 /* FSPerson.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B915D5744F000A34A1 /* FSPerson.h */; };
 		C23E813A15FE87C300A92A44 /* FSOrdinanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C23E813915FE87C300A92A44 /* FSOrdinanceTests.m */; };
+		C24DAA311600EB6A00CB46B9 /* FSTestSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = C24DAA301600EB6A00CB46B9 /* FSTestSupport.m */; };
 		C26EEDB015E7D90E00C7714F /* FSMarriageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C26EEDAF15E7D90E00C7714F /* FSMarriageTests.m */; };
 		C27BC94815E69B9B00D7E01F /* FSEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C27BC94715E69B9B00D7E01F /* FSEventTests.m */; };
 		C2ABA78315D573EF000A34A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2ABA78215D573EF000A34A1 /* Foundation.framework */; };
@@ -32,7 +33,6 @@
 		C2D9E86115E41F6200107376 /* FSOrdinance.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9E86015E41F6200107376 /* FSOrdinance.m */; };
 		C2E850FD15F90DE10027C027 /* FSSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E850FC15F90DE10027C027 /* FSSearch.m */; };
 		C2E8510115F922100027C027 /* FSSearchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2E8510015F922100027C027 /* FSSearchTests.m */; };
-		C2F664B115FA877200999F12 /* AScratchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F664B015FA877200999F12 /* AScratchTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +73,8 @@
 		C237CADB15FF7601008CA24B /* FamilySearchCocoa-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FamilySearchCocoa-Prefix.pch"; sourceTree = "<group>"; };
 		C23E813815FE87C300A92A44 /* FSOrdinanceTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSOrdinanceTests.h; sourceTree = "<group>"; };
 		C23E813915FE87C300A92A44 /* FSOrdinanceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSOrdinanceTests.m; sourceTree = "<group>"; };
+		C24DAA2F1600EB6A00CB46B9 /* FSTestSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSTestSupport.h; sourceTree = "<group>"; };
+		C24DAA301600EB6A00CB46B9 /* FSTestSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSTestSupport.m; sourceTree = "<group>"; };
 		C26EEDAE15E7D90E00C7714F /* FSMarriageTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSMarriageTests.h; sourceTree = "<group>"; };
 		C26EEDAF15E7D90E00C7714F /* FSMarriageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSMarriageTests.m; sourceTree = "<group>"; };
 		C27BC94615E69B9B00D7E01F /* FSEventTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEventTests.h; sourceTree = "<group>"; };
@@ -102,8 +104,7 @@
 		C2E850FC15F90DE10027C027 /* FSSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSSearch.m; sourceTree = "<group>"; };
 		C2E850FF15F922100027C027 /* FSSearchTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSSearchTests.h; sourceTree = "<group>"; };
 		C2E8510015F922100027C027 /* FSSearchTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSSearchTests.m; sourceTree = "<group>"; };
-		C2F664AF15FA877200999F12 /* AScratchTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AScratchTests.h; sourceTree = "<group>"; };
-		C2F664B015FA877200999F12 /* AScratchTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AScratchTests.m; sourceTree = "<group>"; };
+		C2F7728415FFCFFC00942268 /* FamilySearchCocoa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FamilySearchCocoa.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +134,8 @@
 		C23276DF15D58EF3004EDE08 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C24DAA2F1600EB6A00CB46B9 /* FSTestSupport.h */,
+				C24DAA301600EB6A00CB46B9 /* FSTestSupport.m */,
 				C23276E015D58F1F004EDE08 /* en.lproj */,
 				C23276E315D58F1F004EDE08 /* FamilySearchCocoaTests-Info.plist */,
 			);
@@ -181,6 +184,7 @@
 		C2ABA78415D573EF000A34A1 /* FamilySearchCocoa */ = {
 			isa = PBXGroup;
 			children = (
+				C2F7728415FFCFFC00942268 /* FamilySearchCocoa.h */,
 				C2ABA7B715D5744F000A34A1 /* FSAuth.h */,
 				C2ABA7B815D5744F000A34A1 /* FSAuth.m */,
 				C2ABA7B915D5744F000A34A1 /* FSPerson.h */,
@@ -198,7 +202,6 @@
 				C2D9E87015E56B0B00107376 /* private.h */,
 				C2ABA78515D573EF000A34A1 /* Supporting Files */,
 			);
-			name = FamilySearchCocoa;
 			path = FamilySearchCocoa;
 			sourceTree = "<group>";
 		};
@@ -213,8 +216,6 @@
 		C2ABA79915D573EF000A34A1 /* FamilySearchCocoaTests */ = {
 			isa = PBXGroup;
 			children = (
-				C2F664AF15FA877200999F12 /* AScratchTests.h */,
-				C2F664B015FA877200999F12 /* AScratchTests.m */,
 				C2ABA7BF15D5745B000A34A1 /* FSAuthTests.h */,
 				C2ABA7C015D5745B000A34A1 /* FSAuthTests.m */,
 				C2ABA7C115D5745B000A34A1 /* FSPersonTests.h */,
@@ -230,7 +231,6 @@
 				C2ABA7C315D5745B000A34A1 /* constants.h */,
 				C23276DF15D58EF3004EDE08 /* Supporting Files */,
 			);
-			name = FamilySearchCocoaTests;
 			path = FamilySearchCocoaTests;
 			sourceTree = "<group>";
 		};
@@ -365,8 +365,8 @@
 				C27BC94815E69B9B00D7E01F /* FSEventTests.m in Sources */,
 				C26EEDB015E7D90E00C7714F /* FSMarriageTests.m in Sources */,
 				C2E8510115F922100027C027 /* FSSearchTests.m in Sources */,
-				C2F664B115FA877200999F12 /* AScratchTests.m in Sources */,
 				C23E813A15FE87C300A92A44 /* FSOrdinanceTests.m in Sources */,
+				C24DAA311600EB6A00CB46B9 /* FSTestSupport.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

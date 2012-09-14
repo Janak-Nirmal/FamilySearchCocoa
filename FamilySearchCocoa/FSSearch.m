@@ -52,7 +52,7 @@
     return self;
 }
 
-- (void)addValue:(id)value forCriteria:(FSSearchCriteria)criteria onRelative:(FSSearchRelativeType)relative matchingExactly:(BOOL)exact
+- (void)addValue:(NSString *)value forCriteria:(FSSearchCriteria)criteria onRelative:(FSSearchRelativeType)relative matchingExactly:(BOOL)exact
 {
 	switch (relative) {
 		case FSSearchRelativeTypeSelf:
@@ -118,8 +118,8 @@
 	}
 	else {
 		for (NSDictionary *criteriaDictionary in _criteria) {
-			NSString	*criteriaKey	= [criteriaDictionary objectForKey:@"Criteria"];
-			id			value			= [criteriaDictionary objectForKey:@"Value"];
+			NSString	*criteriaKey	= criteriaDictionary[@"Criteria"];
+			id			value			= criteriaDictionary[@"Value"];
 
 			NSString *formattedValue = (NSString *)value;
 			if ([value isKindOfClass:[NSDate class]]) {
@@ -143,35 +143,35 @@
 		[self removeAllObjects];
 		
 		NSDictionary *search = [response.body valueForComplexKeyPath:@"searches[first]"];
-		_contextID		= [search objectForKey:@"contextId"];
-		_totalResults	= [[search objectForKey:@"partial"] integerValue];
+		_contextID		= search[@"contextId"];
+		_totalResults	= [search[@"partial"] integerValue];
 		
 		NSArray *searches = [search valueForComplexKeyPath:@"search"];
 		for (NSDictionary *searchDictionary in searches) {
-			NSDictionary *personDictionary = [searchDictionary objectForKey:@"person"];
-			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:[personDictionary objectForKey:@"id"]];
+			NSDictionary *personDictionary = searchDictionary[@"person"];
+			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:personDictionary[@"id"]];
 			[person populateFromPersonDictionary:personDictionary];
 
 			// Add parents
-			NSArray *parents = [personDictionary objectForKey:@"parent"];
+			NSArray *parents = personDictionary[@"parent"];
 			for (NSDictionary *parentDictionary in parents) {
-				FSPerson *parent = [FSPerson personWithSessionID:_sessionID identifier:[parentDictionary objectForKey:@"id"]];
+				FSPerson *parent = [FSPerson personWithSessionID:_sessionID identifier:parentDictionary[@"id"]];
 				[parent populateFromPersonDictionary:parentDictionary];
 				[person addParent:parent withLineage:FSLineageTypeBiological];
 			}
 
 			// Add children
-			NSArray *children = [personDictionary objectForKey:@"child"];
+			NSArray *children = personDictionary[@"child"];
 			for (NSDictionary *childDictionary in children) {
-				FSPerson *child = [FSPerson personWithSessionID:_sessionID identifier:[childDictionary objectForKey:@"id"]];
+				FSPerson *child = [FSPerson personWithSessionID:_sessionID identifier:childDictionary[@"id"]];
 				[child populateFromPersonDictionary:childDictionary];
 				[person addChild:child withLineage:FSLineageTypeBiological];
 			}
 
 			// Add spouses
-			NSArray *spouses = [personDictionary objectForKey:@"spouse"];
+			NSArray *spouses = personDictionary[@"spouse"];
 			for (NSDictionary *spouseDictionary in spouses) {
-				FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:[spouseDictionary objectForKey:@"id"]];
+				FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:spouseDictionary[@"id"]];
 				[spouse populateFromPersonDictionary:spouseDictionary];
 				[person addSpouse:spouse];
 			}
@@ -194,7 +194,7 @@
 
 -(id)objectAtIndex:(NSUInteger)index
 {
-    return [_backingStore objectAtIndex:index];
+    return _backingStore[index];
 }
 
 #pragma mark NSMutableArray
@@ -221,7 +221,7 @@
 
 -(void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject
 {
-    [_backingStore replaceObjectAtIndex:index withObject:anObject];
+    _backingStore[index] = anObject;
 }
 
 @end

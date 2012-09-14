@@ -65,8 +65,12 @@ FSQueryParameter familyQueryParameters();
 
 
 @interface FSPerson ()
-@property (strong, nonatomic) NSString *sessionID;
+@property (strong, nonatomic)	NSString	*sessionID;
+@property (readonly)			BOOL		isMale;
 - (void)populateFromPersonDictionary:(NSDictionary *)person;
+- (void)removeMarriage:(FSMarriage *)marriage;
+- (void)addOrReplaceOrdinance:(FSOrdinance *)ordinance;
+- (BOOL)isSamePerson:(FSPerson *)person;
 @end
 
 
@@ -79,6 +83,7 @@ FSQueryParameter familyQueryParameters();
 @property (getter = isChanged)	BOOL				changed;	// is newly created or updated and needs to be updated on the server
 @property (getter = isDeleted)	BOOL				deleted;	// has been deleted and needs to be deleted from the server
 + (FSMarriage *)marriageWithHusband:(FSPerson *)husband wife:(FSPerson *)wife;
+- (MTPocketResponse *)destroy;
 @end
 
 
@@ -93,8 +98,19 @@ FSQueryParameter familyQueryParameters();
 
 
 @interface FSOrdinance ()
+@property (strong, nonatomic) NSString *identifier;
 @property (nonatomic) BOOL userAdded;
-+ (FSOrdinance *)ordinanceWithType:(FSOrdinanceType)type identifier:(NSString *)identifier;
++ (FSOrdinance *)ordinanceWithType:(FSOrdinanceType)type;
+- (void)setStatus:(FSOrdinanceStatus)status;
+- (void)setDate:(NSDate *)date;
+- (void)setTempleCode:(NSString *)templeCode;
+- (void)setOfficial:(BOOL)official;
+- (void)setCompleted:(BOOL)completed;
+- (void)setReservable:(BOOL)reservable;
+- (void)setBornInTheCovenant:(BOOL)bornInTheCovenant;
+- (void)setNotes:(NSString *)notes;
+- (void)addPerson:(FSPerson *)person;
+- (BOOL)isEqualToOrdinance:(FSOrdinance *)ordinance;
 @end
 
 

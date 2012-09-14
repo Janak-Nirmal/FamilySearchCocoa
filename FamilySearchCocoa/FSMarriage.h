@@ -7,6 +7,7 @@
 //
 
 #import "FSEvent.h"
+#import <MTPocket.h>
 
 @class FSPerson;
 
@@ -58,16 +59,25 @@ typedef NSString * FSMarriageEventType;
 @property (readonly)	FSPerson	*wife;
 @property (readonly)	NSArray		*events;
 
+
 #pragma mark - Constructor
 // obtain marriage objects from the FSPerson `spouses` property.
+
+
+#pragma mark - Syncing
+- (MTPocketResponse *)fetch;	// Fetcha all the marriage events and properties for this marriage
+- (MTPocketResponse *)save;		// Save events and properties of this marriage to the server
+
 
 #pragma mark - Properties
 - (NSString *)propertyForKey:(FSMarriagePropertyType)key;
 - (void)setProperty:(NSString *)property forKey:(FSMarriagePropertyType)key;
 - (void)reset;
 
+
 #pragma mark - Marriage Events
 - (void)addMarriageEvent:(FSMarriageEvent *)event;
 - (void)removeMarriageEvent:(FSMarriageEvent *)event;
+
 
 @end

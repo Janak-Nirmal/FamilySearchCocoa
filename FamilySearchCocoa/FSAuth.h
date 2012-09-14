@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 FamilySearch.org. All rights reserved.
 //
 
-#import <MTPocket.h>
+@class MTPocketResponse;
 
 
 @interface FSAuth : NSObject

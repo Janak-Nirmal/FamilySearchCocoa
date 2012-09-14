@@ -6,6 +6,14 @@
 //  Copyright (c) 2012 FamilySearch.org. All rights reserved.
 //
 
+/*
+ 
+ NOTE: Any methods of any class returning an MTPocketResponse
+ object is a blocking, synchronous call so you should call it
+ on another thread. All others are non-blocking.
+
+*/
+
 #import <MTPocket.h>
 #import "FSOrdinance.h"
 
@@ -63,17 +71,17 @@ typedef NSString * FSLineageType;
 @interface FSPerson : NSObject
 
 @property (readonly)		  NSString	*identifier;
-@property (strong, nonatomic) NSString	*name;                              // @"Adam Kirk"
-@property (strong, nonatomic) NSString	*gender;							// @"Male" or @"Female"
-@property (readonly)		  BOOL		isAlive;							// Default: YES. You must add a death event for the system to return NO. Not editable by user.
-@property (readonly)		  BOOL		isModifiable;						// Can be modified by the current logged in contributor
-@property (readonly)		  BOOL		isNew;								// Has been created on the client but has not be saved to the server
+@property (strong, nonatomic) NSString	*name;                  // @"Adam Kirk"
+@property (strong, nonatomic) NSString	*gender;				// @"Male" or @"Female"
+@property (readonly)		  BOOL		isAlive;				// Default: YES. You must add a death event for the system to return NO. Not editable by user.
+@property (readonly)		  BOOL		isModifiable;			// Can be modified by the current logged in contributor
+@property (readonly)		  BOOL		isNew;					// Has been created on the client but has not be saved to the server
 @property (readonly)		  NSDate	*lastModifiedDate;
-@property (readonly)		  NSArray	*parents;							// Returns array of FSPerson objects
-@property (readonly)		  NSArray	*children;							// Returns array of FSperson objects
-@property (readonly)		  NSArray	*spouses;							// Returns array of FSMarriage objects
-@property (readonly)		  NSArray	*events;							// Returns array of FSEvent objects
-@property (readonly)		  NSArray	*ordinances;						// Returns array of FSOrdinance objects
+@property (readonly)		  NSArray	*parents;				// Returns array of FSPerson objects
+@property (readonly)		  NSArray	*children;				// Returns array of FSperson objects
+@property (readonly)		  NSArray	*spouses;				// Returns array of FSMarriage objects. See FSMarriage.h for more info.
+@property (readonly)		  NSArray	*events;				// Returns array of FSEvent objects
+@property (readonly)		  NSArray	*ordinances;			// Returns array of FSOrdinance objects. See FSOrdinance.h for more info.
 
 
 
@@ -122,9 +130,8 @@ typedef NSString * FSLineageType;
 
 
 #pragma mark - Misc
-- (NSArray *)duplicates;													// returns possible duplicates of this person (to potentially be merged)
+- (MTPocketResponse *)duplicates:(NSArray **)duplicates;					// returns possible duplicates of this person (to potentially be merged)
 - (void)addUnofficialOrdinanceWithType:(FSOrdinanceType)type date:(NSDate *)date templeCode:(NSString *)templeCode;
-// TODO: - (MTPocketResponse *)combineWithPerson:(FSPerson *)person;		// Will change the identifier of ths person with the newly formed combined person
 + (MTPocketResponse *)batchFetchPeople:(NSArray *)people;					// Will fetch all properties and ordinance information for everyone in the array.
 
 

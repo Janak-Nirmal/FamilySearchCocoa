@@ -11,7 +11,7 @@ In your Podfile, add this line:
 
 pod? => https://github.com/CocoaPods/CocoaPods/
 
-### Notes
+### Overview
 
 FSPerson is the center of the object graph. Make all your changes to an FSPerson and then call save on that person.
 
@@ -208,112 +208,32 @@ Add/Remove a Marriage Event:
 	
 	m.events.count			// => 0
 
-### Properties
+### Ordinances
 
-	FSPropertyTypeCasteName			
-	FSPropertyTypeClanName			
-	FSPropertyTypeNationalID		
-	FSPropertyTypeNationalOrigin	
-	FSPropertyTypeTitleOfNobility	
-	FSPropertyTypeOccupation		
-	FSPropertyTypePhysicalDescription
-	FSPropertyTypeRace				
-	FSPropertyTypeReligiousAffiliation
-	FSPropertyTypeStillborn			
-	FSPropertyTypeTribeName			
-	FSPropertyTypeGEDCOMID			
-	FSPropertyTypeCommonLawMarriage	
-	FSPropertyTypeOther				
-	FSPropertyTypeNumberOfChildren	
-	FSPropertyTypeNumberOfMarriages	
-	FSPropertyTypeCurrentlySpouses	
-	FSPropertyTypeDiedBeforeEight	
-	FSPropertyTypeNameSake			
-	FSPropertyTypeNeverHadChildren	
-	FSPropertyTypeNeverMarried		
-	FSPropertyTypeNotAccountable	
-	FSPropertyTypePossessions		
-	FSPropertyTypeResidence			
-	FSPropertyTypeScholasticAchievement
-	FSPropertyTypeSocialSecurityNumber
-	FSPropertyTypeTwin
+The flow to move a user from adding an ancestor to their family tree and doing their temple work is as simple as:
 
-### Marriage Properties
+	// create a person
+	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	
+	// add minimum info to qualify them reservation
+	person.name			= @"Nathan Kirk";
+	person.gender		= @"Male";
+	person.deathDate	= [NSDate dateFromYear:1970 month:11 day:11];
+	person.deathPlace	= @"Pasco, Franklin, Washington, United States";
+	[person save];
+	
+	// reserve the person, claiming you want to to their ordinances
+	[FSOrdinance reserveOrdinancesForPeople:@[person] inventory:FSOrdinanceInventoryTypePersonal];
+	
+	// generate a family ordinace request and return the URL to it.
+	NSURL *urlToFamilyOrdinanceRequestPDF = nil;
+	[FSOrdinance familyOrdinanceRequestPDFURL:&urlToFamilyOrdinanceRequestPDF withSessionID:_sessionID];
 
-	FSMarriagePropertyTypeGEDCOMID		
-	FSMarriagePropertyTypeCommonLawMarriage
-	FSMarriagePropertyTypeNumberOfChildren
-	FSMarriagePropertyTypeCurrentlySpouses
-	FSMarriagePropertyTypeNeverHadChildren
-	FSMarriagePropertyTypeNeverMarried	
-	FSMarriagePropertyTypeOther
-
-### Lineage Types
-
-	FSLineageTypeBiological		
-	FSLineageTypeAdoptive		
-	FSLineageTypeFoster			
-	FSLineageTypeGuardianship	
-	FSLineageTypeStep			
-	FSLineageTypeUnknown		
-	FSLineageTypeHeadOfHousehold
-	FSLineageTypeOther
-
-### Event Types
-
-	FSPersonEventTypeAdoption		
-	FSPersonEventTypeAdultChristening
-	FSPersonEventTypeBaptism		
-	FSPersonEventTypeConfirmation	
-	FSPersonEventTypeBirth			
-	FSPersonEventTypeBlessing		
-	FSPersonEventTypeBurial			
-	FSPersonEventTypeChristening	
-	FSPersonEventTypeCremation		
-	FSPersonEventTypeDeath			
-	FSPersonEventTypeGraduation		
-	FSPersonEventTypeImmigration	
-	FSPersonEventTypeMilitaryService
-	FSPersonEventTypeMission		
-	FSPersonEventTypeMove			
-	FSPersonEventTypeNaturalization	
-	FSPersonEventTypeProbate		
-	FSPersonEventTypeRetirement		
-	FSPersonEventTypeWill			
-	FSPersonEventTypeCensus			
-	FSPersonEventTypeCircumcision	
-	FSPersonEventTypeEmigration		
-	FSPersonEventTypeExcommunication
-	FSPersonEventTypeFirstCommunion	
-	FSPersonEventTypeFirstKnownChild
-	FSPersonEventTypeFuneral		
-	FSPersonEventTypeHospitalization
-	FSPersonEventTypeIllness		
-	FSPersonEventTypeNaming			
-	FSPersonEventTypeMiscarriage	
-	FSPersonEventTypeOrdination		
-	FSPersonEventTypeOther
-
-### Marriage Event Types
-
-	FSMarriageEventTypeAnnulment		
-	FSMarriageEventTypeDivorce			
-	FSMarriageEventTypeDivorceFiling	
-	FSMarriageEventTypeEngagement		
-	FSMarriageEventTypeMarriage			
-	FSMarriageEventTypeMarriageBanns	
-	FSMarriageEventTypeMarriageContract	
-	FSMarriageEventTypeMarriageLicense	
-	FSMarriageEventTypeCensus			
-	FSMarriageEventTypeMission			
-	FSMarriageEventTypeMarriageSettlement
-	FSMarriageEventTypeSeperation		
-	FSMarriageEventTypeTimeOnlyMarriage	
-	FSMarriageEventTypeOther
+Once the url to the Family Ordinance Request PDF is obtained, your application can download the PDF and let the user view/print it.
 
 ### Testing
 
-To run the unit tests, you need to create the missing "constant.h" file with the following contents:
+To run the unit tests, you need to create the missing "constants.h" file with the following contents:
 
 	#define SANDBOXED_DEV_KEY	@"<sandboxed dev key>"
 	#define SANDBOXED_USERNAME	@"<sandboxed username>"

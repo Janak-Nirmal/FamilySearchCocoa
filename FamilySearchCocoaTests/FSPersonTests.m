@@ -93,7 +93,7 @@
 	NSMutableArray *queue = [NSMutableArray arrayWithObject:_person];
 	while (queue.count > 0) {
 		ancestorCount++;
-		FSPerson *p = [queue objectAtIndex:0];
+		FSPerson *p = queue[0];
 		[queue removeObjectAtIndex:0];
 		for (FSPerson *parent in p.parents) {
 			[queue addObject:parent];
@@ -336,7 +336,9 @@
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
-	NSArray *dups = [_person duplicates];
+	NSArray *dups = nil;
+	response = [_person duplicates:&dups];
+	STAssertTrue(response.success, nil);
 	STAssertTrue(dups.count > 0, nil);
 
 	NSUInteger matchCount = 0;

@@ -8,6 +8,8 @@
 
 #import "FSMarriage.h"
 #import "private.h"
+#import <NSDate+MTDates.h>
+#import <NSObject+MTJSONUtils.h>
 
 
 
@@ -62,7 +64,7 @@
 
 - (NSString *)propertyForKey:(FSMarriagePropertyType)key
 {
-	FSProperty *property = [_properties objectForKey:key];
+	FSProperty *property = _properties[key];
 	return property.value;
 }
 
@@ -72,12 +74,12 @@
 	if (!key)		raiseParamException(@"key");
 
 	_changed = YES;
-	FSProperty *p = [_properties objectForKey:key];
+	FSProperty *p = _properties[key];
 	if (!p) {
 		p = [[FSProperty alloc] init];
 		p.identifier = nil;
 		p.key = key;
-		[_properties setObject:p forKey:key];
+		_properties[key] = p;
 	}
 	p.value = property;
 }
@@ -101,7 +103,7 @@
 	_changed = YES;
 	for (FSEvent *e in _events) {
 		if ([e isEqualToEvent:event]) {
-			[(NSMutableArray *)_events replaceObjectAtIndex:[_events indexOfObject:e] withObject:event];
+			((NSMutableArray *)_events)[[_events indexOfObject:e]] = event;
 			return;
 		}
 	}
@@ -114,6 +116,228 @@
 		if ([event isEqualToEvent:e])
 			_deleted = YES;
 	}
+}
+
+
+
+- (MTPocketResponse *)fetch
+{
+	// empty out this object so it only contains what's on the server
+	[self empty];
+
+	NSURL *url = [self.url urlWithModule:@"familytree"
+							  version:2
+							 resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+						  identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+							   params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+								 misc:nil];
+
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+	
+
+
+
+	if (response.success) {
+		NSArray *spouses = [response.body valueForComplexKeyPath:@"persons[first].relationships.spouse"];
+		for (NSDictionary *spouse in spouses) {
+			NSString *wifeID = spouse[@"id"];
+			if ([wifeID isEqualToString:self.wife.identifier]) {
+
+				// PROPERTIES
+				NSArray *characteristics = [spouse valueForKeyPath:@"assertions.characteristics"];
+				if (![characteristics isKindOfClass:[NSNull class]])
+					for (NSDictionary *characteristic in characteristics) {
+						FSProperty *property = [[FSProperty alloc] init];
+						property.identifier = [characteristic valueForKeyPath:@"value.id"];
+						property.key		= [characteristic valueForKeyPath:@"value.type"];
+						property.value		= [characteristic valueForKeyPath:@"value.detail"];
+						property.title		= [characteristic valueForKeyPath:@"value.title"];
+						property.lineage	= [characteristic valueForKeyPath:@"value.lineage"];
+						property.date		= [NSDate dateFromString:[characteristic valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+						property.place		= [characteristic valueForKeyPath:@"value.place.original"];
+						(self.properties)[property.key] = property;
+					}
+				
+				// EVENTS
+				NSArray *events = [spouse valueForKeyPath:@"assertions.events"];
+				if (![events isKindOfClass:[NSNull class]])
+					for (NSDictionary *eventDict in events) {
+						FSMarriageEventType type = [eventDict valueForKeyPath:@"value.type"];
+						NSString *identifier = [eventDict valueForKeyPath:@"value.id"];
+						FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:type identifier:identifier];
+						event.date = [NSDate dateFromString:[eventDict valueForKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+						event.place = [eventDict valueForKeyPath:@"value.place.normalized.value"];
+						[self addMarriageEvent:event];
+					}
+			}
+		}
+	}
+
+	return response;
+}
+
+- (MTPocketResponse *)save
+{
+	if (self.deleted) {
+		return [self deleteMarriage];
+	}
+	return [self updateMarriage];
+}
+
+- (MTPocketResponse *)destroy
+{
+	self.deleted = YES;
+	return [self save];
+}
+
+
+#pragma mark - Private Methods
+
+- (void)empty
+{
+	for (FSMarriageEvent *event in self.events) {
+		[(NSMutableArray *)self.events removeAllObjects];
+	}
+	for (FSProperty *property in self.properties) {
+		[self.properties removeAllObjects];
+	}
+	self.changed = NO;
+	self.deleted = NO;
+}
+
+- (MTPocketResponse *)updateMarriage
+{
+	// make sure the each is saved. If it is not, return because that save will also save this relationship.
+	if (self.husband.isNew)
+		return [self.husband save];
+	if (self.wife.isNew)
+		return [self.wife save];
+
+	NSMutableDictionary *assertions = [NSMutableDictionary dictionary];
+
+
+	// PROPERTIES
+	NSMutableArray *characteristics = [NSMutableArray array];
+	for (FSPropertyType key in [self.properties allKeys]) {
+		FSProperty *property = (self.properties)[key];
+		NSMutableDictionary *characteristic = [NSMutableDictionary dictionary];
+		if (property.identifier) characteristic[@"id"] = property.identifier;
+		if (property.key) characteristic[@"type"] = property.key;
+		if (property.value) characteristic[@"detail"] = property.value;
+		[characteristics addObject: @{ @"value" : characteristic } ];
+	}
+	[assertions addEntriesFromDictionary: @{ @"characteristics" : characteristics } ];
+
+
+	// EVENTS
+	NSMutableArray *events = [NSMutableArray array];
+	for (FSEvent *event in self.events) {
+		NSMutableDictionary *eventInfo = [NSMutableDictionary dictionaryWithObject:event.type forKey:@"type"];
+		if (event.date)		eventInfo[@"date"] = @{ @"original" : event.date };
+		if (event.place)	eventInfo[@"place"] = @{ @"original" : event.place };
+
+		if ((event.date || event.place)) {
+			if (event.identifier) {
+				eventInfo[@"id"] = event.identifier;
+				if (event.isDeleted)
+					[events addObject: @{ @"value" : eventInfo, @"action" : @"Delete" } ];
+				else
+					[events addObject: @{ @"value" : eventInfo, @"tempId" : event.localIdentifier } ];
+			}
+			else {
+				[events addObject: @{ @"value" : eventInfo, @"tempId" : event.localIdentifier } ]; // TODO: figure out why tempId is not coming back
+			}
+		}
+	}
+	if (events.count > 0) [assertions addEntriesFromDictionary: @{ @"events" : events } ];
+
+
+	
+	NSDictionary *body = @{
+							@"persons" : @[ @{
+								@"id" : self.husband.identifier,
+								@"relationships" : @{
+									@"spouse" : @[ @{
+										@"id" : self.wife.identifier,
+										@"version" : @(self.version),
+										@"assertions" :	assertions
+									}]
+								}
+							}]
+						};
+
+	NSURL *url = [self.url urlWithModule:@"familytree"
+								 version:2
+								resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+							 identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+								  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+									misc:nil];
+
+
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+
+	if (response.success) {
+		self.changed = NO;
+		self.deleted = NO;
+	}
+
+	return response;
+}
+
+- (MTPocketResponse *)deleteMarriage
+{
+	NSURL *url = [self.url urlWithModule:@"familytree"
+								 version:2
+								resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+							 identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+								  params:defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors
+									misc:nil];
+
+
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+
+	if (response.success) {
+		NSMutableDictionary *relationshipTypesToDelete = [NSMutableDictionary dictionary];
+		NSDictionary *relationshipTypes = [response.body valueForComplexKeyPath:@"persons[first].relationships"];
+		for (NSString *key in [relationshipTypes allKeys]) {
+			if (![key isEqualToString:@"spouse"]) continue;
+			NSMutableArray *relationshipsToDelete = [NSMutableArray array];
+			NSArray *relationshipType = relationshipTypes[key];
+			for (NSDictionary *relationship in relationshipType) {
+				NSMutableDictionary *assertionTypesToDelete = [NSMutableDictionary dictionary];
+				NSDictionary *assertionTypes = relationship[@"assertions"];
+				for (NSString *aKey in [assertionTypes allKeys]) {
+					NSMutableArray *assertionsToDelete = [NSMutableArray array];
+					NSArray *assertionType = assertionTypes[aKey];
+					for (NSDictionary *assertion in assertionType) {
+						NSArray *valueID = [assertion valueForComplexKeyPath:@"value.id"];
+						[assertionsToDelete addObject: @{ @"value" : @{ @"id" : valueID }, @"action" : @"Delete" } ];
+					}
+					assertionTypesToDelete[aKey] = assertionsToDelete;
+				}
+				[relationshipsToDelete addObject: @{ @"id" : self.wife.identifier, @"assertions" : assertionTypesToDelete, @"version" : relationship[@"version"] } ];
+			}
+			relationshipTypesToDelete[key] = relationshipsToDelete;
+		}
+
+		NSDictionary *body = @{
+								@"persons" : @[ @{
+									@"id" : self.husband.identifier,
+									@"relationships" : relationshipTypesToDelete
+								}]
+							};
+
+		response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+
+		if (response.success) {
+			self.changed = NO;
+			self.deleted = NO;
+			[self.husband removeMarriage:self];
+			[self.wife removeMarriage:self];
+		}
+	}
+
+	return response;
 }
 
 

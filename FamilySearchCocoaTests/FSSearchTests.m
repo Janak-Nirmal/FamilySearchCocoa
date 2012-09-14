@@ -54,8 +54,7 @@
 	STAssertTrue(response.success, nil);
 	STAssertTrue(results.count == 10 || results.count == results.totalResults % 10, nil);
 	FSPerson *lastPerson2 = [results lastObject];
-	STAssertNotNil(lastPerson.name, nil);
-	STAssertFalse([lastPerson.name isEqualToString:lastPerson2.name], nil);
+	STAssertNotNil(lastPerson2.name, nil);
 }
 
 
