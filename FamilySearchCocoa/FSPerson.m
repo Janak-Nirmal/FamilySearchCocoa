@@ -916,7 +916,7 @@
 				candidate = event;
 		}
 	}
-	return event.place;
+	return candidate.place;
 }
 
 @end
