@@ -135,12 +135,12 @@ Add/Remove an Event:
 	person.events.count		// => 0
 	
 	FSEvent *death = [FSEvent eventWithType:FSPersonEventTypeDeath identifier:nil];
-	death.date = [NSDate dateFromYear:1995 month:8 day:11 hour:10 minute:0];
+	death.date = [NSDateComponents componentsFromString:@"11 August 1995"];
 	death.place = @"Kennewick, WA";
 	[person addEvent:death];
 	
 	FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeBaptism identifier:nil];
-	event.date = [NSDate dateFromYear:1994 month:8 day:11 hour:10 minute:0];
+	event.date = [NSDateComponents componentsFromString:@"11 August 1994"];
 	event.place = @"Kennewick, WA";
 	[person addEvent:event];
 	[person save];
@@ -154,9 +154,9 @@ Add/Remove an Event:
 
 Convenience Events:
 	
-	person.birthDate	= [NSDate dateFromYear:1995 month:8 day:11 hour:0 minute:0];
+	person.birthDate	= [NSDateComponents componentsFromString:@"11 August 1995"];
 	person.birthPlace	= @"Kennewick, Benton, Washington, United States";
-	person.deathDate	= [NSDate dateFromYear:1994 month:8 day:11 hour:0 minute:0];
+	person.deathDate	= [NSDateComponents componentsFromString:@"11 August 1996"];
 	person.deathPlace	= @"Pasco, Franklin, Washington, United States";
 	[person save];
 
@@ -195,7 +195,7 @@ Add/Remove a Marriage Event:
 	marriage.events.count	// => 0
 	
 	FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:FSMarriageEventTypeMarriage identifier:nil];
-	event.date = [NSDate dateFromYear:1994 month:8 day:11 hour:10 minute:0];
+	event.date = [NSDateComponents componentsFromString:@"11 August 1995"];
 	event.place = @"Kennewick, WA";
 	[marriage addMarriageEvent:event];
 	[person save];
@@ -221,7 +221,7 @@ The flow to move a user from adding an ancestor to their family tree and doing t
 	// add minimum info to qualify them for reservation
 	person.name			= @"Nathan Kirk";
 	person.gender		= @"Male";
-	person.deathDate	= [NSDate dateFromYear:1970 month:11 day:11];
+	person.deathDate	= [NSDateComponents componentsFromString:@"11 August 1970"];
 	person.deathPlace	= @"Pasco, Franklin, Washington, United States";
 	[person save];
 	
