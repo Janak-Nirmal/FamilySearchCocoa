@@ -44,17 +44,18 @@ typedef NSString * FSPersonEventType;
 
 
 
-
 @class FSPerson;
 
 
 @interface FSEvent : NSObject
-@property (readonly)			NSString			*identifier;
-@property (readonly)			FSPersonEventType	type;
-@property (strong, nonatomic)	NSString			*description;
-@property (strong, nonatomic)	NSDateComponents	*date;
-@property (strong, nonatomic)	NSString			*place;
+
+@property (readonly)						NSString			*identifier;
+@property (readonly)						FSPersonEventType	type;
+@property (strong, nonatomic)				NSDateComponents	*date;
+@property (strong, nonatomic)				NSString			*place;
+
 + (FSEvent *)eventWithType:(FSPersonEventType)type identifier:(NSString *)identifier;
 - (BOOL)isEqualToEvent:(FSEvent *)event;
+
 @end
 

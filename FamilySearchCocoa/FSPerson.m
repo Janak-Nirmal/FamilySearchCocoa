@@ -189,8 +189,9 @@
 				eventInfo[@"id"] = event.identifier;
 				if (event.isDeleted)
 					[events addObject: @{ @"value" : eventInfo, @"action" : @"Delete" } ];
-				else
-					[events addObject: @{ @"value" : eventInfo, @"tempId" : event.localIdentifier } ];
+				else if (event.isChanged) {
+					[events addObject: @{ @"value" : eventInfo } ];
+				}
 			}
 			else {
 				[events addObject: @{ @"value" : eventInfo, @"tempId" : event.localIdentifier } ]; // TODO: figure out why tempId is not coming back
@@ -479,6 +480,7 @@
 {
 	if (!event) raiseParamException(@"event");
 
+	event.changed = YES;
 	for (FSEvent *e in _events) {
 		if ([e isEqualToEvent:event]) {
 			((NSMutableArray *)_events)[[_events indexOfObject:e]] = event;
@@ -686,7 +688,7 @@
 	_onChange(self);
 }
 
-- (void)removeAllRelationships
+- (void)clearAllRelationships
 {
 	for (FSRelationship *relationship in [_relationships copy]) {
 		[self removeRelationship:relationship];
@@ -726,14 +728,14 @@
 	_onChange(self);
 }
 
-- (void)removeAllMarriages
+- (void)clearAllMarriages
 {
 	for (FSMarriage *marriage in [_marriages copy]) {
 		[self removeMarriage:marriage];
 	}
 }
 
-- (void)removeAllEvents
+- (void)clearAllEvents
 {
 	for (FSEvent *event in [_events copy]) {
 		[(NSMutableArray *)_events removeObject:event];
@@ -776,9 +778,9 @@
 	_name = nil;
 	_gender = nil;
 	[_properties removeAllObjects];
-	[self removeAllRelationships];
-	[self removeAllMarriages];
-	[self removeAllEvents];
+	[self clearAllRelationships];
+	[self clearAllMarriages];
+	[self clearAllEvents];
 }
 
 - (void)populateFromPersonDictionary:(NSDictionary *)person
@@ -820,6 +822,7 @@
 			FSEvent *event = [FSEvent eventWithType:type identifier:identifier];
 			event.date = [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
 			event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
+			event.selected = [eventDict valueForComplexKeyPath:@"selected"] != nil;
 			[self addEvent:event];
 		}
 
@@ -886,29 +889,34 @@
 	}
 
 	FSEvent *event = [FSEvent eventWithType:eventType identifier:nil];
-	event.date = date;
-	event.place = place;
+	event.date		= date;
+	event.place		= place;
+	event.selected	= YES;
 	[self addEvent:event];
 }
 
 - (NSDateComponents *)dateForEventOfType:(FSPersonEventType)eventType
 {
+	FSEvent *candidate = nil;
 	for (FSEvent *event in _events) {
 		if ([event.type isEqualToString:eventType]) {
-			return event.date;
+			if (!candidate || event.selected)
+				candidate = event;
 		}
 	}
-	return nil;
+	return candidate.date;
 }
 
 - (NSString *)placeForEventOfType:(FSPersonEventType)eventType
 {
+	FSEvent *candidate = nil;
 	for (FSEvent *event in _events) {
 		if ([event.type isEqualToString:eventType]) {
-			return event.place;
+			if (!candidate || event.selected)
+				candidate = event;
 		}
 	}
-	return nil;
+	return event.place;
 }
 
 @end

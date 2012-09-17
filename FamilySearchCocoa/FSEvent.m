@@ -22,6 +22,7 @@ NSString *randomStringWithLength(NSInteger length)
 }
 
 
+
 @implementation FSEvent
 
 - (id)initWithType:(FSPersonEventType)type identifier:(NSString *)identifier
@@ -30,6 +31,8 @@ NSString *randomStringWithLength(NSInteger length)
     if (self) {
         _type				= type;
 		_identifier			= identifier;
+		_selected			= NO;
+		_changed			= NO;
 		_localIdentifier	= randomStringWithLength(5);
 		_deleted			= NO;
     }
@@ -47,5 +50,24 @@ NSString *randomStringWithLength(NSInteger length)
 		return YES;
 	return NO;
 }
+
+- (void)setDate:(NSDateComponents *)date
+{
+	_date		= date;
+	_changed	= YES;
+}
+
+- (void)setPlace:(NSString *)place
+{
+	_place		= place;
+	_changed	= YES;
+}
+
+- (void)setSelected:(BOOL)selected
+{
+	_selected	= selected;
+	_changed	= YES;
+}
+
 
 @end

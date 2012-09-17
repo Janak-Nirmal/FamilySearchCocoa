@@ -78,10 +78,10 @@
 	STAssertTrue(person.events.count == 1, nil);
 }
 
-- (void)testAAPartialDate
+- (void)testPartialDate
 {
 	MTPocketResponse *response = nil;
-	NSString *dateString = @"10 July";
+	NSString *dateString = @"July 1995";
 
 	// add a death event so the sytem acknowledges they are dead
 	FSEvent *death = [FSEvent eventWithType:FSPersonEventTypeDeath identifier:nil];
@@ -93,7 +93,7 @@
 
 	response = [_person fetch];
 	STAssertTrue(response.success, nil);
-	STAssertTrue([[response.body valueForComplexKeyPath:@"persons[first].assertions.events[first].value.date.original"] isEqualToString:dateString], nil);
+	STAssertTrue([[response.body valueForComplexKeyPath:@"persons[first].assertions.events[first].value.date.normalized"] isEqualToString:dateString], nil);
 }
 
 - (void)testConvenienceEventMethods

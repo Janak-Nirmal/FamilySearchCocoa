@@ -98,9 +98,10 @@ FSQueryParameter familyQueryParameters();
 
 
 @interface FSEvent()
-@property (readonly)			NSString	*localIdentifier;
-@property (getter = isDeleted)	BOOL		deleted;	// has been deleted and needs to be deleted from the server
-@property (getter = isSelected)	BOOL		selected;	// is selected for the person summary
+@property (readonly)						NSString	*localIdentifier;
+@property (nonatomic, getter = isDeleted)	BOOL		deleted;	// has been deleted and needs to be deleted from the server
+@property (nonatomic, getter = isChanged)	BOOL		changed;
+@property (nonatomic, getter = isSelected)	BOOL		selected;	// is selected for the person summary
 @end
 
 
