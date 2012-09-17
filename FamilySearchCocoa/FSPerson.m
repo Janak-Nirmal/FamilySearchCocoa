@@ -9,6 +9,7 @@
 #import "FSPerson.h"
 #import "private.h"
 #import <NSDate+MTDates.h>
+#import <NSDateComponents+MTDates.h>
 #import <NSObject+MTJSONUtils.h>
 
 
@@ -65,7 +66,7 @@
 	static NSMutableArray *__people;
 	if (!__people) __people = [[NSMutableArray alloc] initWithCapacity:0];
 
-	for (FSPerson *person in __people) {
+	for (FSPerson *person in [__people copy]) {
 		if ([person.identifier isEqualToString:identifier]) {
 			return person;
 		}
@@ -180,7 +181,7 @@
 	NSMutableArray *events = [NSMutableArray array];
 	for (FSEvent *event in _events) {
 		NSMutableDictionary *eventInfo = [NSMutableDictionary dictionaryWithObject:event.type forKey:@"type"];
-		if (event.date)		eventInfo[@"date"] = @{ @"original" : event.date };
+		if (event.date)		eventInfo[@"date"] = @{ @"original" : [event.date stringValue] };
 		if (event.place)	eventInfo[@"place"] = @{ @"original" : event.place };
 
 		if (event.date || event.place) {
@@ -299,14 +300,14 @@
 
 			if ([birth isKindOfClass:[NSString class]]) {
 				FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeBirth identifier:nil];
-				event.date = [NSDate dateFromString:birth usingFormat:DATE_FORMAT];
+				event.date = [NSDateComponents componentsFromString:birth];
 				event.place = nil;
 				[person addEvent:event];
 			}
 
 			if ([death isKindOfClass:[NSString class]]) {
 				FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeDeath identifier:nil];
-				event.date = [NSDate dateFromString:death usingFormat:DATE_FORMAT];
+				event.date = [NSDateComponents componentsFromString:death];
 				event.place = nil;
 				[person addEvent:event];
 			}
@@ -497,14 +498,14 @@
 	_onChange(self);
 }
 
-- (NSDate *)birthDate							{ return [self dateForEventOfType:FSPersonEventTypeBirth];						}
-- (void)setBirthDate:(NSDate *)birthDate		{ [self setDate:birthDate place:nil forEventOfType:FSPersonEventTypeBirth];		}
-- (NSString *)birthPlace						{ return [self placeForEventOfType:FSPersonEventTypeBirth];						}
-- (void)setBirthPlace:(NSString *)birthPlace	{ [self setDate:nil place:birthPlace forEventOfType:FSPersonEventTypeBirth];	}
-- (NSDate *)deathDate							{ return [self dateForEventOfType:FSPersonEventTypeDeath];						}
-- (void)setDeathDate:(NSDate *)deathDate		{ [self setDate:deathDate place:nil forEventOfType:FSPersonEventTypeDeath];		}
-- (NSString *)deathPlace						{ return [self placeForEventOfType:FSPersonEventTypeDeath];						}
-- (void)setDeathPlace:(NSString *)deathPlace	{ [self setDate:nil place:deathPlace forEventOfType:FSPersonEventTypeDeath];	}
+- (NSDateComponents *)birthDate						{ return [self dateForEventOfType:FSPersonEventTypeBirth];						}
+- (void)setBirthDate:(NSDateComponents *)birthDate	{ [self setDate:birthDate place:nil forEventOfType:FSPersonEventTypeBirth];		}
+- (NSString *)birthPlace							{ return [self placeForEventOfType:FSPersonEventTypeBirth];						}
+- (void)setBirthPlace:(NSString *)birthPlace		{ [self setDate:nil place:birthPlace forEventOfType:FSPersonEventTypeBirth];	}
+- (NSDateComponents *)deathDate						{ return [self dateForEventOfType:FSPersonEventTypeDeath];						}
+- (void)setDeathDate:(NSDateComponents *)deathDate	{ [self setDate:deathDate place:nil forEventOfType:FSPersonEventTypeDeath];		}
+- (NSString *)deathPlace							{ return [self placeForEventOfType:FSPersonEventTypeDeath];						}
+- (void)setDeathPlace:(NSString *)deathPlace		{ [self setDate:nil place:deathPlace forEventOfType:FSPersonEventTypeDeath];	}
 
 
 
@@ -804,7 +805,7 @@
 			property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
 			property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
 			property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
-			property.date		= [NSDate dateFromString:[characteristic valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+			property.date		= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristic, @"value.date.normalized", @"value.date.original")];
 			property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
 			_properties[property.key] = property;
 		}
@@ -817,7 +818,7 @@
 			FSPersonEventType type = [eventDict valueForComplexKeyPath:@"value.type"];
 			NSString *identifier = [eventDict valueForComplexKeyPath:@"value.id"];
 			FSEvent *event = [FSEvent eventWithType:type identifier:identifier];
-			event.date = [NSDate dateFromString:[eventDict valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+			event.date = [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
 			event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
 			[self addEvent:event];
 		}
@@ -874,7 +875,7 @@
 	_onChange(self);
 }
 
-- (void)setDate:(NSDate *)date place:(NSString *)place forEventOfType:(FSPersonEventType)eventType
+- (void)setDate:(NSDateComponents *)date place:(NSString *)place forEventOfType:(FSPersonEventType)eventType
 {
 	for (FSEvent *event in _events) {
 		if ([event.type isEqualToString:eventType]) {
@@ -890,7 +891,7 @@
 	[self addEvent:event];
 }
 
-- (NSDate *)dateForEventOfType:(FSPersonEventType)eventType
+- (NSDateComponents *)dateForEventOfType:(FSPersonEventType)eventType
 {
 	for (FSEvent *event in _events) {
 		if ([event.type isEqualToString:eventType]) {

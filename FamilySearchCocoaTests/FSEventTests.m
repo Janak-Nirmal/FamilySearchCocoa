@@ -7,19 +7,21 @@
 //
 
 #import <NSDate+MTDates.h>
+#import <NSDateComponents+MTDates.h>
 #import "FSEventTests.h"
 #import "FSAuth.h"
 #import "FSPerson.h"
 #import "FSEvent.h"
 #import "FSURL.h"
 #import "constants.h"
+#import <NSObject+MTJSONUtils.h>
 
-@interface FSEventTests ()
+@interface AFSEventTests ()
 @property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
-@implementation FSEventTests
+@implementation AFSEventTests
 
 - (void)setUp
 {
@@ -45,14 +47,14 @@
 
 	// add a death event so the sytem acknowledges they are dead
 	FSEvent *death = [FSEvent eventWithType:FSPersonEventTypeDeath identifier:nil];
-	death.date = [NSDate dateFromYear:1995 month:8 day:11 hour:10 minute:0];
+	death.date = [NSDateComponents componentsFromString:@"11 August 1995"];
 	death.place = @"Kennewick, WA";
 	[_person addEvent:death];
 
 
 	// create and add event to person
 	FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeBaptism identifier:nil];
-	event.date = [NSDate dateFromYear:1994 month:8 day:11 hour:10 minute:0];
+	event.date = [NSDateComponents componentsFromString:@"11 August 1994"];
 	event.place = @"Kennewick, WA";
 	[_person addEvent:event];
 	response = [_person save];
@@ -76,6 +78,24 @@
 	STAssertTrue(person.events.count == 1, nil);
 }
 
+- (void)testAAPartialDate
+{
+	MTPocketResponse *response = nil;
+	NSString *dateString = @"10 July";
+
+	// add a death event so the sytem acknowledges they are dead
+	FSEvent *death = [FSEvent eventWithType:FSPersonEventTypeDeath identifier:nil];
+	death.date = [NSDateComponents componentsFromString:dateString];
+	death.place = @"Kennewick, WA";
+	[_person addEvent:death];
+	response = [_person save];
+	STAssertTrue(response.success, nil);
+
+	response = [_person fetch];
+	STAssertTrue(response.success, nil);
+	STAssertTrue([[response.body valueForComplexKeyPath:@"persons[first].assertions.events[first].value.date.original"] isEqualToString:dateString], nil);
+}
+
 - (void)testConvenienceEventMethods
 {
 	MTPocketResponse *response = nil;
@@ -83,10 +103,10 @@
 	// assert person has no events to start with
 	STAssertTrue(_person.events.count == 0, nil);
 
-	NSDate		*birthDate	= [NSDate dateFromYear:1995 month:8 day:11 hour:0 minute:0];
-	NSString	*birthPlace	= @"Kennewick, Benton, Washington, United States";
-	NSDate		*deathDate	= [NSDate dateFromYear:1994 month:8 day:11 hour:0 minute:0];
-	NSString	*deathPlace	= @"Pasco, Franklin, Washington, United States";
+	NSDateComponents	*birthDate	= [NSDateComponents componentsFromString:@"11 August 1995"];
+	NSString			*birthPlace	= @"Kennewick, Benton, Washington, United States";
+	NSDateComponents	*deathDate	= [NSDateComponents componentsFromString:@"11 August 1994"];
+	NSString			*deathPlace	= @"Pasco, Franklin, Washington, United States";
 
 	// create and add event to person
 	_person.birthDate	= birthDate;
@@ -106,10 +126,10 @@
 	STAssertTrue(person.events.count == 2, nil);
 
 	// read the values
-	STAssertTrue([person.birthDate	isEqualToDate:birthDate],		nil);
-	STAssertTrue([person.birthPlace isEqualToString:birthPlace],	nil);
-	STAssertTrue([person.deathDate	isEqualToDate:deathDate],		nil);
-	STAssertTrue([person.deathPlace	isEqualToString:deathPlace],	nil);
+	STAssertTrue([person.birthDate	isEqualToDateComponents:birthDate],	nil);
+	STAssertTrue([person.birthPlace isEqualToString:birthPlace],		nil);
+	STAssertTrue([person.deathDate	isEqualToDateComponents:deathDate],	nil);
+	STAssertTrue([person.deathPlace	isEqualToString:deathPlace],		nil);
 }
 
 @end

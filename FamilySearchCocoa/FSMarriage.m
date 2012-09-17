@@ -9,6 +9,7 @@
 #import "FSMarriage.h"
 #import "private.h"
 #import <NSDate+MTDates.h>
+#import <NSDateComponents+MTDates.h>
 #import <NSObject+MTJSONUtils.h>
 
 
@@ -147,13 +148,15 @@
 				NSArray *characteristics = [spouse valueForComplexKeyPath:@"assertions.characteristics"];
 				if (![characteristics isKindOfClass:[NSNull class]])
 					for (NSDictionary *characteristic in characteristics) {
+						NSString *dateString = [characteristic valueForComplexKeyPath:@"value.date.normalized"];
+						if (!dateString) dateString = [characteristic valueForComplexKeyPath:@"value.date.original"];
 						FSProperty *property = [[FSProperty alloc] init];
 						property.identifier = [characteristic valueForComplexKeyPath:@"value.id"];
 						property.key		= [characteristic valueForComplexKeyPath:@"value.type"];
 						property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
 						property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
 						property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
-						property.date		= [NSDate dateFromString:[characteristic valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+						property.date		= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristic, @"value.date.normalized", @"value.date.original")];
 						property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
 						(self.properties)[property.key] = property;
 					}
@@ -165,7 +168,7 @@
 						FSMarriageEventType type = [eventDict valueForComplexKeyPath:@"value.type"];
 						NSString *identifier = [eventDict valueForComplexKeyPath:@"value.id"];
 						FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:type identifier:identifier];
-						event.date = [NSDate dateFromString:[eventDict valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
+						event.date = [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
 						event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
 						[self addMarriageEvent:event];
 					}

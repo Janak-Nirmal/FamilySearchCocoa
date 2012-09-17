@@ -124,10 +124,10 @@ typedef NSString * FSLineageType;
 - (void)addEvent:(FSEvent *)event;
 - (void)removeEvent:(FSEvent *)event;
 
-@property (nonatomic, strong) NSDate	*birthDate;							/*  These are for convenience.       */
-@property (nonatomic, strong) NSString	*birthPlace;						/*  Does the same thing as           */
-@property (nonatomic, strong) NSDate	*deathDate;							/*  creating an event and            */
-@property (nonatomic, strong) NSString	*deathPlace;						/*  adding it with addEvent:         */
+@property (nonatomic, strong) NSDateComponents	*birthDate;					/*  These are for convenience.       */
+@property (nonatomic, strong) NSString			*birthPlace;				/*  Does the same thing as           */
+@property (nonatomic, strong) NSDateComponents	*deathDate;					/*  creating an event and            */
+@property (nonatomic, strong) NSString			*deathPlace;				/*  adding it with addEvent:         */
 
 
 #pragma mark - Misc

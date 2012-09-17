@@ -7,6 +7,7 @@
 //
 
 #import <NSDate+MTDates.h>
+#import <NSDateComponents+MTDates.h>
 #import "FSMarriageTests.h"
 #import "FSURL.h"
 #import "FSAuth.h"
@@ -14,6 +15,7 @@
 #import "FSEvent.h"
 #import "FSMarriage.h"
 #import "constants.h"
+#import "private.h"
 
 @interface FSMarriageTests ()
 @property (strong, nonatomic) NSString *sessionID;
@@ -55,7 +57,7 @@
 
 	// add event to marriage
 	FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:FSMarriageEventTypeMarriage identifier:nil];
-	event.date = [NSDate dateFromYear:1994 month:8 day:11 hour:10 minute:0];
+	event.date = [NSDateComponents componentsFromString:@"11 August 1994"];
 	event.place = @"Kennewick, WA";
 	[marriage addMarriageEvent:event];
 	response = [_person save];

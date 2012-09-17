@@ -1,7 +1,7 @@
 
 PODS:
 - Base64 (1.0.0)
-- MTDates (0.4.1)
+- MTDates (0.5.0)
 - MTJSONUtils (0.0.1)
 - MTPocket (0.6.0):
   - Base64
@@ -16,7 +16,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Base64: 285e4864ccacb72cb921c09fd7a19af3b47f450d
-  MTDates: fe1289470e843ee0a563f5b3c54a8a35f9df3ebd
+  MTDates: 7114966dba4e06bde61e6fc4532236ae5719309e
   MTJSONUtils: b4bd111f409377fe422fee56d4e7dae4b0ee4fe3
   MTPocket: 81df7fa611cfa8ff8266a37783de46c4dbb726aa
   XMLDictionary: d41dcb25b03e480f374551037396f4fc1307ff1c

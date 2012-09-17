@@ -12,6 +12,7 @@
 #import "FSPerson.h"
 #import "constants.h"
 #import <NSDate+MTDates.h>
+#import <NSDateComponents+MTDates.h>
 
 
 @interface FSPersonTests ()
@@ -159,7 +160,7 @@
 		onChangeWasCalled = YES;
 	};
 
-	_person.deathDate = [NSDate dateFromYear:1990 month:9 day:9];
+	_person.deathDate = [NSDateComponents componentsFromString:@"9 September 1990"];
 	STAssertTrue(onChangeWasCalled, nil);
 }
 
@@ -353,11 +354,11 @@
 	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	person.name = @"Adam Kirk";
 	person.gender = @"Male";
-	person.deathDate = [NSDate dateFromYear:1950 month:7 day:11];
+	person.deathDate = [NSDateComponents componentsFromString:@"11 July 1950"];
 	response = [person save];
 	STAssertTrue(response.success, nil);
 
-	_person.deathDate = [NSDate dateFromYear:1950 month:7 day:11];
+	_person.deathDate = [NSDateComponents componentsFromString:@"11 July 1950"];
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 

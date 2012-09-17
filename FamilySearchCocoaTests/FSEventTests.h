@@ -8,6 +8,6 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface FSEventTests : SenTestCase
+@interface AFSEventTests : SenTestCase
 
 @end

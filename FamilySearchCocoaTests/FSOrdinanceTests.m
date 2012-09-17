@@ -8,6 +8,7 @@
 
 #import "FSOrdinanceTests.h"
 #import <NSDate+MTDates.h>
+#import <NSDateComponents+MTDates.h>
 #import "FSURL.h"
 #import "FSAuth.h"
 #import "FSPerson.h"
@@ -45,7 +46,7 @@
 	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	father.name = @"Nathan Kirk";
 	father.gender = @"Male";
-	father.deathDate = [NSDate dateFromYear:1970 month:11 day:11];
+	father.deathDate = [NSDateComponents componentsFromString:@"11 November 1970"];
 
 	STAssertTrue(_person.ordinances.count == 0, nil);
 
@@ -67,7 +68,7 @@
 	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	father.name			= @"Nathan Kirk";
 	father.gender		= @"Male";
-	father.deathDate	= [NSDate dateFromYear:1970 month:11 day:11];
+	father.deathDate	= [NSDateComponents componentsFromString:@"11 November 1970"];
 	father.deathPlace	= @"Pasco, Franklin, Washington, United States";
 	[_person addParent:father withLineage:FSLineageTypeBiological];
 	response = [_person save];
@@ -90,7 +91,7 @@
 	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	father.name			= @"Nathan Kirk";
 	father.gender		= @"Male";
-	father.deathDate	= [NSDate dateFromYear:1970 month:11 day:11];
+	father.deathDate	= [NSDateComponents componentsFromString:@"11 November 1970"];
 	father.deathPlace	= @"Pasco, Franklin, Washington, United States";
 	[_person addParent:father withLineage:FSLineageTypeBiological];
 	response = [_person save];
@@ -99,7 +100,7 @@
 	FSPerson *gFather	= [FSPerson personWithSessionID:_sessionID identifier:nil];
 	gFather.name		= @"Nathan Kirk";
 	gFather.gender		= @"Male";
-	gFather.deathDate	= [NSDate dateFromYear:1910 month:11 day:11];
+	gFather.deathDate	= [NSDateComponents componentsFromString:@"11 November 1910"];
 	gFather.deathPlace	= @"Pasco, Franklin, Washington, United States";
 	[father addParent:gFather withLineage:FSLineageTypeBiological];
 	response = [father save];
@@ -108,7 +109,7 @@
 	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	spouse.name = @"She Kirk";
 	spouse.gender = @"Female";
-	spouse.deathDate	= [NSDate dateFromYear:1909 month:11 day:11];
+	spouse.deathDate	= [NSDateComponents componentsFromString:@"11 November 1909"];
 	spouse.deathPlace	= @"Pasco, Franklin, Washington, United States";
 	[father addSpouse:spouse];
 	response = [father save];

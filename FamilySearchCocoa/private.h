@@ -12,6 +12,7 @@
 #import "FSEvent.h"
 #import "FSURL.h"
 #import "FSOrdinance.h"
+#import <NSObject+MTJSONUtils.h>
 
 
 #define DATE_FORMAT @"dd MMM yyyy"
@@ -25,6 +26,13 @@ static inline void raiseException(NSString *name, NSString *reason)
 static inline void raiseParamException(NSString *paramName)
 {
 	raiseException(@"Required paramater was nil", [NSString stringWithFormat:@"'%@' cannot be nil.", paramName]);
+}
+
+static inline id objectForPreferredKeys(id obj, NSString *key1, NSString *key2)
+{
+	id key1Result = [obj valueForComplexKeyPath:key1];
+	id key2Result = [obj valueForComplexKeyPath:key2];
+	return key1Result ? key1Result : key2Result;
 }
 
 
@@ -90,8 +98,9 @@ FSQueryParameter familyQueryParameters();
 
 
 @interface FSEvent()
-@property (readonly)			NSString			*localIdentifier;
-@property (getter = isDeleted)	BOOL				deleted;	// has been deleted and needs to be deleted from the server
+@property (readonly)			NSString	*localIdentifier;
+@property (getter = isDeleted)	BOOL		deleted;	// has been deleted and needs to be deleted from the server
+@property (getter = isSelected)	BOOL		selected;	// is selected for the person summary
 @end
 
 
@@ -122,10 +131,12 @@ FSQueryParameter familyQueryParameters();
 @property (strong, nonatomic)	NSString			*value;
 @property (strong, nonatomic)	NSString			*title;
 @property (strong, nonatomic)	NSString			*lineage;
-@property (strong, nonatomic)	NSDate				*date;
+@property (strong, nonatomic)	NSDateComponents	*date;
 @property (strong, nonatomic)	NSString			*place;
 @property (readonly)			NSString			*previousValue;
 @property (readonly)			BOOL				isChanged;
 - (void)reset;
 - (void)markAsSaved;
 @end
+
+

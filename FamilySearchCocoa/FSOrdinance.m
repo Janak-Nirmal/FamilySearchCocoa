@@ -10,6 +10,7 @@
 #import "private.h"
 #import <NSObject+MTJSONUtils.h>
 #import <NSDate+MTDates.h>
+#import <NSDateComponents+MTDates.h>
 
 
 
@@ -234,7 +235,7 @@
 					if (!foundSpouse) {
 						FSPerson *spouse = [FSPerson personWithSessionID:anyPerson.sessionID identifier:nil];
 						spouse.gender		= parent.isMale ? @"Female" : @"Male";
-						spouse.deathDate	= [NSDate dateFromYear:1900 month:1 day:1];
+						spouse.deathDate	= [NSDateComponents componentsFromString:@"1 January 1900"];
 						[person addParent:spouse withLineage:FSLineageTypeBiological];
 						[parent addSpouse:spouse];
 						MTPocketResponse *response = [person save];
