@@ -459,14 +459,18 @@
 
 + (NSArray *)ordinanceTypes
 {
-	return @[
-		FSOrdinanceTypeBaptism,
-		FSOrdinanceTypeConfirmation,
-		FSOrdinanceTypeInitiatory,
-		FSOrdinanceTypeEndowment,
-		FSOrdinanceTypeSealingToParents,
-		FSOrdinanceTypeSealingToSpouse
-	];
+	static NSArray *types = nil;
+	if (!types) {
+		types = @[
+			FSOrdinanceTypeBaptism,
+			FSOrdinanceTypeConfirmation,
+			FSOrdinanceTypeInitiatory,
+			FSOrdinanceTypeEndowment,
+			FSOrdinanceTypeSealingToParents,
+			FSOrdinanceTypeSealingToSpouse
+		];
+	}
+	return types;
 }
 
 
@@ -563,22 +567,6 @@
 		return FSOrdinanceStatusReserved;
 
 	return FSOrdinanceStatusNotSet;
-}
-
-+ (NSArray *)ordinanceTypes
-{
-	static NSArray *types = nil;
-	if (!types) {
-		types = @[
-		FSOrdinanceTypeBaptism,
-		FSOrdinanceTypeConfirmation,
-		FSOrdinanceTypeInitiatory,
-		FSOrdinanceTypeEndowment,
-		FSOrdinanceTypeSealingToParents,
-		FSOrdinanceTypeSealingToSpouse
-		];
-	}
-	return types;
 }
 
 + (NSString *)reservationTypeFromOrdinanceType:(FSOrdinanceType)ordinanceType
