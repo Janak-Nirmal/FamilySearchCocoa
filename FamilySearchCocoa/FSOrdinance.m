@@ -109,7 +109,7 @@
 
 					// STATUS
 					NSString *statusString = ordinanceDictionary[@"status"];
-					if (statusString) [ordinance setStatus:[self statusFromString:statusString]];
+					if (statusString) [ordinance setStatus:statusString];
 
 					// NOTES
 					if (notes) [ordinance setNotes:notes];
@@ -543,30 +543,6 @@
 	BOOL peopleMatch			= [self.people isEqualToSet:ordinance.people];
 	BOOL exists					= matchingIdentifiers || (matchingTypes && bothNotCompleted && bothNilIdentifiers && peopleMatch);
 	return exists;
-}
-
-+ (FSOrdinanceStatus)statusFromString:(NSString *)status
-{
-	if ([status isEqualToString:@"Completed"])
-		return FSOrdinanceStatusCompleted;
-	if ([status isEqualToString:@"Ready"])
-		return FSOrdinanceStatusReady;
-	if ([status isEqualToString:@"In Progress"])
-		return FSOrdinanceStatusInProgress;
-	if ([status isEqualToString:@"Needs More Information"])
-		return FSOrdinanceStatusNeedsMoreInfo;
-	if ([status isEqualToString:@"Not Ready"])
-		return FSOrdinanceStatusNotReady;
-	if ([status isEqualToString:@"Not Available"])
-		return FSOrdinanceStatusNotAvailable;
-	if ([status isEqualToString:@"Not Needed"])
-		return FSOrdinanceStatusNotNeeded;
-	if ([status isEqualToString:@"On Hold"])
-		return FSOrdinanceStatusOnHold;
-	if ([status isEqualToString:@"Reserved"])
-		return FSOrdinanceStatusReserved;
-
-	return FSOrdinanceStatusNotSet;
 }
 
 + (NSString *)reservationTypeFromOrdinanceType:(FSOrdinanceType)ordinanceType

@@ -35,23 +35,24 @@ typedef NSString * FSOrdinanceType;
 #define FSOrdinanceTypeSealingToParents				@"Sealing to Parents"
 #define FSOrdinanceTypeSealingToSpouse				@"Sealing to Spouse"
 
+// Ordinance Status
+typedef NSString * FSOrdinanceStatus;
+#define FSOrdinanceStatusCompleted					@"Completed"				// May or may not be an officially recorded ordinance. (could be patron submitted).
+#define FSOrdinanceStatusReady						@"Ready"					// Is ready for an Ordinance Request to be printed
+#define FSOrdinanceStatusInProgress					@"In Progress"				// Family Ordinance Request has been printed
+#define FSOrdinanceStatusNeedsMoreInfo				@"Needs More Information"	// The person record needs more info before the work can be done
+#define FSOrdinanceStatusNotReady					@"Not Ready"				// The person has not be deceaced for at least a year
+#define FSOrdinanceStatusNotAvailable				@"Not Available"			// Privacy reasons or person lived before 1500 AD
+#define FSOrdinanceStatusNotNeeded					@"Not Needed"				// Died before the age of accountability
+#define FSOrdinanceStatusOnHold						@"On Hold"					// Someone has printed cards for prerequesited ordinances. Will be taken off hold when they are completed.
+#define FSOrdinanceStatusReserved					@"Reserved"					// Someone else has already reserved this ordinance
+#define FSOrdinanceStatusNotSet						@"Not Set"					// The status of this person record has not been set
+
+
 typedef enum {
 	FSOrdinanceInventoryTypePersonal,		// You are responsible for getting the ordinance done
 	FSOrdinanceInventoryTypeChurch			// The church will assign a patron to do the ordinance
 } FSOrdinanceInventoryType;
-
-typedef enum {
-	FSOrdinanceStatusCompleted,				// May or may not be an officially recorded ordinance. (could be patron submitted).
-	FSOrdinanceStatusReady,					// Is ready for an Ordinance Request to be printed
-	FSOrdinanceStatusInProgress,			// Family Ordinance Request has been printed
-	FSOrdinanceStatusNeedsMoreInfo,			// The person record needs more info before the work can be done
-	FSOrdinanceStatusNotReady,				// The person has not be deceaced for at least a year
-	FSOrdinanceStatusNotAvailable,			// Privacy reasons or person lived before 1500 AD
-	FSOrdinanceStatusNotNeeded,				// Died before the age of accountability
-	FSOrdinanceStatusOnHold,				// Someone has printed cards for prerequesited ordinances. Will be taken off hold when they are completed.
-	FSOrdinanceStatusReserved,				// Someone else has already reserved this ordinance
-	FSOrdinanceStatusNotSet					// The status of this person record has not been set
-} FSOrdinanceStatus;
 
 
 
