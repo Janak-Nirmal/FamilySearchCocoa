@@ -56,6 +56,7 @@ typedef NSString * FSPersonEventType;
 
 + (FSEvent *)eventWithType:(FSPersonEventType)type identifier:(NSString *)identifier;
 - (BOOL)isEqualToEvent:(FSEvent *)event;
++ (NSArray *)eventTypes;
 
 @end
 

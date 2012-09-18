@@ -81,6 +81,22 @@
 	return results;
 }
 
++ (NSArray *)criteriaKeys
+{
+	return @[
+		FSSearchCriteriaName,
+		FSSearchCriteriaGivenName,
+		FSSearchCriteriaFamilyName,
+		FSSearchCriteriaGender,
+		FSSearchCriteriaBirthDate,
+		FSSearchCriteriaBirthPlace,
+		FSSearchCriteriaDeathDate,
+		FSSearchCriteriaDeathPlace,
+		FSSearchCriteriaMarriageDate,
+		FSSearchCriteriaMarriagePlace
+	];
+}
+
 @end
 
 

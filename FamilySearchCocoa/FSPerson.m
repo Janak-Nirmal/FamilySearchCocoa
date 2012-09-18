@@ -342,6 +342,39 @@
 	_onChange(self);
 }
 
++ (NSArray *)properties
+{
+	return @[
+		FSPropertyTypeCasteName,
+		FSPropertyTypeClanName,
+		FSPropertyTypeNationalID,
+		FSPropertyTypeNationalOrigin,
+		FSPropertyTypeTitleOfNobility,
+		FSPropertyTypeOccupation,
+		FSPropertyTypePhysicalDescription,
+		FSPropertyTypeRace,
+		FSPropertyTypeReligiousAffiliation,
+		FSPropertyTypeStillborn,
+		FSPropertyTypeTribeName,
+		FSPropertyTypeGEDCOMID,
+		FSPropertyTypeCommonLawMarriage,
+		FSPropertyTypeOther,
+		FSPropertyTypeNumberOfChildren,
+		FSPropertyTypeNumberOfMarriages,
+		FSPropertyTypeCurrentlySpouses,
+		FSPropertyTypeDiedBeforeEight,
+		FSPropertyTypeNameSake,
+		FSPropertyTypeNeverHadChildren,
+		FSPropertyTypeNeverMarried,
+		FSPropertyTypeNotAccountable,
+		FSPropertyTypePossessions,
+		FSPropertyTypeResidence,
+		FSPropertyTypeScholasticAchievement,
+		FSPropertyTypeSocialSecurityNumber,
+		FSPropertyTypeTwin
+	];
+}
+
 - (void)reset
 {
 	for (FSProperty *property in [_properties allValues]) {
@@ -647,6 +680,20 @@
 	}
 
 	return response;
+}
+
++ (NSArray *)lineageTypes
+{
+	return @[
+		FSLineageTypeBiological,
+		FSLineageTypeAdoptive,
+		FSLineageTypeFoster,
+		FSLineageTypeGuardianship,
+		FSLineageTypeStep,
+		FSLineageTypeUnknown,
+		FSLineageTypeHeadOfHousehold,
+		FSLineageTypeOther
+	];
 }
 
 

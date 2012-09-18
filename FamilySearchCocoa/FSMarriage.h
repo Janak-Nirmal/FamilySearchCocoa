@@ -72,6 +72,7 @@ typedef NSString * FSMarriageEventType;
 #pragma mark - Properties
 - (NSString *)propertyForKey:(FSMarriagePropertyType)key;
 - (void)setProperty:(NSString *)property forKey:(FSMarriagePropertyType)key;
++ (NSArray *)marriageProperties;
 - (void)reset;
 
 

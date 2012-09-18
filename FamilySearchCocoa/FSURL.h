@@ -8,5 +8,7 @@
 
 
 @interface FSURL : NSObject
+
 + (void)setSandboxed:(BOOL)sandboxed;
+
 @end

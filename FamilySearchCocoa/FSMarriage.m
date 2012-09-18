@@ -61,6 +61,83 @@
 
 
 
+#pragma mark - Syncing
+
+- (MTPocketResponse *)fetch
+{
+	// empty out this object so it only contains what's on the server
+	[self empty];
+
+	NSURL *url = [self.url urlWithModule:@"familytree"
+								 version:2
+								resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+							 identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+								  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+									misc:nil];
+
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+
+
+
+
+	if (response.success) {
+		NSArray *spouses = [response.body valueForComplexKeyPath:@"persons[first].relationships.spouse"];
+		for (NSDictionary *spouse in spouses) {
+			NSString *wifeID = spouse[@"id"];
+			if ([wifeID isEqualToString:self.wife.identifier]) {
+
+				// PROPERTIES
+				NSArray *characteristics = [spouse valueForComplexKeyPath:@"assertions.characteristics"];
+				if (![characteristics isKindOfClass:[NSNull class]])
+					for (NSDictionary *characteristic in characteristics) {
+						NSString *dateString = [characteristic valueForComplexKeyPath:@"value.date.normalized"];
+						if (!dateString) dateString = [characteristic valueForComplexKeyPath:@"value.date.original"];
+						FSProperty *property = [[FSProperty alloc] init];
+						property.identifier = [characteristic valueForComplexKeyPath:@"value.id"];
+						property.key		= [characteristic valueForComplexKeyPath:@"value.type"];
+						property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
+						property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
+						property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
+						property.date		= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristic, @"value.date.normalized", @"value.date.original")];
+						property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
+						(self.properties)[property.key] = property;
+					}
+
+				// EVENTS
+				NSArray *events = [spouse valueForComplexKeyPath:@"assertions.events"];
+				if (![events isKindOfClass:[NSNull class]])
+					for (NSDictionary *eventDict in events) {
+						FSMarriageEventType type = [eventDict valueForComplexKeyPath:@"value.type"];
+						NSString *identifier = [eventDict valueForComplexKeyPath:@"value.id"];
+						FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:type identifier:identifier];
+						event.date = [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
+						event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
+						[self addMarriageEvent:event];
+					}
+			}
+		}
+	}
+
+	return response;
+}
+
+- (MTPocketResponse *)save
+{
+	if (self.deleted) {
+		return [self deleteMarriage];
+	}
+	return [self updateMarriage];
+}
+
+- (MTPocketResponse *)destroy
+{
+	self.deleted = YES;
+	return [self save];
+}
+
+
+
+
 #pragma mark - Properties
 
 - (NSString *)propertyForKey:(FSMarriagePropertyType)key
@@ -83,6 +160,19 @@
 		_properties[key] = p;
 	}
 	p.value = property;
+}
+
++ (NSArray *)marriageProperties
+{
+	return @[
+		FSMarriagePropertyTypeGEDCOMID,
+		FSMarriagePropertyTypeCommonLawMarriage,
+		FSMarriagePropertyTypeNumberOfChildren,
+		FSMarriagePropertyTypeCurrentlySpouses,
+		FSMarriagePropertyTypeNeverHadChildren,
+		FSMarriagePropertyTypeNeverMarried,
+		FSMarriagePropertyTypeOther
+	];
 }
 
 - (void)reset
@@ -119,79 +209,27 @@
 	}
 }
 
-
-
-- (MTPocketResponse *)fetch
++ (NSArray *)marriageEventTypes
 {
-	// empty out this object so it only contains what's on the server
-	[self empty];
-
-	NSURL *url = [self.url urlWithModule:@"familytree"
-							  version:2
-							 resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
-						  identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
-							   params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
-								 misc:nil];
-
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
-	
-
-
-
-	if (response.success) {
-		NSArray *spouses = [response.body valueForComplexKeyPath:@"persons[first].relationships.spouse"];
-		for (NSDictionary *spouse in spouses) {
-			NSString *wifeID = spouse[@"id"];
-			if ([wifeID isEqualToString:self.wife.identifier]) {
-
-				// PROPERTIES
-				NSArray *characteristics = [spouse valueForComplexKeyPath:@"assertions.characteristics"];
-				if (![characteristics isKindOfClass:[NSNull class]])
-					for (NSDictionary *characteristic in characteristics) {
-						NSString *dateString = [characteristic valueForComplexKeyPath:@"value.date.normalized"];
-						if (!dateString) dateString = [characteristic valueForComplexKeyPath:@"value.date.original"];
-						FSProperty *property = [[FSProperty alloc] init];
-						property.identifier = [characteristic valueForComplexKeyPath:@"value.id"];
-						property.key		= [characteristic valueForComplexKeyPath:@"value.type"];
-						property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
-						property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
-						property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
-						property.date		= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristic, @"value.date.normalized", @"value.date.original")];
-						property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
-						(self.properties)[property.key] = property;
-					}
-				
-				// EVENTS
-				NSArray *events = [spouse valueForComplexKeyPath:@"assertions.events"];
-				if (![events isKindOfClass:[NSNull class]])
-					for (NSDictionary *eventDict in events) {
-						FSMarriageEventType type = [eventDict valueForComplexKeyPath:@"value.type"];
-						NSString *identifier = [eventDict valueForComplexKeyPath:@"value.id"];
-						FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:type identifier:identifier];
-						event.date = [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
-						event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
-						[self addMarriageEvent:event];
-					}
-			}
-		}
-	}
-
-	return response;
+	return @[
+		FSMarriageEventTypeAnnulment,
+		FSMarriageEventTypeDivorce,
+		FSMarriageEventTypeDivorceFiling,
+		FSMarriageEventTypeEngagement,
+		FSMarriageEventTypeMarriage,
+		FSMarriageEventTypeMarriageBanns,
+		FSMarriageEventTypeMarriageContract,
+		FSMarriageEventTypeMarriageLicense,
+		FSMarriageEventTypeCensus,
+		FSMarriageEventTypeMission,
+		FSMarriageEventTypeMarriageSettlement,
+		FSMarriageEventTypeSeperation,
+		FSMarriageEventTypeTimeOnlyMarriage,
+		FSMarriageEventTypeOther
+	];
 }
 
-- (MTPocketResponse *)save
-{
-	if (self.deleted) {
-		return [self deleteMarriage];
-	}
-	return [self updateMarriage];
-}
 
-- (MTPocketResponse *)destroy
-{
-	self.deleted = YES;
-	return [self save];
-}
 
 
 #pragma mark - Private Methods

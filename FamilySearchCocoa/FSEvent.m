@@ -23,7 +23,9 @@ NSString *randomStringWithLength(NSInteger length)
 
 
 
+
 @implementation FSEvent
+
 
 - (id)initWithType:(FSPersonEventType)type identifier:(NSString *)identifier
 {
@@ -50,6 +52,48 @@ NSString *randomStringWithLength(NSInteger length)
 		return YES;
 	return NO;
 }
+
++ (NSArray *)eventTypes
+{
+	return @[
+		FSPersonEventTypeAdoption,
+		FSPersonEventTypeAdultChristening,
+		FSPersonEventTypeBaptism,
+		FSPersonEventTypeConfirmation,
+		FSPersonEventTypeBirth,
+		FSPersonEventTypeBlessing,
+		FSPersonEventTypeBurial,
+		FSPersonEventTypeChristening,
+		FSPersonEventTypeCremation,
+		FSPersonEventTypeDeath,
+		FSPersonEventTypeGraduation,
+		FSPersonEventTypeImmigration,
+		FSPersonEventTypeMilitaryService,
+		FSPersonEventTypeMission,
+		FSPersonEventTypeMove,
+		FSPersonEventTypeNaturalization,
+		FSPersonEventTypeProbate,
+		FSPersonEventTypeRetirement,
+		FSPersonEventTypeWill,
+		FSPersonEventTypeCensus,
+		FSPersonEventTypeCircumcision,
+		FSPersonEventTypeEmigration,
+		FSPersonEventTypeExcommunication,
+		FSPersonEventTypeFirstCommunion,
+		FSPersonEventTypeFirstKnownChild,
+		FSPersonEventTypeFuneral,
+		FSPersonEventTypeHospitalization,
+		FSPersonEventTypeIllness,
+		FSPersonEventTypeNaming,
+		FSPersonEventTypeMiscarriage,
+		FSPersonEventTypeOrdination,
+		FSPersonEventTypeOther
+	];
+}
+
+
+
+#pragma mark - Private Methods
 
 - (void)setDate:(NSDateComponents *)date
 {

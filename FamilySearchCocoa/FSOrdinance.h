@@ -88,4 +88,7 @@ typedef enum {
 + (MTPocketResponse *)urlOfChurchPolicies:(NSURL **)url;
 
 
+#pragma mark - Misc
++ (NSArray *)ordinanceTypes;
+
 @end

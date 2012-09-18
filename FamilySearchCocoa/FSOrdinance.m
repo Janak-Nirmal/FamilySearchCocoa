@@ -455,6 +455,23 @@
 
 
 
+#pragma mark - Misc
+
++ (NSArray *)ordinanceTypes
+{
+	return @[
+		FSOrdinanceTypeBaptism,
+		FSOrdinanceTypeConfirmation,
+		FSOrdinanceTypeInitiatory,
+		FSOrdinanceTypeEndowment,
+		FSOrdinanceTypeSealingToParents,
+		FSOrdinanceTypeSealingToSpouse
+	];
+}
+
+
+
+
 
 #pragma mark - Private Methods
 
