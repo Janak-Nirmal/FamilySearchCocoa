@@ -9,6 +9,7 @@
 #import "FSEvent.h"
 #import "private.h"
 #import <NSDate+MTDates.h>
+#import <NSDateComponents+MTDates.h>
 
 
 NSString *randomStringWithLength(NSInteger length)
@@ -48,8 +49,16 @@ NSString *randomStringWithLength(NSInteger length)
 
 - (BOOL)isEqualToEvent:(FSEvent *)event
 {
-	if (self == event || [self.type isEqualToString:event.type]) // TODO: this needs to be more precise. (e.g. mutliple Mission events)
+	BOOL date	= [self.date isEqualToDateComponents:event.date];
+//	BOOL place	= [self.place isEqualToString:event.place]; // TODO: normalized name won't match original. Can't update on save because it's not returned. talk to API guys.
+	BOOL select	= self.selected == event.selected;
+	BOOL type	= [self.type isEqualToString:event.type];
+//	BOOL ident	= self.identifier && event.identifier && [self.identifier isEqualToString:event.identifier];
+	BOOL equal	= date && select && type;
+	
+	if (self == event || equal)
 		return YES;
+
 	return NO;
 }
 

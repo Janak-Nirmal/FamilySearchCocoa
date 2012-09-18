@@ -86,6 +86,8 @@
 			NSString *wifeID = spouse[@"id"];
 			if ([wifeID isEqualToString:self.wife.identifier]) {
 
+				_version = [[spouse valueForComplexKeyPath:@"version"] integerValue];
+
 				// PROPERTIES
 				NSArray *characteristics = [spouse valueForComplexKeyPath:@"assertions.characteristics"];
 				if (![characteristics isKindOfClass:[NSNull class]])
@@ -131,7 +133,7 @@
 
 - (MTPocketResponse *)destroy
 {
-	self.deleted = YES;
+	_deleted = YES;
 	return [self save];
 }
 
@@ -192,6 +194,7 @@
 	if (!event)	raiseParamException(@"event");
 
 	_changed = YES;
+	event.changed = YES;
 	for (FSEvent *e in _events) {
 		if ([e isEqualToEvent:event]) {
 			((NSMutableArray *)_events)[[_events indexOfObject:e]] = event;
@@ -205,7 +208,7 @@
 {
 	for (FSEvent *e in _events) {
 		if ([event isEqualToEvent:e])
-			_deleted = YES;
+			e.deleted = YES;
 	}
 }
 
@@ -274,7 +277,7 @@
 	NSMutableArray *events = [NSMutableArray array];
 	for (FSEvent *event in self.events) {
 		NSMutableDictionary *eventInfo = [NSMutableDictionary dictionaryWithObject:event.type forKey:@"type"];
-		if (event.date)		eventInfo[@"date"] = @{ @"original" : event.date };
+		if (event.date)		eventInfo[@"date"] = @{ @"original" : [event.date stringValue] };
 		if (event.place)	eventInfo[@"place"] = @{ @"original" : event.place };
 
 		if ((event.date || event.place)) {
@@ -282,8 +285,9 @@
 				eventInfo[@"id"] = event.identifier;
 				if (event.isDeleted)
 					[events addObject: @{ @"value" : eventInfo, @"action" : @"Delete" } ];
-				else
-					[events addObject: @{ @"value" : eventInfo, @"tempId" : event.localIdentifier } ];
+				else if (event.isChanged) {
+					[events addObject: @{ @"value" : eventInfo } ];
+				}
 			}
 			else {
 				[events addObject: @{ @"value" : eventInfo, @"tempId" : event.localIdentifier } ]; // TODO: figure out why tempId is not coming back
@@ -318,8 +322,9 @@
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
 	if (response.success) {
-		self.changed = NO;
-		self.deleted = NO;
+		_changed = NO;
+		_deleted = NO;
+		_version = [[response.body valueForComplexKeyPath:@"persons[first].relationships.spouse[first].version"] integerValue];
 	}
 
 	return response;
