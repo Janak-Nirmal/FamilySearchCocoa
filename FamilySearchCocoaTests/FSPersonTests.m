@@ -10,6 +10,7 @@
 #import "FSURL.h"
 #import "FSAuth.h"
 #import "FSPerson.h"
+#import "FSMarriage.h"
 #import "constants.h"
 #import <NSDate+MTDates.h>
 #import <NSDateComponents+MTDates.h>
@@ -324,7 +325,7 @@
 	spouse.name = @"She Kirk";
 	spouse.gender = @"Female";
 
-	[_person addSpouse:spouse];
+	[_person addMarriage:[FSMarriage marriageWithHusband:_person wife:spouse]];
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
@@ -332,10 +333,10 @@
 	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
-	STAssertTrue(person.spouses.count == 1, nil);
+	STAssertTrue(person.marriages.count == 1, nil);
 
 	// remove the spouse
-	[person removeSpouse:spouse];
+	[person removeMarriage:[person marriageWithSpouse:spouse]];
 	response = [person save];
 	STAssertTrue(response.success, nil);
 
@@ -343,7 +344,7 @@
 	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
-	STAssertTrue(person.spouses.count == 0, nil);
+	STAssertTrue(person.marriages.count == 0, nil);
 }
 
 - (void)testDuplicates

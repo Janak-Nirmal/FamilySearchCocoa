@@ -16,12 +16,12 @@
 #import "constants.h"
 #import <NSObject+MTJSONUtils.h>
 
-@interface AFSEventTests ()
+@interface FSEventTests ()
 @property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
-@implementation AFSEventTests
+@implementation FSEventTests
 
 - (void)setUp
 {

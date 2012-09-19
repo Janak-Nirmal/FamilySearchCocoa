@@ -223,7 +223,8 @@
 
 				for (FSPerson *parent in person.parents) {
 					BOOL foundSpouse = NO;
-					for (FSPerson *spouse in parent.spouses) {
+					for (FSMarriage *marriage in parent.marriages) {
+						FSPerson *spouse = parent.isMale ? marriage.wife : marriage.husband;
 						if (foundSpouse) break;
 						for (FSPerson *otherParent in person.parents) {
 							if ([spouse isSamePerson:otherParent]) {
@@ -234,12 +235,13 @@
 						}
 					}
 
+
 					if (!foundSpouse) {
 						FSPerson *spouse = [FSPerson personWithSessionID:anyPerson.sessionID identifier:nil];
 						spouse.gender		= parent.isMale ? @"Female" : @"Male";
 						spouse.deathDate	= [NSDateComponents componentsFromString:@"1 January 1900"];
 						[person addParent:spouse withLineage:FSLineageTypeBiological];
-						[parent addSpouse:spouse];
+						[parent addMarriage:[FSMarriage marriageWithHusband:(parent.isMale ? parent : spouse) wife:(parent.isMale ? spouse : parent)]];
 						MTPocketResponse *response = [person save];
 						if (response.success) {
 							[couples addObject:@[ @{ @"role" : (parent.isMale ? @"Father" : @"Mother"), @"ref" : parent.identifier}, @{ @"role" : (spouse.isMale ? @"Father" : @"Mother"), @"ref" : spouse.identifier} ]];
@@ -273,9 +275,10 @@
 			
 			// SEALING TO SPOUSE
 			else if ([type isEqualToString:FSOrdinanceTypeSealingToSpouse]) {
-				if (person.spouses.class == 0) continue;
+				if (person.marriages.count == 0) continue;
 				NSMutableArray *sealingsToSpouse = [NSMutableArray array];
-				for (FSPerson *spouse in person.spouses) {
+				for (FSMarriage *marriage in person.marriages) {
+					FSPerson *spouse = person.isMale ? marriage.wife : marriage.husband;
 					NSDictionary *ordinanceDictionary = @{
 										@"reservation" : @{
 											@"inventory" : @{
@@ -539,13 +542,10 @@
 
 - (BOOL)isEqualToOrdinance:(FSOrdinance *)ordinance
 {
-	BOOL matchingIdentifiers	= [self.identifier isEqualToString:ordinance.identifier];
+	BOOL matchingOfficial		= self.official == ordinance.official;
 	BOOL matchingTypes			= [self.type isEqualToString:ordinance.type];
-	BOOL bothNilIdentifiers		= !self.identifier && !ordinance.identifier;
-	BOOL bothNotCompleted		= !self.completed && !ordinance.completed;
-	BOOL peopleMatch			= [self.people isEqualToSet:ordinance.people];
-	BOOL exists					= matchingIdentifiers || (matchingTypes && bothNotCompleted && bothNilIdentifiers && peopleMatch);
-	return exists;
+	BOOL matchingPeople			= [self.people isEqualToSet:ordinance.people];
+	return (self.official && ordinance.official && matchingTypes && matchingPeople) || (matchingOfficial && matchingTypes && matchingPeople);
 }
 
 + (NSString *)reservationTypeFromOrdinanceType:(FSOrdinanceType)ordinanceType

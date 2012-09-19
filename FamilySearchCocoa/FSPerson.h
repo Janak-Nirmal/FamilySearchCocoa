@@ -79,7 +79,7 @@ typedef NSString * FSLineageType;
 @property (readonly)		  NSDate	*lastModifiedDate;
 @property (readonly)		  NSArray	*parents;				// Returns array of FSPerson objects
 @property (readonly)		  NSArray	*children;				// Returns array of FSperson objects
-@property (readonly)		  NSArray	*spouses;				// Returns array of FSMarriage objects. See FSMarriage.h for more info.
+@property (readonly)		  NSArray	*marriages;				// Returns array of FSMarriage objects. See FSMarriage.h for more info.
 @property (readonly)		  NSArray	*events;				// Returns array of FSEvent objects
 @property (readonly)		  NSArray	*ordinances;			// Returns array of FSOrdinance objects. See FSOrdinance.h for more info.
 @property (strong, nonatomic) void (^onChange)(FSPerson *p);	// The passed in block is invoked whenever the person is changed.
@@ -115,10 +115,10 @@ typedef NSString * FSLineageType;
 - (void)removeChild:(FSPerson *)child;
 
 
-#pragma mark - Spouses
-- (FSMarriage *)addSpouse:(FSPerson *)spouse;
+#pragma mark - Marriages
+- (void)addMarriage:(FSMarriage *)marriage;
+- (void)removeMarriage:(FSMarriage *)marriage;
 - (FSMarriage *)marriageWithSpouse:(FSPerson *)spouse;						// Returns nil if there is no marriage with the spouse
-- (void)removeSpouse:(FSPerson *)spouse;
 
 
 #pragma mark - Events

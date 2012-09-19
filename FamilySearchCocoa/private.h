@@ -90,7 +90,6 @@ FSQueryParameter familyQueryParameters();
 @property (nonatomic)			NSInteger			version;
 @property (getter = isChanged)	BOOL				changed;	// is newly created or updated and needs to be updated on the server
 @property (getter = isDeleted)	BOOL				deleted;	// has been deleted and needs to be deleted from the server
-+ (FSMarriage *)marriageWithHusband:(FSPerson *)husband wife:(FSPerson *)wife;
 - (MTPocketResponse *)destroy;
 @end
 
@@ -108,7 +107,7 @@ FSQueryParameter familyQueryParameters();
 
 
 @interface FSOrdinance ()
-@property (strong, nonatomic) NSString *identifier;
+@property (strong, nonatomic) NSString *identifier;					// currently not being used because the server returns nothing
 @property (nonatomic) BOOL userAdded;
 + (FSOrdinance *)ordinanceWithType:(FSOrdinanceType)type;
 - (void)setStatus:(FSOrdinanceStatus)status;

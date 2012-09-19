@@ -189,7 +189,7 @@
 			for (NSDictionary *spouseDictionary in spouses) {
 				FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:spouseDictionary[@"id"]];
 				[spouse populateFromPersonDictionary:spouseDictionary];
-				[person addSpouse:spouse];
+				[person addMarriage:[FSMarriage marriageWithHusband:(spouse.isMale ? spouse : person) wife:(spouse.isMale ? person : spouse)]];
 			}
 
 			[self addObject:person];

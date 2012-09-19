@@ -61,7 +61,7 @@ typedef NSString * FSMarriageEventType;
 
 
 #pragma mark - Constructor
-// obtain marriage objects from the FSPerson `spouses` property.
++ (FSMarriage *)marriageWithHusband:(FSPerson *)husband wife:(FSPerson *)wife;
 
 
 #pragma mark - Syncing

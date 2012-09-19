@@ -84,7 +84,7 @@
 	STAssertTrue(father.ordinances.count == startOrdinances + 4, nil);
 }
 
-- (void)testReserveAndUnreserveOrdinances
+- (void)testAAReserveAndUnreserveOrdinances
 {
 	MTPocketResponse *response = nil;
 
@@ -111,7 +111,7 @@
 	spouse.gender = @"Female";
 	spouse.deathDate	= [NSDateComponents componentsFromString:@"11 November 1909"];
 	spouse.deathPlace	= @"Pasco, Franklin, Washington, United States";
-	[father addSpouse:spouse];
+	[father addMarriage:[FSMarriage marriageWithHusband:father wife:spouse]];
 	response = [father save];
 	STAssertTrue(response.success, nil);
 
@@ -129,7 +129,7 @@
 
 	NSMutableArray *reservedOrdinances = [NSMutableArray array];
 	for (FSOrdinance *ordinance in father.ordinances) {
-		if (ordinance.status == FSOrdinanceStatusReserved) [reservedOrdinances addObject:ordinance];
+		if ([ordinance.status isEqualToString:FSOrdinanceStatusReserved]) [reservedOrdinances addObject:ordinance];
 	}
 	STAssertTrue(reservedOrdinances.count > 0, nil);
 
@@ -141,7 +141,7 @@
 
 	reservedOrdinances = [NSMutableArray array];
 	for (FSOrdinance *ordinance in father.ordinances) {
-		if (ordinance.status == FSOrdinanceStatusReserved) [reservedOrdinances addObject:ordinance];
+		if ([ordinance.status isEqualToString:FSOrdinanceStatusReserved]) [reservedOrdinances addObject:ordinance];
 	}
 	STAssertTrue(reservedOrdinances.count == 0, nil);
 }

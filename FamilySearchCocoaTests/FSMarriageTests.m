@@ -44,16 +44,17 @@
 	MTPocketResponse *response = nil;
 
 	// assert person has no spouses to start with
-	STAssertTrue(_person.spouses.count == 0, nil);
+	STAssertTrue(_person.marriages.count == 0, nil);
 
 	// add a spouse
 	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	spouse.name = @"She Guest";
 	spouse.gender = @"Female";
-	FSMarriage *marriage = [_person addSpouse:spouse];
+	FSMarriage *marriage = [FSMarriage marriageWithHusband:(spouse.isMale ? spouse : _person) wife:(spouse.isMale ? _person : spouse)];
+	[_person addMarriage:marriage];
 	response = [_person save];
 	STAssertTrue(response.success, nil);
-	STAssertTrue(_person.spouses.count == 1, nil);
+	STAssertTrue(_person.marriages.count == 1, nil);
 
 	// add event to marriage
 	FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:FSMarriageEventTypeMarriage identifier:nil];
@@ -67,8 +68,9 @@
 	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
-	STAssertTrue(_person.spouses.count == 1, nil);
+	STAssertTrue(_person.marriages.count == 1, nil);
 	FSMarriage *m = [person marriageWithSpouse:spouse];
+	[m fetch];
 	STAssertTrue(m.events.count == 1, nil);
 
 	// remove marriage event
@@ -93,10 +95,11 @@
 	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	spouse.name = @"She Guest";
 	spouse.gender = @"Female";
-	FSMarriage *marriage = [_person addSpouse:spouse];
+	FSMarriage *marriage = [FSMarriage marriageWithHusband:_person wife:spouse];
+	[_person addMarriage:marriage];
 	response = [_person save];
 	STAssertTrue(response.success, nil);
-	STAssertTrue(_person.spouses.count == 1, nil);
+	STAssertTrue(_person.marriages.count == 1, nil);
 
 	// add the properties
 	[marriage setProperty:@"2" forKey:FSMarriagePropertyTypeNumberOfChildren];
@@ -109,6 +112,7 @@
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	FSMarriage *m = [person marriageWithSpouse:spouse];
+	[m fetch];
 	STAssertTrue([[m propertyForKey:FSMarriagePropertyTypeNumberOfChildren] isEqualToString:@"2"], nil);
 	STAssertTrue([[m propertyForKey:FSMarriagePropertyTypeCommonLawMarriage] isEqualToString:@"True"], nil);
 }

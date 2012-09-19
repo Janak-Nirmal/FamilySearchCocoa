@@ -22,7 +22,6 @@
 @property (strong, nonatomic)	FSURL				*url;
 @property (strong, nonatomic)	NSMutableDictionary	*properties;
 @property (strong, nonatomic)	NSMutableArray		*relationships;
-@property (strong, nonatomic)	NSMutableArray		*marriages;
 @end
 
 
@@ -54,7 +53,8 @@
 
 @implementation FSPerson
 
-@synthesize events = _events;
+@synthesize events		= _events;
+@synthesize marriages	= _marriages;
 
 
 
@@ -120,14 +120,7 @@
 	if ([_identifier isEqualToString:@"me"]) _identifier = nil;
 
 	MTPocketResponse *response = [FSPerson batchFetchPeople:@[ self ]];
-
-	// Fetch marriage properties and events
-	if (response.success) {
-		for (FSPerson *spouse in self.spouses) {
-			FSMarriage *marriage = [self marriageWithSpouse:spouse];
-			[marriage fetch];
-		}
-	}
+	
 	return response;
 }
 
@@ -449,30 +442,36 @@
 
 
 
-#pragma mark - Spouses
+#pragma mark - Marriages
 
-- (NSArray *)spouses
+- (NSArray *)marriages
 {
-	NSMutableArray *spouses = [NSMutableArray array];
+	NSMutableArray *marriages = [NSMutableArray array];
 	for (FSMarriage *marriage in _marriages) {
-		if (!marriage.isDeleted) {
-			if ([marriage.husband isSamePerson:self])
-				[spouses addObject:marriage.wife];
-			if ([marriage.wife isSamePerson:self])
-				[spouses addObject:marriage.husband];
-		}
+		if (!marriage.isDeleted)
+			[marriages addObject:marriage];
 	}
-	return spouses;
+	return marriages;
 }
 
-- (FSMarriage *)addSpouse:(FSPerson *)spouse
+- (void)addMarriage:(FSMarriage *)marriage
 {
-	if (!spouse) raiseParamException(@"spouse");
+	if (!marriage) raiseParamException(@"marriage");
 
-	FSMarriage *marriage = [FSMarriage marriageWithHusband:(self.isMale ? self : spouse)	wife:(self.isMale ? spouse : self)];
 	marriage.changed = YES;
-	[self addMarriage:marriage];
-	return marriage;
+	
+	// add it to me
+	[self addOrReplaceMarriage:marriage];
+
+	// add it to them
+	FSPerson *other = [marriage.husband isSamePerson:self] ? marriage.wife : marriage.husband;
+	[other addOrReplaceMarriage:marriage];
+}
+
+- (void)removeMarriage:(FSMarriage *)marriage
+{
+	if (!marriage) raiseParamException(@"marriage");
+	marriage.deleted = YES;
 }
 
 - (FSMarriage *)marriageWithSpouse:(FSPerson *)spouse
@@ -482,17 +481,6 @@
 			return marriage;
 	}
 	return nil;
-}
-
-- (void)removeSpouse:(FSPerson *)spouse;
-{
-	if (!spouse) raiseParamException(@"spouse");
-
-	for (FSMarriage *marriage in _marriages) {
-		if ([marriage.wife isSamePerson:spouse] || [marriage.husband isSamePerson:spouse]) {
-			marriage.deleted = YES;
-		}
-	}
 }
 
 
@@ -590,7 +578,7 @@
 			for (NSDictionary *spouseDictionary in spouses) {
 				FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:spouseDictionary[@"id"]];
 				[spouse populateFromPersonDictionary:spouseDictionary];
-				[person addSpouse:spouse];
+				[person addMarriage:[FSMarriage marriageWithHusband:(spouse.isMale ? spouse : self) wife:(spouse.isMale ? self : spouse)]];
 			}
 
 			[(NSMutableArray *)*duplicates addObject:person];
@@ -742,24 +730,14 @@
 	}
 }
 
-- (void)addMarriage:(FSMarriage *)marriage
-{
-	// add it to me
-	[self addOrReplaceMarriage:marriage];
-
-	// add it to them
-	FSPerson *other = [marriage.husband isSamePerson:self] ? marriage.wife : marriage.husband;
-	[other addOrReplaceMarriage:marriage];
-}
-
-- (void)removeMarriage:(FSMarriage *)marriage
+- (void)deleteMarriage:(FSMarriage *)marriage
 {
 	// remove it from me
-	[_marriages removeObject:marriage];
+	[(NSMutableArray *)_marriages removeObject:marriage];
 
 	// remove it form them
 	FSPerson *other = [marriage.husband isSamePerson:self] ? marriage.wife : marriage.husband;
-	[other.marriages removeObject:marriage];
+	[(NSMutableArray *)other.marriages removeObject:marriage];
 }
 
 - (void)addOrReplaceMarriage:(FSMarriage *)marriage
@@ -767,18 +745,18 @@
 	for (NSInteger i = 0; i < _marriages.count; i++) {
 		FSMarriage *existing = _marriages[i];
 		if ([existing.husband isSamePerson:marriage.husband] && [existing.wife isSamePerson:marriage.wife]) {
-			_marriages[i] = marriage;
+			((NSMutableArray *)_marriages)[i] = marriage;
 			return;
 		}
 	}
-	[_marriages addObject:marriage];
+	[(NSMutableArray *)_marriages addObject:marriage];
 	_onChange(self);
 }
 
 - (void)clearAllMarriages
 {
 	for (FSMarriage *marriage in [_marriages copy]) {
-		[self removeMarriage:marriage];
+		[self deleteMarriage:marriage];
 	}
 }
 
@@ -898,9 +876,10 @@
 		for (NSDictionary *spouse in spouses) {
 			FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:spouse[@"id"]];
 			if ([p isSamePerson:self]) continue;
-			FSMarriage *marriage = [self addSpouse:p];
+			FSMarriage *marriage = [FSMarriage marriageWithHusband:(p.isMale ? p : self) wife:(p.isMale ? self : p)];
 			id version = spouse[@"version"];
 			marriage.version = version == [NSNull null] ? 1 : [version intValue];
+			[self addMarriage:marriage];
 		}
 	}
 
