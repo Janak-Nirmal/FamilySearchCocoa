@@ -808,6 +808,10 @@
 		[(NSMutableArray *)_ordinances addObject:ordinance];
 	}
 	_onChange(self);
+
+	// this method could only be called if the ordinance
+	// resource was queried, so it's a "sync" event.
+	_onSync(self);
 }
 
 - (BOOL)isSamePerson:(FSPerson *)person
