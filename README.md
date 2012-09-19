@@ -112,24 +112,6 @@ Add/Remove a child:
 	
 	person.children.count	// => 0
 
-Add/Remove a spouse:
-
-	person.spouses.count 	// => 0
-	
-	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
-	spouse.name = @"She Kirk";
-	spouse.gender = @"Female";
-	
-	[person addSpouse:spouse];
-	[person save];
-	
-	person.spouses.count	// => 1
-	
-	[person removeSpouse:spouse];
-	[person save];
-	
-	person.spouses.count	// => 0
-
 Add/Remove an Event:
 
 	person.events.count		// => 0
@@ -160,19 +142,40 @@ Convenience Events:
 	person.deathPlace	= @"Pasco, Franklin, Washington, United States";
 	[person save];
 
+Add/Remove a marriage
+
+	person.marriages.count 	// => 0
+	
+	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	spouse.name = @"She Kirk";
+	spouse.gender = @"Female";
+	
+	FSMarriage *marriage = [FSMarriage marriageWithHusband:person wife:spouse];
+	[person addMarriage:marriage];
+	[person save];
+	
+	person.marriages.count	// => 1
+		
+	[person removeMarriage:marriage];
+	[person save];
+	
+	person.marriages.count	// => 0
+
 Add/Read Marriage Properties:
 
 	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	spouse.name = @"She Man";
 	spouse.gender = @"Female";
-	FSMarriage *marriage = [person addSpouse:spouse];
+	
+	FSMarriage *marriage = [FSMarriage marriageWithHusband:person wife:spouse];
+	[person addMarriage:marriage];
 	[person save];
 	
-	person.spouses.count	// => 1
+	person.marriages.count	// => 1
 	
 	[marriage setProperty:@"2" forKey:FSMarriagePropertyTypeNumberOfChildren];
 	[marriage setProperty:@"True" forKey:FSMarriagePropertyTypeCommonLawMarriage];
-	[person save];
+	[marriage save];
 	
 	FSPerson *p = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
 	[p fetch];
@@ -187,10 +190,12 @@ Add/Remove a Marriage Event:
 	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	spouse.name = @"She Man";
 	spouse.gender = @"Female";
-	FSMarriage *marriage = [person addSpouse:spouse];
+	
+	FSMarriage *marriage = [FSMarriage marriageWithHusband:person wife:spouse];
+	[person addMarriage:marriage];
 	[person save];
 	
-	person.spouses.count	// => 1
+	person.marriages.count	// => 1
 	
 	marriage.events.count	// => 0
 	
@@ -198,12 +203,12 @@ Add/Remove a Marriage Event:
 	event.date = [NSDateComponents componentsFromString:@"11 August 1995"];
 	event.place = @"Kennewick, WA";
 	[marriage addMarriageEvent:event];
-	[person save];
+	[marriage save];
 	
 	marriage.events.count	// => 1
 	
 	[marriage removeMarriageEvent:event];
-	[person save];
+	[marriage save];
 	
 	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
 	[person fetch];
