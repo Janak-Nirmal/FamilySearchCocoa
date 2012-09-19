@@ -163,6 +163,8 @@
 					[person addOrReplaceOrdinance:ordinance];
 				}
 			}
+
+			person.onSync(person);
 		}
 	}
 
@@ -308,6 +310,7 @@
 			}
 		}
 		[personDictionaries addObject:personDictionary];
+		person.onSync(person);
 	}
 	
 	NSDictionary *body = @{ @"persons" : @{ @"person" : personDictionaries } };
