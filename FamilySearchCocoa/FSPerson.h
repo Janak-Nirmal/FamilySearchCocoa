@@ -71,6 +71,7 @@ typedef NSString * FSLineageType;
 @interface FSPerson : NSObject
 
 @property (readonly)		  NSString	*identifier;
+@property (strong, nonatomic) NSString	*sessionID;
 @property (strong, nonatomic) NSString	*name;                  // @"Adam Kirk"
 @property (strong, nonatomic) NSString	*gender;				// @"Male" or @"Female"
 @property (readonly)		  BOOL		isAlive;				// Default: YES. You must add a death event for the system to return NO. Not editable by user.

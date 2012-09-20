@@ -73,7 +73,6 @@ FSQueryParameter familyQueryParameters();
 
 
 @interface FSPerson ()
-@property (strong, nonatomic)	NSString	*sessionID;
 @property (readonly)			BOOL		isMale;
 - (void)populateFromPersonDictionary:(NSDictionary *)person;
 - (void)removeMarriage:(FSMarriage *)marriage;
