@@ -53,6 +53,7 @@ typedef NSString * FSPersonEventType;
 @property (readonly)						FSPersonEventType	type;
 @property (strong, nonatomic)				NSDateComponents	*date;
 @property (strong, nonatomic)				NSString			*place;
+@property (nonatomic, getter = isSelected)	BOOL				selected;	// is selected for the person summary
 
 + (FSEvent *)eventWithType:(FSPersonEventType)type identifier:(NSString *)identifier;
 - (BOOL)isEqualToEvent:(FSEvent *)event;
