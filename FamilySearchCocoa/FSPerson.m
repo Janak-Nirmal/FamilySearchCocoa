@@ -335,39 +335,6 @@
 	_onChange(self);
 }
 
-+ (NSArray *)properties
-{
-	return @[
-		FSPropertyTypeCasteName,
-		FSPropertyTypeClanName,
-		FSPropertyTypeNationalID,
-		FSPropertyTypeNationalOrigin,
-		FSPropertyTypeTitleOfNobility,
-		FSPropertyTypeOccupation,
-		FSPropertyTypePhysicalDescription,
-		FSPropertyTypeRace,
-		FSPropertyTypeReligiousAffiliation,
-		FSPropertyTypeStillborn,
-		FSPropertyTypeTribeName,
-		FSPropertyTypeGEDCOMID,
-		FSPropertyTypeCommonLawMarriage,
-		FSPropertyTypeOther,
-		FSPropertyTypeNumberOfChildren,
-		FSPropertyTypeNumberOfMarriages,
-		FSPropertyTypeCurrentlySpouses,
-		FSPropertyTypeDiedBeforeEight,
-		FSPropertyTypeNameSake,
-		FSPropertyTypeNeverHadChildren,
-		FSPropertyTypeNeverMarried,
-		FSPropertyTypeNotAccountable,
-		FSPropertyTypePossessions,
-		FSPropertyTypeResidence,
-		FSPropertyTypeScholasticAchievement,
-		FSPropertyTypeSocialSecurityNumber,
-		FSPropertyTypeTwin
-	];
-}
-
 - (void)reset
 {
 	for (FSProperty *property in [_properties allValues]) {
@@ -490,11 +457,13 @@
 
 - (NSArray *)events
 {
-	NSMutableArray *events = [NSMutableArray array];
-	for (FSEvent *e in _events) {
-		if (!e.isDeleted) [events addObject:e];
+	NSMutableDictionary *events = [NSMutableDictionary dictionary];
+	for (FSEvent *event in _events) {
+		if (!event.isDeleted && (event.selected || !events[event.type])) {
+			events[event.type] = event;
+		}
 	}
-	return events;
+	return [events allValues];
 }
 
 - (void)addEvent:(FSEvent *)event
@@ -668,6 +637,44 @@
 	}
 
 	return response;
+}
+
+
+
+
+#pragma mark - Keys
+
++ (NSArray *)properties
+{
+	return @[
+	FSPropertyTypeCasteName,
+	FSPropertyTypeClanName,
+	FSPropertyTypeNationalID,
+	FSPropertyTypeNationalOrigin,
+	FSPropertyTypeTitleOfNobility,
+	FSPropertyTypeOccupation,
+	FSPropertyTypePhysicalDescription,
+	FSPropertyTypeRace,
+	FSPropertyTypeReligiousAffiliation,
+	FSPropertyTypeStillborn,
+	FSPropertyTypeTribeName,
+	FSPropertyTypeGEDCOMID,
+	FSPropertyTypeCommonLawMarriage,
+	FSPropertyTypeOther,
+	FSPropertyTypeNumberOfChildren,
+	FSPropertyTypeNumberOfMarriages,
+	FSPropertyTypeCurrentlySpouses,
+	FSPropertyTypeDiedBeforeEight,
+	FSPropertyTypeNameSake,
+	FSPropertyTypeNeverHadChildren,
+	FSPropertyTypeNeverMarried,
+	FSPropertyTypeNotAccountable,
+	FSPropertyTypePossessions,
+	FSPropertyTypeResidence,
+	FSPropertyTypeScholasticAchievement,
+	FSPropertyTypeSocialSecurityNumber,
+	FSPropertyTypeTwin
+	];
 }
 
 + (NSArray *)lineageTypes
@@ -923,26 +930,20 @@
 
 - (NSDateComponents *)dateForEventOfType:(FSPersonEventType)eventType
 {
-	FSEvent *candidate = nil;
-	for (FSEvent *event in _events) {
-		if ([event.type isEqualToString:eventType]) {
-			if (!candidate || event.selected)
-				candidate = event;
-		}
-	}
-	return candidate.date;
+	for (FSEvent *event in _events)
+		if ([event.type isEqualToString:eventType])
+			return event.date;
+
+	return nil;
 }
 
 - (NSString *)placeForEventOfType:(FSPersonEventType)eventType
 {
-	FSEvent *candidate = nil;
-	for (FSEvent *event in _events) {
-		if ([event.type isEqualToString:eventType]) {
-			if (!candidate || event.selected)
-				candidate = event;
-		}
-	}
-	return candidate.place;
+	for (FSEvent *event in self.events)
+		if ([event.type isEqualToString:eventType])
+			return event.place;
+	
+	return nil;
 }
 
 @end

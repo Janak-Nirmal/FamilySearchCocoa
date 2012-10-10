@@ -50,14 +50,6 @@
 
 #pragma mark - Getting Ordinances
 
-+ (MTPocketResponse *)fetchOrdinancesForPerson:(FSPerson *)person
-{
-	if (!person || !person.identifier) raiseParamException(@"person");
-	
-	MTPocketResponse *response = [FSOrdinance fetchOrdinancesForPeople: @[ person ] ];
-	return response;
-}
-
 + (MTPocketResponse *)fetchOrdinancesForPeople:(NSArray *)people
 {
 	if (people.count == 0) return nil;
@@ -461,7 +453,7 @@
 
 
 
-#pragma mark - Misc
+#pragma mark - Keys
 
 + (NSArray *)ordinanceTypes
 {
@@ -477,6 +469,26 @@
 		];
 	}
 	return types;
+}
+
++ (NSArray *)ordinanceStatuses
+{
+	static NSArray *statuses = nil;
+	if (!statuses) {
+		statuses = @[
+			FSOrdinanceStatusCompleted,
+			FSOrdinanceStatusReady,
+			FSOrdinanceStatusInProgress,
+			FSOrdinanceStatusNeedsMoreInfo,
+			FSOrdinanceStatusNotReady,
+			FSOrdinanceStatusNotAvailable,
+			FSOrdinanceStatusNotNeeded,
+			FSOrdinanceStatusOnHold,
+			FSOrdinanceStatusReserved,
+			FSOrdinanceStatusNotSet
+		];
+	}
+	return statuses;
 }
 
 

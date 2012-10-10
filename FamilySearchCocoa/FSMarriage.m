@@ -22,6 +22,26 @@
 	return (FSMarriageEvent *)[super eventWithType:type identifier:identifier];
 }
 
++ (NSArray *)marriageEventTypes
+{
+	return @[
+		FSMarriageEventTypeAnnulment,
+		FSMarriageEventTypeDivorce,
+		FSMarriageEventTypeDivorceFiling,
+		FSMarriageEventTypeEngagement,
+		FSMarriageEventTypeMarriage,
+		FSMarriageEventTypeMarriageBanns,
+		FSMarriageEventTypeMarriageContract,
+		FSMarriageEventTypeMarriageLicense,
+		FSMarriageEventTypeCensus,
+		FSMarriageEventTypeMission,
+		FSMarriageEventTypeMarriageSettlement,
+		FSMarriageEventTypeSeperation,
+		FSMarriageEventTypeTimeOnlyMarriage,
+		FSMarriageEventTypeOther
+	];
+}
+
 @end
 
 
@@ -164,19 +184,6 @@
 	p.value = property;
 }
 
-+ (NSArray *)marriageProperties
-{
-	return @[
-		FSMarriagePropertyTypeGEDCOMID,
-		FSMarriagePropertyTypeCommonLawMarriage,
-		FSMarriagePropertyTypeNumberOfChildren,
-		FSMarriagePropertyTypeCurrentlySpouses,
-		FSMarriagePropertyTypeNeverHadChildren,
-		FSMarriagePropertyTypeNeverMarried,
-		FSMarriagePropertyTypeOther
-	];
-}
-
 - (void)reset
 {
 	for (FSProperty *property in [_properties allValues]) {
@@ -212,23 +219,21 @@
 	}
 }
 
-+ (NSArray *)marriageEventTypes
+
+
+
+#pragma mark - Keys
+
++ (NSArray *)marriageProperties
 {
 	return @[
-		FSMarriageEventTypeAnnulment,
-		FSMarriageEventTypeDivorce,
-		FSMarriageEventTypeDivorceFiling,
-		FSMarriageEventTypeEngagement,
-		FSMarriageEventTypeMarriage,
-		FSMarriageEventTypeMarriageBanns,
-		FSMarriageEventTypeMarriageContract,
-		FSMarriageEventTypeMarriageLicense,
-		FSMarriageEventTypeCensus,
-		FSMarriageEventTypeMission,
-		FSMarriageEventTypeMarriageSettlement,
-		FSMarriageEventTypeSeperation,
-		FSMarriageEventTypeTimeOnlyMarriage,
-		FSMarriageEventTypeOther
+		FSMarriagePropertyTypeGEDCOMID,
+		FSMarriagePropertyTypeCommonLawMarriage,
+		FSMarriagePropertyTypeNumberOfChildren,
+		FSMarriagePropertyTypeCurrentlySpouses,
+		FSMarriagePropertyTypeNeverHadChildren,
+		FSMarriagePropertyTypeNeverMarried,
+		FSMarriagePropertyTypeOther
 	];
 }
 

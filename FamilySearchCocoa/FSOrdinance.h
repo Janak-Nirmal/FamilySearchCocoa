@@ -50,8 +50,8 @@ typedef NSString * FSOrdinanceStatus;
 
 
 typedef enum {
-	FSOrdinanceInventoryTypePersonal,		// You are responsible for getting the ordinance done
-	FSOrdinanceInventoryTypeChurch			// The church will assign a patron to do the ordinance
+	FSOrdinanceInventoryTypePersonal,											// You are responsible for getting the ordinance done
+	FSOrdinanceInventoryTypeChurch												// The church will assign a patron to do the ordinance
 } FSOrdinanceInventoryType;
 
 
@@ -69,13 +69,12 @@ typedef enum {
 @property (readonly)	BOOL						reservable;
 @property (readonly)	BOOL						bornInTheCovenant;
 @property (readonly)	NSString					*notes;
-@property (readonly)	NSArray						*prerequisites;		// FSOrdinance objects representing ordinances that must be completed before this one.
-@property (readonly)	NSSet						*people;			// All the people involved in this ordinance.
+@property (readonly)	NSArray						*prerequisites;				// FSOrdinance objects representing ordinances that must be completed before this one.
+@property (readonly)	NSSet						*people;					// All the people involved in this ordinance.
 
 
 #pragma mark - Getting Ordinances
-+ (MTPocketResponse *)fetchOrdinancesForPerson:(FSPerson *)person;		// Populates the 'ordinances' property on the passed in person.
-+ (MTPocketResponse *)fetchOrdinancesForPeople:(NSArray *)people;		// Populates the 'ordinances' properties on the passed in people.
++ (MTPocketResponse *)fetchOrdinancesForPeople:(NSArray *)people;				// Populates the 'ordinances' properties on the passed in people.
 
 
 #pragma mark - Reserving Ordinances
@@ -89,7 +88,8 @@ typedef enum {
 + (MTPocketResponse *)urlOfChurchPolicies:(NSURL **)url;
 
 
-#pragma mark - Misc
+#pragma mark - Keys
 + (NSArray *)ordinanceTypes;
++ (NSArray *)ordinanceStatuses;
 
 @end

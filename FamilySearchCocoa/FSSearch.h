@@ -39,11 +39,18 @@ typedef NSString * FSSearchCriteria;
 
 @interface FSSearch : NSObject
 
-@property (nonatomic) NSUInteger batchSize;				// Default: 10
+@property (nonatomic) NSUInteger batchSize;			// Default: 10
 
+#pragma mark - Create Search
 - (id)initWithSessionID:(NSString *)sessionID;
+
+#pragma mark - Criteria
 - (void)addValue:(NSString *)value forCriteria:(FSSearchCriteria)criteria onRelative:(FSSearchRelativeType)relative matchingExactly:(BOOL)exact;
+
+#pragma mark - Get Results
 - (FSSearchResults *)results;
+
+#pragma mark - Keys
 + (NSArray *)criteriaKeys;
 
 @end
@@ -57,7 +64,7 @@ typedef NSString * FSSearchCriteria;
 
 @property (readonly) NSUInteger totalResults;
 
-- (MTPocketResponse *)next;
+- (MTPocketResponse *)next;							// Returns the next set of paginated results
 
 @end
 

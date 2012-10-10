@@ -41,6 +41,11 @@
 
 @implementation FSSearch
 
+
+
+
+#pragma mark - Create Search
+
 - (id)initWithSessionID:(NSString *)sessionID
 {
     self = [super init];
@@ -51,6 +56,11 @@
     }
     return self;
 }
+
+
+
+
+#pragma mark - Criteria
 
 - (void)addValue:(NSString *)value forCriteria:(FSSearchCriteria)criteria onRelative:(FSSearchRelativeType)relative matchingExactly:(BOOL)exact
 {
@@ -73,6 +83,11 @@
 	[_criteria addObject: @{ @"Criteria" : criteria, @"Value" : value } ];
 }
 
+
+
+
+#pragma mark - Get Results
+
 - (FSSearchResults *)results
 {
 	FSSearchResults *results = [[FSSearchResults alloc] initWithSessionID:_sessionID];
@@ -80,6 +95,11 @@
 	results.criteria = _criteria;
 	return results;
 }
+
+
+
+
+#pragma mark - Keys
 
 + (NSArray *)criteriaKeys
 {
@@ -199,6 +219,8 @@
 	_currentIndex += _batchSize;
 	return response;
 }
+
+
 
 
 #pragma mark NSArray

@@ -43,8 +43,15 @@ typedef NSString * FSMarriageEventType;
 
 
 @interface FSMarriageEvent : FSEvent
+
 @property (readonly)	FSMarriageEventType	type;
+
+#pragma mark - Create Marriag Event
 + (FSMarriageEvent *)marriageEventWithType:(FSMarriageEventType)type identifier:(NSString *)identifier;
+
+#pragma mark - Keys
++ (NSArray *)marriageEventTypes;
+
 @end
 
 
@@ -72,13 +79,16 @@ typedef NSString * FSMarriageEventType;
 #pragma mark - Properties
 - (NSString *)propertyForKey:(FSMarriagePropertyType)key;
 - (void)setProperty:(NSString *)property forKey:(FSMarriagePropertyType)key;
-+ (NSArray *)marriageProperties;
 - (void)reset;
 
 
 #pragma mark - Marriage Events
 - (void)addMarriageEvent:(FSMarriageEvent *)event;
 - (void)removeMarriageEvent:(FSMarriageEvent *)event;
+
+
+#pragma mark - Keys
++ (NSArray *)marriageProperties;
 
 
 @end

@@ -42,10 +42,20 @@ NSString *randomStringWithLength(NSInteger length)
     return self;
 }
 
+
+
+
+#pragma mark - Create Events
+
 + (FSEvent *)eventWithType:(FSPersonEventType)type identifier:(NSString *)identifier
 {
 	return [[FSEvent alloc] initWithType:type identifier:identifier];
 }
+
+
+
+
+#pragma mark - Compare Events
 
 - (BOOL)isEqualToEvent:(FSEvent *)event
 {
@@ -61,6 +71,10 @@ NSString *randomStringWithLength(NSInteger length)
 
 	return NO;
 }
+
+
+
+#pragma mark - Keys
 
 + (NSArray *)eventTypes
 {

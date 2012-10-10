@@ -102,7 +102,6 @@ typedef NSString * FSLineageType;
 #pragma mark - Properties
 - (NSString *)propertyForKey:(FSPropertyType)key;
 - (void)setProperty:(NSString *)property forKey:(FSPropertyType)key;
-+ (NSArray *)properties;													// An array of all person properties. (e.g. for displaying in a UI list)
 - (void)reset;																// reverts all property values back to their last-saved values
 
 
@@ -136,7 +135,10 @@ typedef NSString * FSLineageType;
 - (MTPocketResponse *)duplicates:(NSArray **)duplicates;					// returns possible duplicates of this person (to potentially be merged)
 - (void)addUnofficialOrdinanceWithType:(FSOrdinanceType)type date:(NSDate *)date templeCode:(NSString *)templeCode;
 + (MTPocketResponse *)batchFetchPeople:(NSArray *)people;					// Will fetch all properties and ordinance information for everyone in the array.
-+ (NSArray *)lineageTypes;
+
+#pragma mark - Keys
++ (NSArray *)properties;													// An array of all person properties. (e.g. for displaying in a UI list)
++ (NSArray *)lineageTypes;													// An array of the lineange types a relationship can have
 
 
 @end

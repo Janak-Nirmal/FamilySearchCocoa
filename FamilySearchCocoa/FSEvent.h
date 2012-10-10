@@ -55,8 +55,13 @@ typedef NSString * FSPersonEventType;
 @property (strong, nonatomic)				NSString			*place;
 @property (nonatomic, getter = isSelected)	BOOL				selected;	// is selected for the person summary
 
+#pragma mark - Create Event
 + (FSEvent *)eventWithType:(FSPersonEventType)type identifier:(NSString *)identifier;
+
+#pragma mark - Compare Events
 - (BOOL)isEqualToEvent:(FSEvent *)event;
+
+#pragma mark - Keys
 + (NSArray *)eventTypes;
 
 @end
