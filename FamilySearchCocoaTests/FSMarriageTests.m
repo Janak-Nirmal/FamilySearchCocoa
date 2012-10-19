@@ -87,7 +87,7 @@
 	STAssertTrue(m2.events.count == 0, nil);
 }
 
-- (void)testAddPropertiesToMarriage
+- (void)testAddCharacteristicsToMarriage
 {
 	MTPocketResponse *response;
 
@@ -102,8 +102,8 @@
 	STAssertTrue(_person.marriages.count == 1, nil);
 
 	// add the properties
-	[marriage setProperty:@"2" forKey:FSMarriagePropertyTypeNumberOfChildren];
-	[marriage setProperty:@"True" forKey:FSMarriagePropertyTypeCommonLawMarriage];
+	[marriage setCharacteristic:@"2" forKey:FSMarriageCharacteristicTypeNumberOfChildren];
+	[marriage setCharacteristic:@"True" forKey:FSMarriageCharacteristicTypeCommonLawMarriage];
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
@@ -113,8 +113,8 @@
 	STAssertTrue(response.success, nil);
 	FSMarriage *m = [person marriageWithSpouse:spouse];
 	[m fetch];
-	STAssertTrue([[m propertyForKey:FSMarriagePropertyTypeNumberOfChildren] isEqualToString:@"2"], nil);
-	STAssertTrue([[m propertyForKey:FSMarriagePropertyTypeCommonLawMarriage] isEqualToString:@"True"], nil);
+	STAssertTrue([[m characteristicForKey:FSMarriageCharacteristicTypeNumberOfChildren] isEqualToString:@"2"], nil);
+	STAssertTrue([[m characteristicForKey:FSMarriageCharacteristicTypeCommonLawMarriage] isEqualToString:@"True"], nil);
 }
 
 

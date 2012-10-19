@@ -16,39 +16,46 @@
 
 #import <MTPocket.h>
 #import "FSOrdinance.h"
+#import "FSEvent.h"
 
-@class FSEvent, FSMarriage, FSOrdinance, FSAuth;
+@class FSMarriage, FSOrdinance, FSAuth;
 
 
-// Person Properties
+// Person Property
 typedef NSString * FSPropertyType;
-#define FSPropertyTypeCasteName					@"Caste Name"
-#define FSPropertyTypeClanName					@"Clan Name"
-#define FSPropertyTypeNationalID				@"National ID"
-#define FSPropertyTypeNationalOrigin			@"National Origin"
-#define FSPropertyTypeTitleOfNobility			@"Title of Nobility"
-#define FSPropertyTypeOccupation				@"Occupation"
-#define FSPropertyTypePhysicalDescription		@"Physical Description"
-#define FSPropertyTypeRace						@"Race"
-#define FSPropertyTypeReligiousAffiliation		@"Religious Affiliation"
-#define FSPropertyTypeStillborn					@"Stillborn"
-#define FSPropertyTypeTribeName					@"Tribe Name"
-#define FSPropertyTypeGEDCOMID					@"GEDCOM ID"
-#define FSPropertyTypeCommonLawMarriage			@"Common Law Marriage"
-#define FSPropertyTypeOther						@"Other"
-#define FSPropertyTypeNumberOfChildren			@"Number of Children"
-#define FSPropertyTypeNumberOfMarriages			@"Number of Marriages"
-#define FSPropertyTypeCurrentlySpouses			@"Currently Spouses"
-#define FSPropertyTypeDiedBeforeEight			@"Died before Eight"
-#define FSPropertyTypeNameSake					@"Name Sake"
-#define FSPropertyTypeNeverHadChildren			@"Never Had Children"
-#define FSPropertyTypeNeverMarried				@"Never Married"
-#define FSPropertyTypeNotAccountable			@"Not Accountable"
-#define FSPropertyTypePossessions				@"Possessions"
-#define FSPropertyTypeResidence					@"Residence"
-#define FSPropertyTypeScholasticAchievement		@"Scholastic Achievement"
-#define FSPropertyTypeSocialSecurityNumber		@"Social Security Number"
-#define FSPropertyTypeTwin						@"Twin"
+#define FSPropertyTypeName		@"Name"
+#define FSPropertyTypeGender	@"Gender"
+
+
+// Person Characteristics
+typedef NSString * FSCharacteristicType;
+#define FSCharacteristicTypeCasteName				@"Caste Name"
+#define FSCharacteristicTypeClanName				@"Clan Name"
+#define FSCharacteristicTypeNationalID				@"National ID"
+#define FSCharacteristicTypeNationalOrigin			@"National Origin"
+#define FSCharacteristicTypeTitleOfNobility			@"Title of Nobility"
+#define FSCharacteristicTypeOccupation				@"Occupation"
+#define FSCharacteristicTypePhysicalDescription		@"Physical Description"
+#define FSCharacteristicTypeRace					@"Race"
+#define FSCharacteristicTypeReligiousAffiliation	@"Religious Affiliation"
+#define FSCharacteristicTypeStillborn				@"Stillborn"
+#define FSCharacteristicTypeTribeName				@"Tribe Name"
+#define FSCharacteristicTypeGEDCOMID				@"GEDCOM ID"
+#define FSCharacteristicTypeCommonLawMarriage		@"Common Law Marriage"
+#define FSCharacteristicTypeOther					@"Other"
+#define FSCharacteristicTypeNumberOfChildren		@"Number of Children"
+#define FSCharacteristicTypeNumberOfMarriages		@"Number of Marriages"
+#define FSCharacteristicTypeCurrentlySpouses		@"Currently Spouses"
+#define FSCharacteristicTypeDiedBeforeEight			@"Died before Eight"
+#define FSCharacteristicTypeNameSake				@"Name Sake"
+#define FSCharacteristicTypeNeverHadChildren		@"Never Had Children"
+#define FSCharacteristicTypeNeverMarried			@"Never Married"
+#define FSCharacteristicTypeNotAccountable			@"Not Accountable"
+#define FSCharacteristicTypePossessions				@"Possessions"
+#define FSCharacteristicTypeResidence				@"Residence"
+#define FSCharacteristicTypeScholasticAchievement	@"Scholastic Achievement"
+#define FSCharacteristicTypeSocialSecurityNumber	@"Social Security Number"
+#define FSCharacteristicTypeTwin					@"Twin"
 
 
 // Lineage Type
@@ -72,8 +79,6 @@ typedef NSString * FSLineageType;
 
 @property (readonly)		  NSString	*identifier;
 @property (strong, nonatomic) NSString	*sessionID;
-@property (strong, nonatomic) NSString	*name;                  // @"Adam Kirk"
-@property (strong, nonatomic) NSString	*gender;				// @"Male" or @"Female"
 @property (readonly)		  BOOL		isAlive;				// Default: YES. You must add a death event for the system to return NO. Not editable by user.
 @property (readonly)		  BOOL		isModifiable;			// Can be modified by the current logged in contributor
 @property (readonly)		  BOOL		isNew;					// Has been created on the client but has not be saved to the server
@@ -94,15 +99,26 @@ typedef NSString * FSLineageType;
 
 
 #pragma mark - Syncing
-- (MTPocketResponse *)fetch;												// If called when identifier is (not nil => reset w server info)	| (nil => throws an exception)
-- (MTPocketResponse *)save;													// If called when identifier is (not nil => update person)			| (nil => create new person)
+- (MTPocketResponse *)fetch;									// If called when identifier is (not nil => reset w server info)	| (nil => throws an exception)
+- (MTPocketResponse *)save;										// If called when identifier is (not nil => update person)			| (nil => create new person)
 - (MTPocketResponse *)fetchAncestors:(NSUInteger)generations;
++ (MTPocketResponse *)batchFetchPeople:(NSArray *)people;
+// After setting name, gender and birthlike/deathlike events, you must call save, then fetch, then this
+// in order to save them as the "primary" values for the person. This will not be necessary in a future
+// API, but until then...
+- (MTPocketResponse *)saveSummary;
 
 
 #pragma mark - Properties
-- (NSString *)propertyForKey:(FSPropertyType)key;
-- (void)setProperty:(NSString *)property forKey:(FSPropertyType)key;
-- (void)reset;																// reverts all property values back to their last-saved values
+@property (strong, nonatomic) NSString	*name;                  // @"Adam Kirk"
+@property (strong, nonatomic) NSString	*gender;				// @"Male" or @"Female"
+- (NSArray *)loggedValuesForPropertyType:(FSPropertyType)type;
+
+
+#pragma mark - Characteristics
+- (NSString *)characteristicForKey:(FSCharacteristicType)key;
+- (void)setCharacteristic:(NSString *)characteristic forKey:(FSCharacteristicType)key;
+- (void)reset;													// reverts all characteristic values back to their last-saved values
 
 
 #pragma mark - Parents
@@ -118,27 +134,27 @@ typedef NSString * FSLineageType;
 #pragma mark - Marriages
 - (void)addMarriage:(FSMarriage *)marriage;
 - (void)removeMarriage:(FSMarriage *)marriage;
-- (FSMarriage *)marriageWithSpouse:(FSPerson *)spouse;						// Returns nil if there is no marriage with the spouse
+- (FSMarriage *)marriageWithSpouse:(FSPerson *)spouse;			// Returns nil if there is no marriage with the spouse
 
 
 #pragma mark - Events
 - (void)addEvent:(FSEvent *)event;
 - (void)removeEvent:(FSEvent *)event;
+- (NSArray *)loggedEventsOfType:(FSPersonEventType)type;
 
-@property (nonatomic, strong) NSDateComponents	*birthDate;					/*  These are for convenience.       */
-@property (nonatomic, strong) NSString			*birthPlace;				/*  Does the same thing as           */
-@property (nonatomic, strong) NSDateComponents	*deathDate;					/*  creating an event and            */
-@property (nonatomic, strong) NSString			*deathPlace;				/*  adding it with addEvent:         */
+@property (nonatomic, strong) NSDateComponents	*birthDate;		/*  These are for convenience.       */
+@property (nonatomic, strong) NSString			*birthPlace;	/*  Does the same thing as           */
+@property (nonatomic, strong) NSDateComponents	*deathDate;		/*  creating an event and            */
+@property (nonatomic, strong) NSString			*deathPlace;	/*  adding it with addEvent:         */
 
 
 #pragma mark - Misc
-- (MTPocketResponse *)duplicates:(NSArray **)duplicates;					// returns possible duplicates of this person (to potentially be merged)
+- (MTPocketResponse *)duplicates:(NSArray **)duplicates;		// returns possible duplicates of this person (to potentially be merged)
 - (void)addUnofficialOrdinanceWithType:(FSOrdinanceType)type date:(NSDate *)date templeCode:(NSString *)templeCode;
-+ (MTPocketResponse *)batchFetchPeople:(NSArray *)people;					// Will fetch all properties and ordinance information for everyone in the array.
 
 #pragma mark - Keys
-+ (NSArray *)properties;													// An array of all person properties. (e.g. for displaying in a UI list)
-+ (NSArray *)lineageTypes;													// An array of the lineange types a relationship can have
++ (NSArray *)characteristics;									// An array of all person characteristics. (e.g. for displaying in a UI list)
++ (NSArray *)lineageTypes;										// An array of the lineange types a relationship can have
 
 
 @end

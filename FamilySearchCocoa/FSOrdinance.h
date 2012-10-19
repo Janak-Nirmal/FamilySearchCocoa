@@ -84,7 +84,7 @@ typedef enum {
 
 
 #pragma mark - Printing Ordinance Requests
-+ (MTPocketResponse *)familyOrdinanceRequestPDFURL:(NSURL **)PDFURL withSessionID:(NSString *)sessionID;
++ (MTPocketResponse *)familyOrdinanceRequestPDFURL:(NSURL **)PDFURL forPeople:(NSArray *)people;
 + (MTPocketResponse *)urlOfChurchPolicies:(NSURL **)url;
 
 

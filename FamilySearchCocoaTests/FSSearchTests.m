@@ -46,13 +46,13 @@
 
 	response = [results next];
 	STAssertTrue(response.success, nil);
-	STAssertTrue(results.count == 10 || results.count == results.totalResults % 10, nil);
+	STAssertTrue(results.count == 10 || results.count == results.numberOfResults % 10, nil);
 	FSPerson *lastPerson = [results lastObject];
 	STAssertNotNil(lastPerson.name, nil);
 
 	response = [results next];
 	STAssertTrue(response.success, nil);
-	STAssertTrue(results.count == 10 || results.count == results.totalResults % 10, nil);
+	STAssertTrue(results.count == 10 || results.count == results.numberOfResults % 10, nil);
 	FSPerson *lastPerson2 = [results lastObject];
 	STAssertNotNil(lastPerson2.name, nil);
 }

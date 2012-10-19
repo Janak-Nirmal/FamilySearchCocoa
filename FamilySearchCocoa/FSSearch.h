@@ -17,7 +17,7 @@ typedef enum {
 } FSSearchRelativeType;
 
 
-// Person Properties
+// Person Search Criteria
 typedef NSString * FSSearchCriteria;
 #define FSSearchCriteriaName				@"name"						// NSString
 #define FSSearchCriteriaGivenName			@"givenName"				// NSString
@@ -62,7 +62,7 @@ typedef NSString * FSSearchCriteria;
 
 @interface FSSearchResults : NSMutableArray
 
-@property (readonly) NSUInteger totalResults;
+@property (readonly) NSUInteger numberOfResults;
 
 - (MTPocketResponse *)next;							// Returns the next set of paginated results
 

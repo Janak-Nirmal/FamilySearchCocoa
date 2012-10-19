@@ -20,7 +20,8 @@
 
 @interface FSPerson ()
 @property (strong, nonatomic)	FSURL				*url;
-@property (strong, nonatomic)	NSMutableDictionary	*properties;
+@property (strong, nonatomic)	NSMutableArray		*properties;
+@property (strong, nonatomic)	NSMutableDictionary	*characteristics;
 @property (strong, nonatomic)	NSMutableArray		*relationships;
 @end
 
@@ -74,19 +75,18 @@
 
 	self = [super init];
 	if (self) {
-		_sessionID		= sessionID;
-		_url			= [[FSURL alloc] initWithSessionID:sessionID];
-		_identifier		= identifier;
-		_name			= nil;
-		_gender			= @"Male";
-		_isAlive		= NO;
-		_relationships	= [NSMutableArray array];
-		_properties		= [NSMutableDictionary dictionary];
-		_marriages		= [NSMutableArray array];
-		_events			= [NSMutableArray array];
-		_ordinances		= [NSMutableArray array];
-		_onChange		= ^(FSPerson *p){};
-		_onSync			= ^(FSPerson *p){};
+		_sessionID			= sessionID;
+		_url				= [[FSURL alloc] initWithSessionID:sessionID];
+		_identifier			= identifier;
+		_properties			= [NSMutableArray array];
+		_isAlive			= NO;
+		_relationships		= [NSMutableArray array];
+		_characteristics	= [NSMutableDictionary dictionary];
+		_marriages			= [NSMutableArray array];
+		_events				= [NSMutableArray array];
+		_ordinances			= [NSMutableArray array];
+		_onChange			= ^(FSPerson *p){};
+		_onSync				= ^(FSPerson *p){};
 		[__people addObject:self];
 	}
 	return self;
@@ -130,12 +130,12 @@
 
 
 	// NAME
-	if (_name) {
+	if (self.name) {
 		NSDictionary *nameDict = @{
 								@"names" : @[ @{
 									@"value" : @{
 										@"forms" : @[ @{
-											@"fullText" : _name
+											@"fullText" : self.name
 										}]
 									}
 								}]
@@ -145,27 +145,27 @@
 
 
 	// GENDER
-	if (_gender) {
+	if (self.gender) {
 		NSDictionary *genderDict = @{
 									@"genders" : @[ @{
 										@"value" : @{
-											@"type" : _gender
+											@"type" : self.gender
 										}
 									}]
 								};
 		[assertions addEntriesFromDictionary:genderDict];
 	}
+	
 
-
-	// PROPERTIES
+	// CHARACTERISTICS
 	NSMutableArray *characteristics = [NSMutableArray array];
-	for (FSPropertyType key in [_properties allKeys]) {
-		FSProperty *property = _properties[key];
-		NSMutableDictionary *characteristic = [NSMutableDictionary dictionary];
-		if (property.identifier) characteristic[@"id"] = property.identifier;
-		if (property.key) characteristic[@"type"] = property.key;
-		if (property.value) characteristic[@"detail"] = property.value;
-		[characteristics addObject: @{ @"value" : characteristic } ];
+	for (FSCharacteristicType key in [_characteristics allKeys]) {
+		FSCharacteristic *characteristic = _characteristics[key];
+		NSMutableDictionary *characteristicDict = [NSMutableDictionary dictionary];
+		if (characteristic.identifier) characteristicDict[@"id"] = characteristic.identifier;
+		if (characteristic.key) characteristicDict[@"type"] = characteristic.key;
+		if (characteristic.value) characteristicDict[@"detail"] = characteristic.value;
+		[characteristics addObject: @{ @"value" : characteristicDict } ];
 	}
 	[assertions addEntriesFromDictionary: @{ @"characteristics" : characteristics } ];
 
@@ -230,8 +230,8 @@
 			_identifier = [response.body valueForComplexKeyPath:@"persons[first].id"];
 		}
 
-		for (FSProperty *property in [_properties allValues]) {
-			[property markAsSaved];
+		for (FSCharacteristic *characteristic in [_characteristics allValues]) {
+			[characteristic markAsSaved];
 		}
 
 		for (FSEvent *event in [_events copy]) {
@@ -311,34 +311,171 @@
 	return response;
 }
 
++ (MTPocketResponse *)batchFetchPeople:(NSArray *)people
+{
+	if (people.count == 0) return nil;
+	FSPerson *anyPerson = [people lastObject];
+	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in people must have a valid 'sessionID'");
+
+
+	NSMutableArray *identifiers = [NSMutableArray array];
+	for (FSPerson *person in people) {
+		if (person.identifier) [identifiers addObject:person.identifier];
+	}
+
+	FSURL *fsURL = [[FSURL alloc] initWithSessionID:anyPerson.sessionID];
+	NSURL *url = [fsURL urlWithModule:@"familytree"
+							  version:2
+							 resource:@"person"
+						  identifiers:identifiers
+							   params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics | FSQOrdinances
+								 misc:nil];
+
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+
+	if (response.success) {
+
+		NSArray *peopleDictionaries = (response.body)[@"persons"];
+		for (NSDictionary *personDictionary in peopleDictionaries) {
+			NSString *id = personDictionary[@"id"];
+			FSPerson *person = people.count == 1 ? anyPerson : [FSPerson personWithSessionID:anyPerson.sessionID identifier:id];
+			[person populateFromPersonDictionary:personDictionary];
+			person.onSync(person);
+		}
+	}
+
+	return response;
+}
+
+- (MTPocketResponse *)saveSummary
+{
+	NSMutableDictionary *assertions = [NSMutableDictionary dictionary];
+
+
+	// NAME
+	FSProperty *nameProperty = [self selectedPropertyForType:FSPropertyTypeName];
+	if (nameProperty) {
+		NSDictionary *nameDict = @{
+										@"names" : @[ @{
+											@"action" : @"Select",
+											@"value" : @{
+												@"id" : nameProperty.identifier
+											}
+										}]
+									};
+		[assertions addEntriesFromDictionary:nameDict];
+	}
+
+
+	// GENDER
+	FSProperty *genderProperty = [self selectedPropertyForType:FSPropertyTypeGender];
+	if (genderProperty) {
+		NSDictionary *genderDict = @{
+										@"genders" : @[ @{
+											@"action" : @"Select",
+											@"value" : @{
+												@"id" : genderProperty.identifier
+											}
+										}]
+									};
+		[assertions addEntriesFromDictionary:genderDict];
+	}
+
+	// EVENTS
+	NSMutableArray *events = [NSMutableArray array];
+	for (FSEvent *event in _events) {
+		NSMutableDictionary *eventInfo = [NSMutableDictionary dictionaryWithObject:event.type forKey:@"type"];
+		if (event.identifier) {
+			eventInfo[@"id"] = event.identifier;
+			[events addObject: @{
+									@"action" : @"Select",
+									@"value" : @{
+										@"type" : event.type,
+										@"id"	: event.identifier
+									}
+								}];
+		}
+	}
+	if (events.count > 0) [assertions addEntriesFromDictionary: @{ @"events" : events } ];
+
+	// SAVE
+	NSURL *url = [_url urlWithModule:@"familytree"
+							 version:2
+							resource:@"person"
+						 identifiers:(_identifier ? @[ _identifier ] : nil)
+							  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+								misc:nil];
+
+	NSMutableDictionary *personDict = [NSMutableDictionary dictionary];
+	if (_identifier)				personDict[@"id"] = _identifier;
+	if (assertions.count > 0)		personDict[@"assertions"] = assertions;
+
+	NSDictionary *body = @{ @"persons" : @[ personDict ] };
+	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+
+	return response;
+}
+
 
 
 
 #pragma mark - Properties
 
-- (NSString *)propertyForKey:(FSPropertyType)key
+- (NSString *)name
 {
-	FSProperty *property = _properties[key];
-	return property.value;
+	return [self summaryValueForPropertyType:FSPropertyTypeName];
 }
 
-- (void)setProperty:(NSString *)property forKey:(FSPropertyType)key
+- (void)setName:(NSString *)name
 {
-	FSProperty *p = _properties[key];
-	if (!p) {
-		p = [[FSProperty alloc] init];
-		p.identifier = nil;
-		p.key = key;
-		_properties[key] = p;
+	[self setValue:name forPropertyType:FSPropertyTypeName identifier:nil summary:FSSummaryLocalYES];
+}
+
+- (NSString *)gender
+{
+	return [self summaryValueForPropertyType:FSPropertyTypeGender];
+}
+
+- (void)setGender:(NSString *)gender
+{
+	[self setValue:gender forPropertyType:FSPropertyTypeGender identifier:nil summary:FSSummaryLocalYES];
+}
+
+- (NSArray *)loggedValuesForPropertyType:(FSPropertyType)type
+{
+	return [_properties filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(FSProperty *property, NSDictionary *bindings) {
+		return [property.type isEqualToString:type];
+	}]];
+}
+
+
+
+
+#pragma mark - Characteristics
+
+- (NSString *)characteristicForKey:(FSCharacteristicType)key
+{
+	FSCharacteristic *characteristic = _characteristics[key];
+	return characteristic.value;
+}
+
+- (void)setCharacteristic:(NSString *)characteristic forKey:(FSCharacteristicType)key
+{
+	FSCharacteristic *c = _characteristics[key];
+	if (!c) {
+		c = [[FSCharacteristic alloc] init];
+		c.identifier = nil;
+		c.key = key;
+		_characteristics[key] = c;
 	}
-	p.value = property;
+	c.value = characteristic;
 	_onChange(self);
 }
 
 - (void)reset
 {
-	for (FSProperty *property in [_properties allValues]) {
-		[property reset];
+	for (FSCharacteristic *characteristic in [_characteristics allValues]) {
+		[characteristic reset];
 	}
 	_onChange(self);
 }
@@ -459,7 +596,8 @@
 {
 	NSMutableDictionary *events = [NSMutableDictionary dictionary];
 	for (FSEvent *event in _events) {
-		if (!event.isDeleted && (event.selected || !events[event.type])) {
+		FSEvent *existing = events[event.type];
+		if (!event.isDeleted && (!existing || summaryFlagChosenBeforeFlag(event.summary, existing.summary))) {
 			events[event.type] = event;
 		}
 	}
@@ -469,15 +607,7 @@
 - (void)addEvent:(FSEvent *)event
 {
 	if (!event) raiseParamException(@"event");
-
-	event.changed = YES;
-	for (FSEvent *e in _events) {
-		if ([e isEqualToEvent:event]) {
-			((NSMutableArray *)_events)[[_events indexOfObject:e]] = event;
-			return;
-		}
-	}
-	[(NSMutableArray *)_events addObject:event];
+	[self addEvent:event summary:FSSummaryLocalYES];
 	_onChange(self);
 }
 
@@ -498,6 +628,13 @@
 - (void)setDeathDate:(NSDateComponents *)deathDate	{ [self setDate:deathDate place:nil forEventOfType:FSPersonEventTypeDeath];		}
 - (NSString *)deathPlace							{ return [self placeForEventOfType:FSPersonEventTypeDeath];						}
 - (void)setDeathPlace:(NSString *)deathPlace		{ [self setDate:nil place:deathPlace forEventOfType:FSPersonEventTypeDeath];	}
+
+- (NSArray *)loggedEventsOfType:(FSPersonEventType)type
+{
+	return [_events filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(FSEvent *event, NSDictionary *bindings) {
+		return [event.type isEqualToString:type];
+	}]];
+}
 
 
 
@@ -571,9 +708,7 @@
 	[self addOrReplaceOrdinance:ordinance];
 }
 
-
-// TODO
-- (MTPocketResponse *)combineWithPerson:(FSPerson *)person
+- (MTPocketResponse *)combineWithPerson:(FSPerson *)person // TODO
 {
 	NSURL *url = [_url urlWithModule:@"familytree"
 							 version:2
@@ -603,77 +738,41 @@
 	return response;
 }
 
-+ (MTPocketResponse *)batchFetchPeople:(NSArray *)people
-{
-	if (people.count == 0) return nil;
-	FSPerson *anyPerson = [people lastObject];
-	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in people must have a valid 'sessionID'");
-
-
-	NSMutableArray *identifiers = [NSMutableArray array];
-	for (FSPerson *person in people) {
-		if (person.identifier) [identifiers addObject:person.identifier];
-	}
-
-	FSURL *fsURL = [[FSURL alloc] initWithSessionID:anyPerson.sessionID];
-	NSURL *url = [fsURL urlWithModule:@"familytree"
-							  version:2
-							 resource:@"person"
-						  identifiers:identifiers
-							   params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics | FSQOrdinances
-								 misc:nil];
-
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
-
-	if (response.success) {
-
-		NSArray *peopleDictionaries = (response.body)[@"persons"];
-		for (NSDictionary *personDictionary in peopleDictionaries) {
-			NSString *id = personDictionary[@"id"];
-			FSPerson *person = people.count == 1 ? anyPerson : [FSPerson personWithSessionID:anyPerson.sessionID identifier:id];
-			[person populateFromPersonDictionary:personDictionary];
-			person.onSync(person);
-		}
-	}
-
-	return response;
-}
-
 
 
 
 #pragma mark - Keys
 
-+ (NSArray *)properties
++ (NSArray *)characteristics
 {
 	return @[
-	FSPropertyTypeCasteName,
-	FSPropertyTypeClanName,
-	FSPropertyTypeNationalID,
-	FSPropertyTypeNationalOrigin,
-	FSPropertyTypeTitleOfNobility,
-	FSPropertyTypeOccupation,
-	FSPropertyTypePhysicalDescription,
-	FSPropertyTypeRace,
-	FSPropertyTypeReligiousAffiliation,
-	FSPropertyTypeStillborn,
-	FSPropertyTypeTribeName,
-	FSPropertyTypeGEDCOMID,
-	FSPropertyTypeCommonLawMarriage,
-	FSPropertyTypeOther,
-	FSPropertyTypeNumberOfChildren,
-	FSPropertyTypeNumberOfMarriages,
-	FSPropertyTypeCurrentlySpouses,
-	FSPropertyTypeDiedBeforeEight,
-	FSPropertyTypeNameSake,
-	FSPropertyTypeNeverHadChildren,
-	FSPropertyTypeNeverMarried,
-	FSPropertyTypeNotAccountable,
-	FSPropertyTypePossessions,
-	FSPropertyTypeResidence,
-	FSPropertyTypeScholasticAchievement,
-	FSPropertyTypeSocialSecurityNumber,
-	FSPropertyTypeTwin
+	FSCharacteristicTypeCasteName,
+	FSCharacteristicTypeClanName,
+	FSCharacteristicTypeNationalID,
+	FSCharacteristicTypeNationalOrigin,
+	FSCharacteristicTypeTitleOfNobility,
+	FSCharacteristicTypeOccupation,
+	FSCharacteristicTypePhysicalDescription,
+	FSCharacteristicTypeRace,
+	FSCharacteristicTypeReligiousAffiliation,
+	FSCharacteristicTypeStillborn,
+	FSCharacteristicTypeTribeName,
+	FSCharacteristicTypeGEDCOMID,
+	FSCharacteristicTypeCommonLawMarriage,
+	FSCharacteristicTypeOther,
+	FSCharacteristicTypeNumberOfChildren,
+	FSCharacteristicTypeNumberOfMarriages,
+	FSCharacteristicTypeCurrentlySpouses,
+	FSCharacteristicTypeDiedBeforeEight,
+	FSCharacteristicTypeNameSake,
+	FSCharacteristicTypeNeverHadChildren,
+	FSCharacteristicTypeNeverMarried,
+	FSCharacteristicTypeNotAccountable,
+	FSCharacteristicTypePossessions,
+	FSCharacteristicTypeResidence,
+	FSCharacteristicTypeScholasticAchievement,
+	FSCharacteristicTypeSocialSecurityNumber,
+	FSCharacteristicTypeTwin
 	];
 }
 
@@ -696,6 +795,86 @@
 
 
 #pragma mark - Private Methods
+
+- (NSString *)summaryValueForPropertyType:(FSPropertyType)type
+{
+	FSProperty *candidate = nil;
+	FSSummary strongestFlag = FSSummaryRemoteNO;
+	for (FSProperty *property in _properties)
+		if ([property.type isEqualToString:type] && (!candidate || summaryFlagChosenBeforeFlag(property.summary, strongestFlag))) {
+			candidate		= property;
+			strongestFlag	= property.summary;
+		}
+
+	return candidate.value;
+}
+
+- (FSProperty *)selectedPropertyForType:(FSPropertyType)type
+{
+	FSProperty *candidate = nil;
+	FSSummary strongestFlag = FSSummaryRemoteYES;
+	for (FSProperty *property in _properties)
+		if ([property.type isEqualToString:type] && summaryFlagChosenBeforeFlag(property.summary, strongestFlag)) {
+			candidate		= property;
+			strongestFlag	= property.summary;
+		}
+
+	return candidate;
+}
+
+- (void)setValue:(NSString *)value forPropertyType:(FSPropertyType)type identifier:(NSString *)identifier summary:(FSSummary)summary
+{
+	// there can only be at most one local YES
+	if (summary == FSSummaryLocalYES)
+		for (FSProperty *property in _properties)
+			if ([property.type isEqualToString:type] && property.summary == FSSummaryLocalYES)
+				property.summary = FSSummaryLocalNO;
+
+	// there can only be at most one remote YES
+	if (summary == FSSummaryRemoteYES)
+		for (FSProperty *property in _properties)
+			if ([property.type isEqualToString:type] && property.summary == FSSummaryRemoteYES)
+				property.summary = FSSummaryRemoteNO;
+
+	// there should not be duplicate properties with the same values
+	for (FSProperty *property in _properties)
+		if ([property.type isEqualToString:type] && [property.value isEqualToString:value]) {
+			property.summary = summary;
+			property.identifier = identifier;
+			return;
+		}
+
+	FSProperty *property = [FSProperty propertyWithType:type withValue:value identifier:identifier summary:summary];
+	[_properties addObject:property];
+}
+
+- (void)addEvent:(FSEvent *)event summary:(BOOL)summary
+{
+	// there can only be at most one local YES
+	if (summary == FSSummaryLocalYES)
+		for (FSEvent *e in _events)
+			if ([e.type isEqualToString:event.type] && e.summary == FSSummaryLocalYES)
+				e.summary = FSSummaryLocalNO;
+
+	// there can only be at most one remote YES
+	if (summary == FSSummaryRemoteYES)
+		for (FSEvent *e in _events)
+			if ([e.type isEqualToString:event.type] && e.summary == FSSummaryRemoteYES)
+				e.summary = FSSummaryRemoteNO;
+
+	event.summary = summary;
+
+	// if this event is already in the list, replace the existing
+	for (FSEvent *e in _events)
+		if ([e isEqualToEvent:event]) {
+			((NSMutableArray *)_events)[[_events indexOfObject:e]] = event;
+			return;
+		}
+
+	[(NSMutableArray *)_events addObject:event];
+
+	event.changed = YES;
+}
 
 - (void)addRelationship:(FSRelationship *)relationship
 {
@@ -802,17 +981,17 @@
 
 - (BOOL)isMale
 {
-	return [_gender isEqualToString:@"Male"];
+	return [self.gender isEqualToString:@"Male"];
 }
 
 - (void)empty
 {
-	_name = nil;
-	_gender = nil;
-	[_properties removeAllObjects];
+	// TODO: We shouldn't need this really, cause 
+
+	[_characteristics removeAllObjects];
 	[self clearAllRelationships];
 	[self clearAllMarriages];
-	[self clearAllEvents];
+//	[self clearAllEvents];
 }
 
 - (void)populateFromPersonDictionary:(NSDictionary *)person
@@ -822,26 +1001,39 @@
 	
 	// GENERAL INFO
 	_identifier			= person[@"id"];
-	_name				= [person valueForComplexKeyPath:@"assertions.names[first].value.forms[first].fullText"];
-	_gender				= [person valueForComplexKeyPath:@"assertions.genders[first].value.type"];
 	_isAlive			= [[person valueForComplexKeyPath:@"properties.living"] intValue] == YES;
 	_isModifiable		= [[person valueForComplexKeyPath:@"properties.modifiable"] intValue] == YES;
 	_lastModifiedDate	= [NSDate dateWithTimeIntervalSince1970:[[person valueForComplexKeyPath:@"properties.modified"] intValue]];
 
+	NSArray *names = [person valueForComplexKeyPath:@"assertions.names"];
+	for (NSDictionary *nameDict in names) {
+		NSString	*identifier		= [nameDict valueForComplexKeyPath:@"value.id"];
+		FSSummary	selected		= [nameDict valueForComplexKeyPath:@"selected"] != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
+		NSString	*name			= [nameDict valueForComplexKeyPath:@"value.forms[first].fullText"];
+		[self setValue:name forPropertyType:FSPropertyTypeName identifier:identifier summary:selected];
+	}
 
-	// PROPERTIES
+	NSArray *genders = [person valueForComplexKeyPath:@"assertions.genders"];
+	for (NSDictionary *genderDict in genders) {
+		NSString	*identifier		= [genderDict valueForComplexKeyPath:@"value.id"];
+		FSSummary	selected		= [genderDict valueForComplexKeyPath:@"selected"] != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
+		NSString	*gender			= [genderDict valueForComplexKeyPath:@"value.type"];
+		[self setValue:gender forPropertyType:FSPropertyTypeGender identifier:identifier summary:selected];
+	}
+
+	// CHARACTERISTICS
 	NSArray *characteristics = [person valueForComplexKeyPath:@"assertions.characteristics"];
 	if (![characteristics isKindOfClass:[NSNull class]])
-		for (NSDictionary *characteristic in characteristics) {
-			FSProperty *property = [[FSProperty alloc] init];
-			property.identifier = [characteristic valueForComplexKeyPath:@"value.id"];
-			property.key		= [characteristic valueForComplexKeyPath:@"value.type"];
-			property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
-			property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
-			property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
-			property.date		= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristic, @"value.date.normalized", @"value.date.original")];
-			property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
-			_properties[property.key] = property;
+		for (NSDictionary *characteristicDict in characteristics) {
+			FSCharacteristic *characteristic		= [[FSCharacteristic alloc] init];
+			characteristic.identifier				= [characteristicDict valueForComplexKeyPath:@"value.id"];
+			characteristic.key						= [characteristicDict valueForComplexKeyPath:@"value.type"];
+			characteristic.value					= [characteristicDict valueForComplexKeyPath:@"value.detail"];
+			characteristic.title					= [characteristicDict valueForComplexKeyPath:@"value.title"];
+			characteristic.lineage					= [characteristicDict valueForComplexKeyPath:@"value.lineage"];
+			characteristic.date						= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristicDict, @"value.date.normalized", @"value.date.original")];
+			characteristic.place					= [characteristicDict valueForComplexKeyPath:@"value.place.original"];
+			_characteristics[characteristic.key]	= characteristic;
 		}
 
 
@@ -849,13 +1041,13 @@
 	NSArray *events = [person valueForComplexKeyPath:@"assertions.events"];
 	if (![events isKindOfClass:[NSNull class]])
 		for (NSDictionary *eventDict in events) {
-			FSPersonEventType type = [eventDict valueForComplexKeyPath:@"value.type"];
-			NSString *identifier = [eventDict valueForComplexKeyPath:@"value.id"];
-			FSEvent *event = [FSEvent eventWithType:type identifier:identifier];
-			event.date = [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
-			event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
-			event.selected = [eventDict valueForComplexKeyPath:@"selected"] != nil;
-			[self addEvent:event];
+			FSPersonEventType	type		= [eventDict valueForComplexKeyPath:@"value.type"];
+			NSString			*identifier	= [eventDict valueForComplexKeyPath:@"value.id"];
+			FSEvent				*event		= [FSEvent eventWithType:type identifier:identifier];
+			FSSummary			selected	= [eventDict valueForComplexKeyPath:@"selected"] != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
+			event.date						= [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
+			event.place						= [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
+			[self addEvent:event summary:selected];
 		}
 
 
@@ -864,9 +1056,9 @@
 	for (NSDictionary *parent in parents) {
 		NSArray *coupledParents = parent[@"parent"];
 		for (NSDictionary *coupledParent in coupledParents) {
-			FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:coupledParent[@"id"]];
-			NSString *lineage = [coupledParent valueForComplexKeyPath:@"characteristics[first].value.lineage"];
-			FSRelationship *relationship = [FSRelationship relationshipWithParent:p child:self lineage:lineage];
+			FSPerson		*p				= [[FSPerson alloc] initWithSessionID:_sessionID identifier:coupledParent[@"id"]];
+			NSString		*lineage		= [coupledParent valueForComplexKeyPath:@"characteristics[first].value.lineage"];
+			FSRelationship	*relationship	= [FSRelationship relationshipWithParent:p child:self lineage:lineage];
 			[self addRelationship:relationship];
 		}
 	}
@@ -875,17 +1067,17 @@
 	for (NSDictionary *family in families) {
 		NSArray *children = [family valueForComplexKeyPath:@"child"];
 		for (NSDictionary *child in children) {
-			FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:child[@"id"]];
-			FSRelationship *relationship = [FSRelationship relationshipWithParent:self child:p lineage:FSLineageTypeBiological];
+			FSPerson		*p				= [[FSPerson alloc] initWithSessionID:_sessionID identifier:child[@"id"]];
+			FSRelationship	*relationship	= [FSRelationship relationshipWithParent:self child:p lineage:FSLineageTypeBiological];
 			[self addRelationship:relationship];
 		}
 		NSArray *spouses = [family valueForComplexKeyPath:@"parent"];
 		for (NSDictionary *spouse in spouses) {
-			FSPerson *p = [[FSPerson alloc] initWithSessionID:_sessionID identifier:spouse[@"id"]];
+			FSPerson	*p			= [[FSPerson alloc] initWithSessionID:_sessionID identifier:spouse[@"id"]];
 			if ([p isSamePerson:self]) continue;
-			FSMarriage *marriage = [FSMarriage marriageWithHusband:(p.isMale ? p : self) wife:(p.isMale ? self : p)];
-			id version = spouse[@"version"];
-			marriage.version = version == [NSNull null] ? 1 : [version intValue];
+			FSMarriage	*marriage	= [FSMarriage marriageWithHusband:(p.isMale ? p : self) wife:(p.isMale ? self : p)];
+			id			version		= spouse[@"version"];
+			marriage.version		= version == [NSNull null] ? 1 : [version intValue];
 			[self addMarriage:marriage];
 		}
 	}
@@ -900,8 +1092,8 @@
 			NSDate			*date		= [NSDate dateFromString:[ordinanceDictionary valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
 			NSString		*templeCode	= [ordinanceDictionary valueForComplexKeyPath:@"value.temple"];
 
-			FSOrdinance *ordinance = [FSOrdinance ordinanceWithType:type];
-			ordinance.identifier = identifer;
+			FSOrdinance *ordinance		= [FSOrdinance ordinanceWithType:type];
+			ordinance.identifier		= identifer;
 			[ordinance setDate:date];
 			[ordinance setTempleCode:templeCode];
 			[ordinance setOfficial:official];
@@ -913,24 +1105,25 @@
 
 - (void)setDate:(NSDateComponents *)date place:(NSString *)place forEventOfType:(FSPersonEventType)eventType
 {
-	for (FSEvent *event in _events) {
-		if ([event.type isEqualToString:eventType]) {
-			if (date)	event.date = date;
-			if (place)	event.place = place;
-			return;
-		}
-	}
+	FSEvent *event = nil;
 
-	FSEvent *event = [FSEvent eventWithType:eventType identifier:nil];
-	event.date		= date;
-	event.place		= place;
-	event.selected	= YES;
+	// Get the already selected summary event if there is one
+	for (FSEvent *e in self.events)
+		if ([e.type isEqualToString:eventType])
+			event = e;
+
+	// Create a new event if no current event is the selected summary
+	if (!event) event = [FSEvent eventWithType:eventType identifier:nil];
+
+	if (date)	event.date = date;
+	if (place)	event.place = place;
+	
 	[self addEvent:event];
 }
 
 - (NSDateComponents *)dateForEventOfType:(FSPersonEventType)eventType
 {
-	for (FSEvent *event in _events)
+	for (FSEvent *event in self.events)
 		if ([event.type isEqualToString:eventType])
 			return event.date;
 
@@ -942,9 +1135,9 @@
 	for (FSEvent *event in self.events)
 		if ([event.type isEqualToString:eventType])
 			return event.place;
-	
-	return nil;
-}
+
+	return nil;}
+
 
 @end
 
@@ -1101,8 +1294,44 @@
 
 
 
-
 @implementation FSProperty
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        _summary = FSSummaryRemoteNO;
+    }
+    return self;
+}
+
++ (FSProperty *)propertyWithType:(FSPropertyType)type withValue:(NSString *)value identifier:(NSString *)identifier summary:(FSSummary)summary
+{
+	FSProperty *property = [[FSProperty alloc] init];
+	property.identifier	= identifier;
+	property.type		= type;
+	property.value		= value;
+	property.summary	= summary;
+	return property;
+}
+
+- (void)setSummary:(FSSummary)summary
+{
+	if (summaryFlagCanOverwriteFlag(summary, _summary)) _summary = summary;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@implementation FSCharacteristic
 
 - (void)setValue:(NSString *)value
 {
@@ -1125,6 +1354,4 @@
 	_previousValue = _value;
 }
 
-
 @end
-

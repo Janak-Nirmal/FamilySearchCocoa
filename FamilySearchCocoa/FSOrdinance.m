@@ -358,90 +358,88 @@
 
 #pragma mark - Printing Ordinance Requests
 
-+ (MTPocketResponse *)familyOrdinanceRequestPDFURL:(NSURL **)PDFURL withSessionID:(NSString *)sessionID
++ (MTPocketResponse *)familyOrdinanceRequestPDFURL:(NSURL **)PDFURL forPeople:(NSArray *)people
 {
-	NSArray *people = nil;
+	if (people.count == 0) raiseParamException(@"people");
+	FSPerson *anyPerson = [people lastObject];
+	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in 'people' must have a valid 'sessionID'");
 	
-	MTPocketResponse *response = [FSOrdinance people:&people reservedByCurrentUserWithSessionID:sessionID];
+	MTPocketResponse *response = [FSOrdinance fetchOrdinancesForPeople:people];
 
 	if (response.success) {
 
-		response = [FSOrdinance fetchOrdinancesForPeople:people];
+		NSMutableArray *personDictionaries = [NSMutableArray array];
+		for (FSPerson *person in people) {
+			NSMutableDictionary *personDictionary = [NSMutableDictionary dictionary];
+			personDictionary[@"ref"] = person.identifier;
+			for (FSOrdinance *ordinance in person.ordinances) {
+
+				if ([ordinance.type isEqualToString:FSOrdinanceTypeSealingToParents]) {
+					NSMutableArray *parentDictionaries = [NSMutableArray array];
+					for (FSPerson *participant in ordinance.people) {
+						if ([participant isSamePerson:person]) continue;
+						[parentDictionaries addObject: @{ @"role" : (participant.isMale ? @"Father" : @"Mother"), @"ref" : participant.identifier } ];
+					}
+					NSMutableArray *sealings = personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]];
+					if (!sealings) {
+						sealings = [NSMutableArray array];
+						personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]] = sealings;
+					}
+					if (parentDictionaries.count > 0) [sealings addObject: @{ @"parent" : parentDictionaries } ];
+				}
+
+				else if ([ordinance.type isEqualToString:FSOrdinanceTypeSealingToSpouse]) {
+					NSDictionary *spouseDictionary = nil;
+					for (FSPerson *participant in ordinance.people) {
+						if ([participant isSamePerson:person]) continue;
+						spouseDictionary = @{ @"ref" : participant.identifier };
+					}
+					NSMutableArray *sealings = personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]];
+					if (!sealings) {
+						sealings = [NSMutableArray array];
+						personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]] = sealings;
+					}
+					if (spouseDictionary) [sealings addObject: @{ @"spouse" : spouseDictionary } ];
+				}
+
+				else {
+					personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]] = @{};
+				}
+			}
+			[personDictionaries addObject:personDictionary];
+		}
+
+		NSDictionary *body = @{
+								@"trips" : @{
+									@"trip" : @[@{
+										@"persons" : @{
+											@"person" : personDictionaries
+										}
+									}]
+								}
+							};
+
+		FSURL *fsURL = [[FSURL alloc] initWithSessionID:anyPerson.sessionID];
+		NSURL *url = [fsURL urlWithModule:@"reservation"
+								  version:1
+								 resource:@"trip"
+							  identifiers:nil
+								   params:0
+									 misc:nil];
+
+		response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
 		if (response.success) {
-
-			NSMutableArray *personDictionaries = [NSMutableArray array];
-			for (FSPerson *person in people) {
-				NSMutableDictionary *personDictionary = [NSMutableDictionary dictionary];
-				personDictionary[@"ref"] = person.identifier;
-				for (FSOrdinance *ordinance in person.ordinances) {
-
-					if ([ordinance.type isEqualToString:FSOrdinanceTypeSealingToParents]) {
-						NSMutableArray *parentDictionaries = [NSMutableArray array];
-						for (FSPerson *participant in ordinance.people) {
-							if ([participant isSamePerson:person]) continue;
-							[parentDictionaries addObject: @{ @"role" : (participant.isMale ? @"Father" : @"Mother"), @"ref" : participant.identifier } ];
-						}
-						NSMutableArray *sealings = personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]];
-						if (!sealings) {
-							sealings = [NSMutableArray array];
-							personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]] = sealings;
-						}
-						if (parentDictionaries.count > 0) [sealings addObject: @{ @"parent" : parentDictionaries } ];
-					}
-
-					else if ([ordinance.type isEqualToString:FSOrdinanceTypeSealingToSpouse]) {
-						NSDictionary *spouseDictionary = nil;
-						for (FSPerson *participant in ordinance.people) {
-							if ([participant isSamePerson:person]) continue;
-							spouseDictionary = @{ @"ref" : participant.identifier };
-						}
-						NSMutableArray *sealings = personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]];
-						if (!sealings) {
-							sealings = [NSMutableArray array];
-							personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]] = sealings;
-						}
-						if (spouseDictionary) [sealings addObject: @{ @"spouse" : spouseDictionary } ];
-					}
-
-					else {
-						personDictionary[[FSOrdinance reservationTypeFromOrdinanceType:ordinance.type]] = @{};
-					}
-				}
-				[personDictionaries addObject:personDictionary];
-			}
-
-			NSDictionary *body = @{
-									@"trips" : @{
-										@"trip" : @[@{
-											@"persons" : @{
-												@"person" : personDictionaries
-											}
-										}]
-									}
-								};
-
-			FSURL *fsURL = [[FSURL alloc] initWithSessionID:sessionID];
-			NSURL *url = [fsURL urlWithModule:@"reservation"
-									  version:1
-									 resource:@"trip"
-								  identifiers:nil
-									   params:0
-										 misc:nil];
-
-			response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
-
-			if (response.success) {
-				NSString *identifier = [response.body valueForComplexKeyPath:@"trips.trip[first].id"];
-				*PDFURL = [fsURL urlWithModule:@"reservation"
-									   version:1
-									  resource:[NSString stringWithFormat:@"trip/%@/pdf", identifier]
-								   identifiers:nil
-										params:0
-										  misc:nil];
-			}
+			NSString *identifier = [response.body valueForComplexKeyPath:@"trips.trip[first].id"];
+			*PDFURL = [fsURL urlWithModule:@"reservation"
+								   version:1
+								  resource:[NSString stringWithFormat:@"trip/%@/pdf", identifier]
+							   identifiers:nil
+									params:0
+									  misc:nil];
 		}
 	}
+	
 	return response;
 }
 

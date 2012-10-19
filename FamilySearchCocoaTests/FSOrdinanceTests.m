@@ -79,7 +79,7 @@
 
 	NSUInteger startOrdinances = father.ordinances.count;
 
-	response = [FSOrdinance fetchOrdinancesForPerson:father];
+	response = [FSOrdinance fetchOrdinancesForPeople:@[father]];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(father.ordinances.count == startOrdinances + 4, nil);
 }
@@ -118,13 +118,13 @@
 	response = [father fetch];
 	STAssertTrue(response.success, nil);
 
-	response = [FSOrdinance fetchOrdinancesForPerson:father];
+	response = [FSOrdinance fetchOrdinancesForPeople:@[father]];
 	STAssertTrue(response.success, nil);
 
 	response = [FSOrdinance reserveOrdinancesForPeople:@[ father ] inventory:FSOrdinanceInventoryTypePersonal];
 	STAssertTrue(response.success, nil);
 
-	response = [FSOrdinance fetchOrdinancesForPerson:father];
+	response = [FSOrdinance fetchOrdinancesForPeople:@[father]];
 	STAssertTrue(response.success, nil);
 
 	NSMutableArray *reservedOrdinances = [NSMutableArray array];
@@ -133,10 +133,10 @@
 	}
 	STAssertTrue(reservedOrdinances.count > 0, nil);
 
-	response = [FSOrdinance unreserveOrdinancesForPeople:@[ father ]];
+	response = [FSOrdinance unreserveOrdinancesForPeople: @[ father ] ];
 	STAssertTrue(response.success, nil);
 
-	response = [FSOrdinance fetchOrdinancesForPerson:father];
+	response = [FSOrdinance fetchOrdinancesForPeople: @[ father ] ];
 	STAssertTrue(response.success, nil);
 
 	reservedOrdinances = [NSMutableArray array];
@@ -167,13 +167,14 @@
 {
 	MTPocketResponse *response = nil;
 
+	NSArray *people = nil;
+	response = [FSOrdinance people:&people reservedByCurrentUserWithSessionID:_sessionID];
+	STAssertTrue(response.success, nil);
+
 	NSURL *url = nil;
-	response = [FSOrdinance familyOrdinanceRequestPDFURL:&url withSessionID:_sessionID];
+	response = [FSOrdinance familyOrdinanceRequestPDFURL:&url forPeople:people];
 	STAssertTrue(response.success, nil);
 	STAssertNotNil(url, nil);
-
-	response = [FSOrdinance familyOrdinanceRequestPDFURL:&url withSessionID:_sessionID];
-	STAssertTrue(response.success, nil);
 }
 
 @end

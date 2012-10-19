@@ -12,15 +12,15 @@
 @class FSPerson;
 
 
-// Marriage Properties
-typedef NSString * FSMarriagePropertyType;
-#define FSMarriagePropertyTypeGEDCOMID			@"GEDCOM ID"
-#define FSMarriagePropertyTypeCommonLawMarriage	@"Common Law Marriage"
-#define FSMarriagePropertyTypeNumberOfChildren	@"Number of Children"
-#define FSMarriagePropertyTypeCurrentlySpouses	@"Currently Spouses"
-#define FSMarriagePropertyTypeNeverHadChildren	@"Never Had Children"
-#define FSMarriagePropertyTypeNeverMarried		@"Never Married"
-#define FSMarriagePropertyTypeOther				@"Other"
+// Marriage Characteristics
+typedef NSString * FSMarriageCharacteristicType;
+#define FSMarriageCharacteristicTypeGEDCOMID			@"GEDCOM ID"
+#define FSMarriageCharacteristicTypeCommonLawMarriage	@"Common Law Marriage"
+#define FSMarriageCharacteristicTypeNumberOfChildren	@"Number of Children"
+#define FSMarriageCharacteristicTypeCurrentlySpouses	@"Currently Spouses"
+#define FSMarriageCharacteristicTypeNeverHadChildren	@"Never Had Children"
+#define FSMarriageCharacteristicTypeNeverMarried		@"Never Married"
+#define FSMarriageCharacteristicTypeOther				@"Other"
 
 // Marriage Event Types
 typedef NSString * FSMarriageEventType;
@@ -72,13 +72,13 @@ typedef NSString * FSMarriageEventType;
 
 
 #pragma mark - Syncing
-- (MTPocketResponse *)fetch;	// Fetcha all the marriage events and properties for this marriage
+- (MTPocketResponse *)fetch;	// Fetch all the marriage events and properties for this marriage
 - (MTPocketResponse *)save;		// Save events and properties of this marriage to the server
 
 
-#pragma mark - Properties
-- (NSString *)propertyForKey:(FSMarriagePropertyType)key;
-- (void)setProperty:(NSString *)property forKey:(FSMarriagePropertyType)key;
+#pragma mark - Characteristics
+- (NSString *)characteristicForKey:(FSMarriageCharacteristicType)key;
+- (void)setCharacteristic:(NSString *)characteristic forKey:(FSMarriageCharacteristicType)key;
 - (void)reset;
 
 
@@ -88,7 +88,7 @@ typedef NSString * FSMarriageEventType;
 
 
 #pragma mark - Keys
-+ (NSArray *)marriageProperties;
++ (NSArray *)marriageCharacteristics;
 
 
 @end

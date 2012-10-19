@@ -179,8 +179,8 @@
 		[self removeAllObjects];
 		
 		NSDictionary *search = [response.body valueForComplexKeyPath:@"searches[first]"];
-		_contextID		= search[@"contextId"];
-		_totalResults	= [search[@"partial"] integerValue];
+		_contextID			= search[@"contextId"];
+		_numberOfResults	= [search[@"partial"] integerValue];
 		
 		NSArray *searches = [search valueForComplexKeyPath:@"search"];
 		for (NSDictionary *searchDictionary in searches) {

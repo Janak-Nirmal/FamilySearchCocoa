@@ -120,7 +120,7 @@
 //	STAssertFalse([_person.identifier isEqualToString:previousID], nil);
 //}
 
-- (void)testbatchFetchPeople
+- (void)testBatchFetchPeople
 {
 	MTPocketResponse *response;
 
@@ -154,6 +154,45 @@
 	STAssertNotNil(p3.gender, nil);
 }
 
+- (void)testAASaveSummary
+{
+	MTPocketResponse *response = nil;
+
+	// Snuff 'em
+	// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	NSDateComponents	*birthDate	= [NSDateComponents componentsFromString:@"11 August 1995"];
+	NSString			*birthPlace	= @"Kennewick, Benton, Washington, United States";
+	NSDateComponents	*deathDate	= [NSDateComponents componentsFromString:@"11 August 1994"];
+	NSString			*deathPlace	= @"Pasco, Franklin, Washington, United States";
+	// create and add event to person
+	_person.birthDate	= birthDate;
+	_person.birthPlace	= birthPlace;
+	// add a death event so the sytem acknowledges they are dead
+	_person.deathDate	= deathDate;
+	_person.deathPlace	= deathPlace;
+	response = [_person save];
+	STAssertTrue(response.success, nil);
+	// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+	_person.name = @"Adam Kirk Jr.";
+	response = [_person save];
+	STAssertTrue(response.success, nil);
+
+	response = [_person fetch];
+	STAssertTrue(response.success, nil);
+	STAssertTrue([_person loggedValuesForPropertyType:FSPropertyTypeName].count == 2, nil);
+	STAssertTrue([_person.name isEqualToString:@"Adam Kirk Jr."], nil);
+
+	response = [_person saveSummary];
+	STAssertTrue(response.success, nil);
+
+	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	response = [person fetch];
+	STAssertTrue(response.success, nil);
+	STAssertTrue([person.name isEqualToString:@"Adam Kirk Jr."], nil);
+	
+}
+
 - (void)testOnChangeCallback
 {
 	__block BOOL onChangeWasCalled = NO;
@@ -179,13 +218,13 @@
 	STAssertTrue(onSyncWasCalled, nil);
 }
 
-- (void)testAddPropertiesToPerson
+- (void)testAddCharacteristicsToPerson
 {
 	MTPocketResponse *response;
 
 	// add the properties
-	[_person setProperty:@"Kirk" forKey:FSPropertyTypeCasteName];
-	[_person setProperty:@"Programmer" forKey:FSPropertyTypeOccupation];
+	[_person setCharacteristic:@"Kirk" forKey:FSCharacteristicTypeCasteName];
+	[_person setCharacteristic:@"Programmer" forKey:FSCharacteristicTypeOccupation];
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
@@ -193,8 +232,8 @@
 	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
-	STAssertTrue([[person propertyForKey:FSPropertyTypeCasteName] isEqualToString:@"Kirk"], nil);
-	STAssertTrue([[person propertyForKey:FSPropertyTypeOccupation] isEqualToString:@"Programmer"], nil);
+	STAssertTrue([[person characteristicForKey:FSCharacteristicTypeCasteName] isEqualToString:@"Kirk"], nil);
+	STAssertTrue([[person characteristicForKey:FSCharacteristicTypeOccupation] isEqualToString:@"Programmer"], nil);
 }
 
 - (void)testAddAndRemoveFather

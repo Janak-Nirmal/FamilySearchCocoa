@@ -34,7 +34,7 @@ NSString *randomStringWithLength(NSInteger length)
     if (self) {
         _type				= type;
 		_identifier			= identifier;
-		_selected			= NO;
+		_summary			= FSSummaryLocalNO;
 		_changed			= NO;
 		_localIdentifier	= randomStringWithLength(5);
 		_deleted			= NO;
@@ -61,10 +61,9 @@ NSString *randomStringWithLength(NSInteger length)
 {
 	BOOL date	= [self.date isEqualToDateComponents:event.date];
 //	BOOL place	= [self.place isEqualToString:event.place]; // TODO: normalized name won't match original. Can't update on save because it's not returned. talk to API guys.
-	BOOL select	= self.selected == event.selected;
 	BOOL type	= [self.type isEqualToString:event.type];
 //	BOOL ident	= self.identifier && event.identifier && [self.identifier isEqualToString:event.identifier];
-	BOOL equal	= date && select && type;
+	BOOL equal	= date && type;
 	
 	if (self == event || equal)
 		return YES;
@@ -130,10 +129,10 @@ NSString *randomStringWithLength(NSInteger length)
 	_changed	= YES;
 }
 
-- (void)setSelected:(BOOL)selected
+- (void)setSummary:(FSSummary)summary
 {
-	_selected	= selected;
-	_changed	= YES;
+	if (summaryFlagCanOverwriteFlag(summary, _summary)) _summary = summary;
+	_changed = YES;
 }
 
 

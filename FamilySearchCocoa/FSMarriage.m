@@ -61,14 +61,14 @@
 
     self = [super init];
     if (self) {
-		_url			= [[FSURL alloc] initWithSessionID:husband.sessionID];
-		_husband		= husband;
-		_wife			= wife;
-		_properties		= [NSMutableDictionary dictionary];
-		_changed		= YES;
-		_deleted		= NO;
-		_version		= 1;
-		_events			= [NSMutableArray array];
+		_url				= [[FSURL alloc] initWithSessionID:husband.sessionID];
+		_husband			= husband;
+		_wife				= wife;
+		_characteristics	= [NSMutableDictionary dictionary];
+		_changed			= YES;
+		_deleted			= NO;
+		_version			= 1;
+		_events				= [NSMutableArray array];
     }
     return self;
 }
@@ -108,21 +108,21 @@
 
 				_version = [[spouse valueForComplexKeyPath:@"version"] integerValue];
 
-				// PROPERTIES
+				// CHARACTERISTICS
 				NSArray *characteristics = [spouse valueForComplexKeyPath:@"assertions.characteristics"];
 				if (![characteristics isKindOfClass:[NSNull class]])
-					for (NSDictionary *characteristic in characteristics) {
-						NSString *dateString = [characteristic valueForComplexKeyPath:@"value.date.normalized"];
-						if (!dateString) dateString = [characteristic valueForComplexKeyPath:@"value.date.original"];
-						FSProperty *property = [[FSProperty alloc] init];
-						property.identifier = [characteristic valueForComplexKeyPath:@"value.id"];
-						property.key		= [characteristic valueForComplexKeyPath:@"value.type"];
-						property.value		= [characteristic valueForComplexKeyPath:@"value.detail"];
-						property.title		= [characteristic valueForComplexKeyPath:@"value.title"];
-						property.lineage	= [characteristic valueForComplexKeyPath:@"value.lineage"];
-						property.date		= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristic, @"value.date.normalized", @"value.date.original")];
-						property.place		= [characteristic valueForComplexKeyPath:@"value.place.original"];
-						(self.properties)[property.key] = property;
+					for (NSDictionary *characteristicDict in characteristics) {
+						NSString *dateString = [characteristicDict valueForComplexKeyPath:@"value.date.normalized"];
+						if (!dateString) dateString = [characteristicDict valueForComplexKeyPath:@"value.date.original"];
+						FSCharacteristic *characteristic = [[FSCharacteristic alloc] init];
+						characteristic.identifier = [characteristicDict valueForComplexKeyPath:@"value.id"];
+						characteristic.key		= [characteristicDict valueForComplexKeyPath:@"value.type"];
+						characteristic.value	= [characteristicDict valueForComplexKeyPath:@"value.detail"];
+						characteristic.title	= [characteristicDict valueForComplexKeyPath:@"value.title"];
+						characteristic.lineage	= [characteristicDict valueForComplexKeyPath:@"value.lineage"];
+						characteristic.date		= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristicDict, @"value.date.normalized", @"value.date.original")];
+						characteristic.place	= [characteristicDict valueForComplexKeyPath:@"value.place.original"];
+						(self.characteristics)[characteristic.key] = characteristic;
 					}
 
 				// EVENTS
@@ -160,34 +160,34 @@
 
 
 
-#pragma mark - Properties
+#pragma mark - Characteristics
 
-- (NSString *)propertyForKey:(FSMarriagePropertyType)key
+- (NSString *)characteristicForKey:(FSMarriageCharacteristicType)key
 {
-	FSProperty *property = _properties[key];
-	return property.value;
+	FSCharacteristic *characteristic = _characteristics[key];
+	return characteristic.value;
 }
 
-- (void)setProperty:(NSString *)property forKey:(FSMarriagePropertyType)key
+- (void)setCharacteristic:(NSString *)characteristic forKey:(FSMarriageCharacteristicType)key
 {
-	if (!property)	raiseParamException(@"property");
-	if (!key)		raiseParamException(@"key");
+	if (!characteristic)	raiseParamException(@"property");
+	if (!key)				raiseParamException(@"key");
 
 	_changed = YES;
-	FSProperty *p = _properties[key];
-	if (!p) {
-		p = [[FSProperty alloc] init];
-		p.identifier = nil;
-		p.key = key;
-		_properties[key] = p;
+	FSCharacteristic *c = _characteristics[key];
+	if (!c) {
+		c = [[FSCharacteristic alloc] init];
+		c.identifier = nil;
+		c.key = key;
+		_characteristics[key] = c;
 	}
-	p.value = property;
+	c.value = characteristic;
 }
 
 - (void)reset
 {
-	for (FSProperty *property in [_properties allValues]) {
-		[property reset];
+	for (FSCharacteristic *characteristic in [_characteristics allValues]) {
+		[characteristic reset];
 	}
 }
 
@@ -224,16 +224,16 @@
 
 #pragma mark - Keys
 
-+ (NSArray *)marriageProperties
++ (NSArray *)marriageCharacteristics
 {
 	return @[
-		FSMarriagePropertyTypeGEDCOMID,
-		FSMarriagePropertyTypeCommonLawMarriage,
-		FSMarriagePropertyTypeNumberOfChildren,
-		FSMarriagePropertyTypeCurrentlySpouses,
-		FSMarriagePropertyTypeNeverHadChildren,
-		FSMarriagePropertyTypeNeverMarried,
-		FSMarriagePropertyTypeOther
+		FSMarriageCharacteristicTypeGEDCOMID,
+		FSMarriageCharacteristicTypeCommonLawMarriage,
+		FSMarriageCharacteristicTypeNumberOfChildren,
+		FSMarriageCharacteristicTypeCurrentlySpouses,
+		FSMarriageCharacteristicTypeNeverHadChildren,
+		FSMarriageCharacteristicTypeNeverMarried,
+		FSMarriageCharacteristicTypeOther
 	];
 }
 
@@ -247,8 +247,8 @@
 	for (FSMarriageEvent *event in self.events) {
 		[(NSMutableArray *)self.events removeAllObjects];
 	}
-	for (FSProperty *property in self.properties) {
-		[self.properties removeAllObjects];
+	for (FSCharacteristic *characteristic in _characteristics) {
+		[_characteristics removeAllObjects];
 	}
 	self.changed = NO;
 	self.deleted = NO;
@@ -265,15 +265,15 @@
 	NSMutableDictionary *assertions = [NSMutableDictionary dictionary];
 
 
-	// PROPERTIES
+	// CHARACTERISTICS
 	NSMutableArray *characteristics = [NSMutableArray array];
-	for (FSPropertyType key in [self.properties allKeys]) {
-		FSProperty *property = (self.properties)[key];
-		NSMutableDictionary *characteristic = [NSMutableDictionary dictionary];
-		if (property.identifier) characteristic[@"id"] = property.identifier;
-		if (property.key) characteristic[@"type"] = property.key;
-		if (property.value) characteristic[@"detail"] = property.value;
-		[characteristics addObject: @{ @"value" : characteristic } ];
+	for (FSCharacteristicType key in [_characteristics allKeys]) {
+		FSCharacteristic *characteristic = (_characteristics)[key];
+		NSMutableDictionary *characteristicDict = [NSMutableDictionary dictionary];
+		if (characteristic.identifier) characteristicDict[@"id"] = characteristic.identifier;
+		if (characteristic.key) characteristicDict[@"type"] = characteristic.key;
+		if (characteristic.value) characteristicDict[@"detail"] = characteristic.value;
+		[characteristics addObject: @{ @"value" : characteristicDict } ];
 	}
 	[assertions addEntriesFromDictionary: @{ @"characteristics" : characteristics } ];
 

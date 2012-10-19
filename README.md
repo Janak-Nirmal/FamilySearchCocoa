@@ -46,11 +46,11 @@ Get information about yourself:
 	FSPerson *me = [FSPerson currentUserWithSessionID:_sessionID];
 	MTPocketResponse *response = [me fetch];
 	if (response.success) {
-		me.name 									// => @"Adam Kirk"
-		me.isAlive									// => YES
-		me.gender 									// => @"Male"
-		me.parents.count							// => 2
-		[me getProperty:FSPropertyTypeOccupation];	// => @"Saint"
+		me.name 											// => @"Adam Kirk"
+		me.isAlive											// => YES
+		me.gender 											// => @"Male"
+		me.parents.count									// => 2
+		[me characteristicForKey:FSPropertyTypeOccupation];	// => @"Saint"
 	}
 
 Get information about someone else:
@@ -73,7 +73,7 @@ Create a person:
 Update a person:
 
 	person = [FSPerson personWithSessionID:_sessionID identifier:@"BLAH-BLAH"];
-	[person setProperty:@"Programmer" forKey:FSPropertyTypeOccupation];
+	[person setCharacteristic:@"Programmer" forKey:FSPropertyTypeOccupation];
 	[person save];
 
 Add/Remove a parent:
@@ -218,7 +218,7 @@ Add/Remove a Marriage Event:
 
 ### Ordinances
 
-The flow to move a user from adding an ancestor to their family tree and doing their temple work is as simple as:
+The flow to move a user from adding an ancestor to their family tree to doing their temple work is as simple as:
 
 	// create a person
 	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:nil];
@@ -230,7 +230,7 @@ The flow to move a user from adding an ancestor to their family tree and doing t
 	person.deathPlace	= @"Pasco, Franklin, Washington, United States";
 	[person save];
 	
-	// reserve the person, claiming you want to to their ordinances
+	// reserve the person, claiming you want to do their ordinances
 	[FSOrdinance reserveOrdinancesForPeople:@[person] inventory:FSOrdinanceInventoryTypePersonal];
 	
 	// generate a family ordinace request and return the URL to it.
