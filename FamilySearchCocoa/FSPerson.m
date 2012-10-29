@@ -239,14 +239,14 @@
 		}
 
 		// RELATIONSHIPS
-		for (FSRelationship *relationship in _relationships) {
+		for (FSRelationship *relationship in [_relationships copy]) {
 			if (relationship.isChanged || relationship.isDeleted) {
 				[relationship save];
 			}
 		}
 
 		// MARRIAGES
-		for (FSMarriage *marriage in _marriages) {
+		for (FSMarriage *marriage in [_marriages copy]) {
 			if (marriage.isChanged || marriage.isDeleted) {
 				[marriage save];
 			}
