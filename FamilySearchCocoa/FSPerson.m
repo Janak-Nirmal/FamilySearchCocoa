@@ -608,6 +608,7 @@
 {
 	if (!event) raiseParamException(@"event");
 	[self addEvent:event summary:FSSummaryLocalYES];
+	event.changed = YES;
 	_onChange(self);
 }
 
@@ -872,8 +873,6 @@
 		}
 
 	[(NSMutableArray *)_events addObject:event];
-
-	event.changed = YES;
 }
 
 - (void)addRelationship:(FSRelationship *)relationship
@@ -1048,6 +1047,7 @@
 			event.date						= [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
 			event.place						= [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
 			[self addEvent:event summary:selected];
+			event.changed = NO;
 		}
 
 
