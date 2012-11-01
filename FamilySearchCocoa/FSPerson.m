@@ -275,17 +275,13 @@
 		NSArray *people = pedigree[@"persons"];
 		for (NSDictionary *personDict in people) {
 			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:personDict[@"id"]];
-
-			// GENERAL
-			person.name		= [personDict valueForComplexKeyPath:@"assertions.names[first].value.forms[first].fullText"];
-			person.gender	= [personDict valueForComplexKeyPath:@"assertions.genders[first].value.type"];
+			[person populateFromPersonDictionary:personDict];
 
 			// PARENTS
 			NSArray *parents = [personDict valueForComplexKeyPath:@"parents[first].parent"];
 			for (NSDictionary *parentDict in parents) {
 				FSPerson *parent = [FSPerson personWithSessionID:_sessionID identifier:parentDict[@"id"]];
 				parent.gender = parentDict[@"gender"];
-				[person addParent:parent withLineage:FSLineageTypeBiological];
 			}
 
 			// EVENTS
@@ -595,12 +591,18 @@
 - (NSArray *)events
 {
 	NSMutableDictionary *events = [NSMutableDictionary dictionary];
-	for (FSEvent *event in _events) {
+
+	NSArray *sorted = [_events sortedArrayUsingComparator:^NSComparisonResult(FSEvent *e1, FSEvent *e2) {
+		return [e2.identifier localizedCaseInsensitiveCompare:e1.identifier];
+	}];
+
+	for (FSEvent *event in sorted) {
 		FSEvent *existing = events[event.type];
 		if (!event.isDeleted && (!existing || summaryFlagChosenBeforeFlag(event.summary, existing.summary))) {
 			events[event.type] = event;
 		}
 	}
+
 	return [events allValues];
 }
 
@@ -747,33 +749,33 @@
 + (NSArray *)characteristics
 {
 	return @[
-	FSCharacteristicTypeCasteName,
-	FSCharacteristicTypeClanName,
-	FSCharacteristicTypeNationalID,
-	FSCharacteristicTypeNationalOrigin,
-	FSCharacteristicTypeTitleOfNobility,
-	FSCharacteristicTypeOccupation,
-	FSCharacteristicTypePhysicalDescription,
-	FSCharacteristicTypeRace,
-	FSCharacteristicTypeReligiousAffiliation,
-	FSCharacteristicTypeStillborn,
-	FSCharacteristicTypeTribeName,
-	FSCharacteristicTypeGEDCOMID,
-	FSCharacteristicTypeCommonLawMarriage,
-	FSCharacteristicTypeOther,
-	FSCharacteristicTypeNumberOfChildren,
-	FSCharacteristicTypeNumberOfMarriages,
-	FSCharacteristicTypeCurrentlySpouses,
-	FSCharacteristicTypeDiedBeforeEight,
-	FSCharacteristicTypeNameSake,
-	FSCharacteristicTypeNeverHadChildren,
-	FSCharacteristicTypeNeverMarried,
-	FSCharacteristicTypeNotAccountable,
-	FSCharacteristicTypePossessions,
-	FSCharacteristicTypeResidence,
-	FSCharacteristicTypeScholasticAchievement,
-	FSCharacteristicTypeSocialSecurityNumber,
-	FSCharacteristicTypeTwin
+		FSCharacteristicTypeCasteName,
+		FSCharacteristicTypeClanName,
+		FSCharacteristicTypeNationalID,
+		FSCharacteristicTypeNationalOrigin,
+		FSCharacteristicTypeTitleOfNobility,
+		FSCharacteristicTypeOccupation,
+		FSCharacteristicTypePhysicalDescription,
+		FSCharacteristicTypeRace,
+		FSCharacteristicTypeReligiousAffiliation,
+		FSCharacteristicTypeStillborn,
+		FSCharacteristicTypeTribeName,
+		FSCharacteristicTypeGEDCOMID,
+		FSCharacteristicTypeCommonLawMarriage,
+		FSCharacteristicTypeOther,
+		FSCharacteristicTypeNumberOfChildren,
+		FSCharacteristicTypeNumberOfMarriages,
+		FSCharacteristicTypeCurrentlySpouses,
+		FSCharacteristicTypeDiedBeforeEight,
+		FSCharacteristicTypeNameSake,
+		FSCharacteristicTypeNeverHadChildren,
+		FSCharacteristicTypeNeverMarried,
+		FSCharacteristicTypeNotAccountable,
+		FSCharacteristicTypePossessions,
+		FSCharacteristicTypeResidence,
+		FSCharacteristicTypeScholasticAchievement,
+		FSCharacteristicTypeSocialSecurityNumber,
+		FSCharacteristicTypeTwin
 	];
 }
 
@@ -801,7 +803,12 @@
 {
 	FSProperty *candidate = nil;
 	FSSummary strongestFlag = FSSummaryRemoteNO;
-	for (FSProperty *property in _properties)
+
+	NSArray *sorted = [_properties sortedArrayUsingComparator:^NSComparisonResult(FSProperty *p1, FSProperty *p2) {
+		return [p2.identifier localizedCaseInsensitiveCompare:p1.identifier];
+	}];
+
+	for (FSProperty *property in sorted)
 		if ([property.type isEqualToString:type] && (!candidate || summaryFlagChosenBeforeFlag(property.summary, strongestFlag))) {
 			candidate		= property;
 			strongestFlag	= property.summary;
@@ -1022,7 +1029,7 @@
 
 	// CHARACTERISTICS
 	NSArray *characteristics = [person valueForComplexKeyPath:@"assertions.characteristics"];
-	if (![characteristics isKindOfClass:[NSNull class]])
+	if (characteristics && [characteristics isKindOfClass:[NSArray class]])
 		for (NSDictionary *characteristicDict in characteristics) {
 			FSCharacteristic *characteristic		= [[FSCharacteristic alloc] init];
 			characteristic.identifier				= [characteristicDict valueForComplexKeyPath:@"value.id"];
@@ -1038,7 +1045,7 @@
 
 	// EVENTS
 	NSArray *events = [person valueForComplexKeyPath:@"assertions.events"];
-	if (![events isKindOfClass:[NSNull class]])
+	if (events && [events isKindOfClass:[NSArray class]])
 		for (NSDictionary *eventDict in events) {
 			FSPersonEventType	type		= [eventDict valueForComplexKeyPath:@"value.type"];
 			NSString			*identifier	= [eventDict valueForComplexKeyPath:@"value.id"];
