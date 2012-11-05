@@ -124,6 +124,7 @@ typedef NSString * FSLineageType;
 #pragma mark - Parents
 - (void)addParent:(FSPerson *)parent withLineage:(FSLineageType)lineage;
 - (void)removeParent:(FSPerson *)parent;
+- (NSArray *)motherAndFather;									// returns 2 parents no matter what. Will create new persons and add as parents if it has to.
 
 
 #pragma mark - Children

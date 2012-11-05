@@ -154,7 +154,7 @@
 	STAssertNotNil(p3.gender, nil);
 }
 
-- (void)testAASaveSummary
+- (void)testSaveSummary
 {
 	MTPocketResponse *response = nil;
 
@@ -322,6 +322,30 @@
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 2, nil);
+}
+
+- (void)testGetMotherAndFather
+{
+	NSArray *bothParents = [_person motherAndFather];
+	STAssertTrue(bothParents.count == 2, nil);
+}
+
+- (void)testDoesntSaveBlankParents
+{
+	MTPocketResponse *response = nil;
+
+	NSArray *bothParents = [_person motherAndFather];
+	STAssertTrue(bothParents.count == 2, nil);
+	STAssertTrue(_person.parents.count == 2, nil);
+
+	response = [_person save];
+	STAssertTrue(response.success, nil);
+
+	FSPerson *person = [FSPerson personWithSessionID:_person.sessionID identifier:_person.identifier];
+	response = [person fetch];
+	STAssertTrue(response.success, nil);
+	STAssertTrue(person.parents.count == 0, nil);
+
 }
 
 - (void)testAddAndRemoveChild

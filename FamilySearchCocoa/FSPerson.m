@@ -277,7 +277,7 @@
 			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:personDict[@"id"]];
 			[person populateFromPersonDictionary:personDict];
 
-			// PARENTS
+			// PARENTS GENDER
 			NSArray *parents = [personDict valueForComplexKeyPath:@"parents[first].parent"];
 			for (NSDictionary *parentDict in parents) {
 				FSPerson *parent = [FSPerson personWithSessionID:_sessionID identifier:parentDict[@"id"]];
@@ -335,6 +335,7 @@
 		for (NSDictionary *personDictionary in peopleDictionaries) {
 			NSString *id = personDictionary[@"id"];
 			FSPerson *person = people.count == 1 ? anyPerson : [FSPerson personWithSessionID:anyPerson.sessionID identifier:id];
+			[person empty]; // empty out this object so it only contains what's on the server
 			[person populateFromPersonDictionary:personDictionary];
 			person.onSync(person);
 		}
@@ -510,6 +511,34 @@
 	}
 }
 
+- (NSArray *)motherAndFather
+{
+	FSPerson *father = nil;
+	FSPerson *mother = nil;
+
+	for (FSPerson *parent in self.parents) {
+		if ([parent.gender isEqualToString:@"Male"])
+			father = parent;
+
+		else if ([parent.gender isEqualToString:@"Female"])
+			mother = parent;
+	}
+
+	if (!father) {
+		father = [FSPerson personWithSessionID:self.sessionID identifier:nil];
+		father.gender = @"Male";
+		[self addParent:father withLineage:FSLineageTypeBiological];
+	}
+
+	if (!mother) {
+		mother = [FSPerson personWithSessionID:self.sessionID identifier:nil];
+		mother.gender = @"Female";
+		[self addParent:mother withLineage:FSLineageTypeBiological];
+	}
+
+	return @[ father, mother ];
+}
+
 
 
 
@@ -592,6 +621,7 @@
 {
 	NSMutableDictionary *events = [NSMutableDictionary dictionary];
 
+	// so that if none of the summary statuses win, the last one set (highest id) wins
 	NSArray *sorted = [_events sortedArrayUsingComparator:^NSComparisonResult(FSEvent *e1, FSEvent *e2) {
 		return [e2.identifier localizedCaseInsensitiveCompare:e1.identifier];
 	}];
@@ -804,6 +834,7 @@
 	FSProperty *candidate = nil;
 	FSSummary strongestFlag = FSSummaryRemoteNO;
 
+	// so that if none of the summary statuses win, the last one set (highest id) wins
 	NSArray *sorted = [_properties sortedArrayUsingComparator:^NSComparisonResult(FSProperty *p1, FSProperty *p2) {
 		return [p2.identifier localizedCaseInsensitiveCompare:p1.identifier];
 	}];
@@ -1002,9 +1033,6 @@
 
 - (void)populateFromPersonDictionary:(NSDictionary *)person
 {
-	// empty out this object so it only contains what's on the server
-	[self empty];
-	
 	// GENERAL INFO
 	_identifier			= person[@"id"];
 	_isAlive			= [[person valueForComplexKeyPath:@"properties.living"] intValue] == YES;
@@ -1194,6 +1222,12 @@
 
 - (MTPocketResponse *)updateRelationship
 {
+	// don't save blank parents or children
+	if (!self.parent.name || [self.parent.name isEqualToString:@""])
+		return nil;
+	if (!self.child.name || [self.child.name isEqualToString:@""])
+		return nil;
+
 	// make sure the each is saved. If it is not, return because that save will also save this relationship.
 	if (self.parent.isNew)
 		return [self.parent save];
