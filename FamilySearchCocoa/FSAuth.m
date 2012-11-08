@@ -39,7 +39,12 @@
 
 - (MTPocketResponse *)loginWithUsername:(NSString *)un password:(NSString *)pw
 {	
-	NSURL *url = [_url urlWithModule:@"identity" version:2 resource:@"login" identifiers:nil params:0 misc:[NSString stringWithFormat:@"key=%@", _devKey]];
+	NSURL *url = [_url urlWithModule:@"identity"
+							 version:2
+							resource:@"login"
+						 identifiers:nil
+							  params:0
+								misc:[NSString stringWithFormat:@"key=%@", _devKey]];
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:un password:pw body:nil];
 	if (response.success) {
 		_sessionID = [response.body valueForComplexKeyPath:@"session.id"];

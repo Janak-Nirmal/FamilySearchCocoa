@@ -89,7 +89,7 @@ static BOOL __sandboxed = YES;
 
 	NSMutableString *url = [NSMutableString stringWithFormat:@"https://%@.familysearch.org", (__sandboxed ? @"sandbox" : @"api")];
 	[url appendFormat:@"/%@", module];
-	[url appendFormat:@"/v%u", version];
+	if (version > 0) [url appendFormat:@"/v%u", version];
 	[url appendFormat:@"/%@", resource];
 	if (identifiers && identifiers.count > 0) [url appendFormat:@"/%@", [identifiers componentsJoinedByString:@","]];
 	[url appendString:@"?"];
