@@ -126,6 +126,10 @@
 
 - (MTPocketResponse *)save
 {
+	if (!self.name		|| [self.name isEqualToString:@""])		raiseException(@"Nil 'name'", @"You cannot save a person unless they have been given a name");
+	if (!self.gender	|| [self.gender isEqualToString:@""])	raiseException(@"Nil 'gender'", @"You cannot save a person until you set their gender property.");
+
+
 	NSMutableDictionary *assertions = [NSMutableDictionary dictionary];
 
 
@@ -769,9 +773,9 @@
 		NSDictionary *combinedPersonDictionary = [response.body valueForComplexKeyPath:@"persons[first]"];
 		_identifier = combinedPersonDictionary[@"id"];
 		[self fetch];
+		_onSync(self, FSPersonSyncResultCreated);
 	}
 
-	_onSync(self, FSPersonSyncResultCreated);
 	return response;
 }
 

@@ -230,6 +230,7 @@
 
 					if (!foundSpouse) {
 						FSPerson *spouse = [FSPerson personWithSessionID:anyPerson.sessionID identifier:nil];
+						spouse.name			= @"No Name";
 						spouse.gender		= parent.isMale ? @"Female" : @"Male";
 						spouse.deathDate	= [NSDateComponents componentsFromString:@"1 January 1900"];
 						[person addParent:spouse withLineage:FSLineageTypeBiological];

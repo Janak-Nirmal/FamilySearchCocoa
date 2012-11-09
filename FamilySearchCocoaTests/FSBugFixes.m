@@ -43,6 +43,7 @@
 
 	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	father.name = @"Nathan Kirk";
+	father.gender = @"Male";
 	response = [father save];
 	STAssertTrue(response.success, nil);
 
@@ -52,6 +53,7 @@
 
 	FSPerson *mother = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	mother.name = @"Jackie Taylor";
+	mother.gender = @"Female";
 	response = [mother save];
 	STAssertTrue(response.success, nil);
 
