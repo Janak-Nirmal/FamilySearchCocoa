@@ -209,13 +209,16 @@
 	MTPocketResponse *response = nil;
 
 	__block BOOL onSyncWasCalled = NO;
-	_person.onSync = ^(FSPerson *p) {
+	__block FSPersonSyncResult onSyncStatus = FSPersonSyncResultNone;
+	_person.onSync = ^(FSPerson *p, FSPersonSyncResult status) {
 		onSyncWasCalled = YES;
+		onSyncStatus = status;
 	};
 
 	response = [_person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(onSyncWasCalled, nil);
+	STAssertTrue(onSyncStatus == FSPersonSyncResultFetched, nil);
 }
 
 - (void)testAddCharacteristicsToPerson

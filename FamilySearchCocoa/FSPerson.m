@@ -86,7 +86,7 @@
 		_events				= [NSMutableArray array];
 		_ordinances			= [NSMutableArray array];
 		_onChange			= ^(FSPerson *p){};
-		_onSync				= ^(FSPerson *p){};
+		_onSync				= ^(FSPerson *p, FSPersonSyncResult status){};
 		[__people addObject:self];
 	}
 	return self;
@@ -226,8 +226,11 @@
 	// if newly created person, assign id and link relationships
 	if (response.success) {
 
+		FSPersonSyncResult status = FSPersonSyncResultUpdated;
+
 		if (!_identifier) {
 			_identifier = [response.body valueForComplexKeyPath:@"persons[first].id"];
+			status = FSPersonSyncResultCreated;
 		}
 
 		for (FSCharacteristic *characteristic in [_characteristics allValues]) {
@@ -251,9 +254,10 @@
 				[marriage save];
 			}
 		}
+
+		_onSync(self, status);
 	}
 
-	_onSync(self);
 	return response;
 }
 
@@ -337,7 +341,7 @@
 			FSPerson *person = people.count == 1 ? anyPerson : [FSPerson personWithSessionID:anyPerson.sessionID identifier:id];
 			[person empty]; // empty out this object so it only contains what's on the server
 			[person populateFromPersonDictionary:personDictionary];
-			person.onSync(person);
+			person.onSync(person, FSPersonSyncResultFetched);
 		}
 	}
 
@@ -767,7 +771,7 @@
 		[self fetch];
 	}
 
-	_onSync(self);
+	_onSync(self, FSPersonSyncResultCreated);
 	return response;
 }
 

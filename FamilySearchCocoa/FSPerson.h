@@ -70,6 +70,15 @@ typedef NSString * FSLineageType;
 #define FSLineageTypeOther						@"Other"
 
 
+typedef enum {
+	FSPersonSyncResultCreated,
+	FSPersonSyncResultFetched,
+	FSPersonSyncResultUpdated,
+	FSPersonSyncResultDeleted,
+	FSPersonSyncResultNone
+} FSPersonSyncResult;
+
+
 
 
 
@@ -89,7 +98,7 @@ typedef NSString * FSLineageType;
 @property (readonly)		  NSArray	*events;				// Returns array of FSEvent objects
 @property (readonly)		  NSArray	*ordinances;			// Returns array of FSOrdinance objects. See FSOrdinance.h for more info.
 @property (strong, nonatomic) void (^onChange)(FSPerson *p);	// The passed in block is invoked whenever the person is changed.
-@property (strong, nonatomic) void (^onSync)(FSPerson *p);		// The passed in block is invoked whenever the person synced with the server.
+@property (strong, nonatomic) void (^onSync)(FSPerson *p, FSPersonSyncResult status);		// The passed in block is invoked whenever the person synced with the server.
 
 
 
@@ -122,7 +131,7 @@ typedef NSString * FSLineageType;
 
 
 #pragma mark - Parents
-- (void)addParent:(FSPerson *)parent withLineage:(FSLineageType)lineage;
+- (void)addParent:(FSPerson *)parent withLineage:(FSLineageType)lineage;	// You must marry two parents or sometimes one won't be returned in the pedigree (fetchAncestors:) call.
 - (void)removeParent:(FSPerson *)parent;
 - (NSArray *)motherAndFather;									// returns 2 parents no matter what. Will create new persons and add as parents if it has to.
 

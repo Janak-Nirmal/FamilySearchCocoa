@@ -156,7 +156,7 @@
 				}
 			}
 
-			person.onSync(person);
+			person.onSync(person, FSPersonSyncResultFetched);
 		}
 	}
 
@@ -305,7 +305,7 @@
 			}
 		}
 		[personDictionaries addObject:personDictionary];
-		person.onSync(person);
+		person.onSync(person, FSPersonSyncResultUpdated);
 	}
 	
 	NSDictionary *body = @{ @"persons" : @{ @"person" : personDictionaries } };

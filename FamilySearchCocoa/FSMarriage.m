@@ -381,8 +381,8 @@
 		response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
 		if (response.success) {
-			self.changed = NO;
-			self.deleted = NO;
+			_changed = NO;
+			_deleted = NO;
 			[self.husband removeMarriage:self];
 			[self.wife removeMarriage:self];
 		}

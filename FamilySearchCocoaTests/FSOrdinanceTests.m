@@ -85,7 +85,7 @@
 	STAssertTrue(father.ordinances.count == startOrdinances + 4, nil);
 }
 
-- (void)testAAReserveAndUnreserveOrdinances
+- (void)testReserveAndUnreserveOrdinances
 {
 	MTPocketResponse *response = nil;
 
