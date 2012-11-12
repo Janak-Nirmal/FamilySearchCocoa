@@ -256,6 +256,12 @@
 
 - (MTPocketResponse *)updateMarriage
 {
+	// don't save blank parents or children
+	if (!self.husband.name || [self.husband.name isEqualToString:@""])
+		return nil;
+	if (!self.wife.name || [self.wife.name isEqualToString:@""])
+		return nil;
+
 	// make sure the each is saved. If it is not, return because that save will also save this relationship.
 	if (self.husband.isNew)
 		return [self.husband save];
