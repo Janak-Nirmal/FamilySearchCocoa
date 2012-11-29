@@ -149,7 +149,7 @@
 
 	NSMutableArray *params = [NSMutableArray array];
 //	[params appendFormat:@"folderId=%@", _person.identifier];
-	[params addObject:[NSString stringWithFormat:@"filename=%@", @"arthur-young.png"]];//[[NSUUID UUID] UUIDString]];
+	[params addObject:[NSString stringWithFormat:@"filename=%@", [[NSUUID UUID] UUIDString]]];
     if (_category) 	[params addObject:[NSString stringWithFormat:@"artifactCategory=%@", _category]];
 
 	NSURL *url = [self.connectionURL urlWithModule:@"artifactmanager"
