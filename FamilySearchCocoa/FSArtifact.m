@@ -16,9 +16,9 @@
 
 
 @interface FSArtifactTag ()
-@property (weak, nonatomic)     FSArtifact  *artifact;
-@property (strong, nonatomic)   NSString    *taggedPersonID;
-@property (nonatomic)           BOOL        deleted;
+@property (unsafe_unretained, nonatomic)    FSArtifact  *artifact;
+@property (strong, nonatomic)               NSString    *taggedPersonID;
+@property (nonatomic)                       BOOL        deleted;
 - (MTPocketResponse *)save;
 - (MTPocketResponse *)destroy;
 @end
