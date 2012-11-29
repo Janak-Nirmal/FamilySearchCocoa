@@ -31,7 +31,6 @@
 @property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSURL *connectionURL;
 @property (strong, nonatomic) NSString *apID;
-@property (strong, nonatomic) NSString *originalFilename;
 @property (strong, nonatomic) NSString *folderID;
 @property (strong, nonatomic) NSString *uploaderID;
 @property (strong, nonatomic) NSURL *url;
@@ -149,7 +148,7 @@
 
 	NSMutableArray *params = [NSMutableArray array];
 //	[params appendFormat:@"folderId=%@", _person.identifier];
-	[params addObject:[NSString stringWithFormat:@"filename=%@", [[NSUUID UUID] UUIDString]]];
+	[params addObject:[NSString stringWithFormat:@"filename=%@", (_originalFilename ? _originalFilename : [[NSUUID UUID] UUIDString])]];
     if (_category) 	[params addObject:[NSString stringWithFormat:@"artifactCategory=%@", _category]];
 
 	NSURL *url = [self.connectionURL urlWithModule:@"artifactmanager"

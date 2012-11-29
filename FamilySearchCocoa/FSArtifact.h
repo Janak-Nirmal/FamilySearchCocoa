@@ -7,11 +7,6 @@
 //
 
 
-/*
- This service is new and under developemnt, so do not use this API yet.
-*/
-
-
 
 #import <MTPocket.h>
 
@@ -67,6 +62,7 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 @property (readonly, nonatomic) NSData              *data;
 @property (readonly, nonatomic) NSString			*MIMEType;
 @property (strong,	 nonatomic) NSString			*title;
+@property (strong,   nonatomic) NSString            *originalFilename;
 @property (readonly, nonatomic) NSString			*status;
 @property (readonly, nonatomic) NSString            *screeningStatus;
 @property (strong,	 nonatomic) NSString			*description;
