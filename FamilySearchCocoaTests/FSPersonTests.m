@@ -39,6 +39,17 @@
 	STAssertTrue(response.success, nil);
 }
 
+- (void)setUpProduction
+{
+	[FSURL setSandboxed:NO];
+
+	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
+	[auth loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
+	_sessionID = auth.sessionID;
+
+	_person = [FSPerson personWithSessionID:_sessionID identifier:@"KPQH-N6L"]; // Don Kirk, my real grandpa
+}
+
 - (void)testCurrentUserFetch
 {
 	MTPocketResponse *response = nil;
@@ -429,8 +440,7 @@
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
-	NSArray *dups = nil;
-	response = [_person duplicates:&dups];
+	NSArray *dups = [_person duplicatesWithResponse:&response];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(dups.count > 0, nil);
 

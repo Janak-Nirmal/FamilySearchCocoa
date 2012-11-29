@@ -234,10 +234,33 @@ The flow to move a user from adding an ancestor to their family tree to doing th
 	[FSOrdinance reserveOrdinancesForPeople:@[person] inventory:FSOrdinanceInventoryTypePersonal];
 	
 	// generate a family ordinace request and return the URL to it.
-	NSURL *urlToFamilyOrdinanceRequestPDF = nil;
-	[FSOrdinance familyOrdinanceRequestPDFURL:&urlToFamilyOrdinanceRequestPDF withSessionID:_sessionID];
+	NSURL *url = [FSOrdinance familyOrdinanceRequestPDFURLForPeople:people response:&response];
 
 Once the url to the Family Ordinance Request PDF is obtained, your application can download the PDF and let the user view/print it.
+
+### Artifacts
+
+You can add and read media attached to people in the read (e.g. photos, audio, etc).
+
+	// create and upload an artifact
+	UIImage *image = [UIImage imageNamed:@"jimmy"];
+	FSArtifact *artifact = [FSArtifact artifactWithData:UIImagePNGRepresentation(image) MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+	MTPocketResponse *response = [artifact save];
+	
+	// tag a person in the artifact
+	FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 60, 88)];
+	[artifact addTag:tag];
+	response = [artifact save];
+	
+	// remove a tag
+	[artifact removeTag:tag]
+	response = [artifact save];
+	
+	// fetch all the artifacts a person is tagged in
+	NSArray *artifacts = [FSArtifact artifactsForPerson:_person category:FSArtifactCategoryImage response:&response];
+    
+	// delete an artifact
+	response = [artifact destroy];
 
 ### Testing
 
@@ -250,3 +273,4 @@ To run the unit tests, you need to create the missing "constants.h" file with th
 	#define PRODUCTION_DEV_KEY	@"<live dev key>"
 	#define PRODUCTION_USERNAME	@"<live username>"
 	#define PRODUCTION_PASSWORD	@"<live password>"
+	#define PRODUCTION_PERSON_ID    @"<a real id from a person in the production tree>"

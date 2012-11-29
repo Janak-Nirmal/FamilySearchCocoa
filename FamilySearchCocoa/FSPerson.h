@@ -98,7 +98,7 @@ typedef enum {
 @property (readonly)		  NSArray	*events;				// Returns array of FSEvent objects
 @property (readonly)		  NSArray	*ordinances;			// Returns array of FSOrdinance objects. See FSOrdinance.h for more info.
 @property (strong, nonatomic) void (^onChange)(FSPerson *p);	// The passed in block is invoked whenever the person is changed.
-@property (strong, nonatomic) void (^onSync)(FSPerson *p, FSPersonSyncResult status);		// The passed in block is invoked whenever the person synced with the server.
+@property (strong, nonatomic) void (^onSync)(FSPerson *p, FSPersonSyncResult result);		// The passed in block is invoked whenever the person synced with the server.
 
 
 
@@ -159,8 +159,9 @@ typedef enum {
 
 
 #pragma mark - Misc
-- (MTPocketResponse *)duplicates:(NSArray **)duplicates;		// returns possible duplicates of this person (to potentially be merged)
+- (NSArray *)duplicatesWithResponse:(MTPocketResponse **)response;		// returns possible duplicates of this person (to potentially be merged)
 - (void)addUnofficialOrdinanceWithType:(FSOrdinanceType)type date:(NSDate *)date templeCode:(NSString *)templeCode;
+
 
 #pragma mark - Keys
 + (NSArray *)characteristics;									// An array of all person characteristics. (e.g. for displaying in a UI list)

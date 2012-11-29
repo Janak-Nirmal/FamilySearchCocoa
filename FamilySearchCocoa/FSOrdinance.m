@@ -359,15 +359,17 @@
 
 #pragma mark - Printing Ordinance Requests
 
-+ (MTPocketResponse *)familyOrdinanceRequestPDFURL:(NSURL **)PDFURL forPeople:(NSArray *)people
++ (NSURL *)familyOrdinanceRequestPDFURLForPeople:(NSArray *)people response:(MTPocketResponse **)response
 {
 	if (people.count == 0) raiseParamException(@"people");
 	FSPerson *anyPerson = [people lastObject];
 	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in 'people' must have a valid 'sessionID'");
-	
-	MTPocketResponse *response = [FSOrdinance fetchOrdinancesForPeople:people];
 
-	if (response.success) {
+    NSURL *PDFURL = nil;
+
+    MTPocketResponse *resp = *response = [FSOrdinance fetchOrdinancesForPeople:people];
+
+	if (resp.success) {
 
 		NSMutableArray *personDictionaries = [NSMutableArray array];
 		for (FSPerson *person in people) {
@@ -428,11 +430,11 @@
 								   params:0
 									 misc:nil];
 
-		response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+		resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
-		if (response.success) {
-			NSString *identifier = [response.body valueForComplexKeyPath:@"trips.trip[first].id"];
-			*PDFURL = [fsURL urlWithModule:@"reservation"
+		if (resp.success) {
+			NSString *identifier = [resp.body valueForComplexKeyPath:@"trips.trip[first].id"];
+			PDFURL = [fsURL urlWithModule:@"reservation"
 								   version:1
 								  resource:[NSString stringWithFormat:@"trip/%@/pdf", identifier]
 							   identifiers:nil
@@ -441,10 +443,10 @@
 		}
 	}
 	
-	return response;
+	return PDFURL;
 }
 
-+ (MTPocketResponse *)urlOfChurchPolicies:(NSURL **)url
++ (NSURL *)urlOfChurchPoliciesResponse:(MTPocketResponse **)response
 {
 	return nil; // TODO
 }

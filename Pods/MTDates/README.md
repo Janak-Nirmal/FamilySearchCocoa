@@ -203,6 +203,7 @@ NOTE: You may need to add `-all_load` to "Other Linker Flags" in your targets bu
 	- (NSUInteger)daysInCurrentMonth;
 	- (NSUInteger)daysInPreviousMonth;
 	- (NSUInteger)daysInNextMonth;
+	- (NSDate *)inTimeZone:(NSTimeZone *)timezone;
 
 ### NSDateComponents Additions
 
@@ -223,3 +224,10 @@ NOTE: You may need to add `-all_load` to "Other Linker Flags" in your targets bu
 
 	NSDateComponents *comps = [NSDateComponents componentsFromString:@"10"];
 	[comps stringValue] 	// => @"October"
+
+### Contributors
+
+* [Adam Kirk](https://github.com/atomkirk) @atomkirk
+* [Parker Wightman](https://github.com/pwightman) @parkerwightman
+* [James Schultz](https://github.com/boxenjim) @boxenjim
+* [Ryan Maxwell](https://github.com/ryanmaxwell) @ryanmaxwell

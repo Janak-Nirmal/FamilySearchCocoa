@@ -680,12 +680,15 @@
 
 
 
+
+
 #pragma mark - Misc
 
-- (MTPocketResponse *)duplicates:(NSArray **)duplicates
+- (NSArray *)duplicatesWithResponse:(MTPocketResponse **)response
 {
 	if (!_identifier) raiseException(@"Nil 'identifier'", @"The persons 'identifier' cannot be nil to find duplicates");
-	*duplicates = [[NSMutableArray alloc] init];
+
+	NSMutableArray *duplicates = [NSMutableArray array];
 
 	NSURL *url = [_url urlWithModule:@"familytree"
 							 version:2
@@ -694,10 +697,10 @@
 							  params:0
 								misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+	MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
-	if (response.success) {
-		NSDictionary *search = [response.body valueForComplexKeyPath:@"matches[first]"];
+	if (resp.success) {
+		NSDictionary *search = [resp.body valueForComplexKeyPath:@"matches[first]"];
 		NSArray *searches = [search valueForComplexKeyPath:@"match"];
 		for (NSDictionary *searchDictionary in searches) {
 			NSDictionary *personDictionary = searchDictionary[@"person"];
@@ -728,11 +731,11 @@
 				[person addMarriage:[FSMarriage marriageWithHusband:(spouse.isMale ? spouse : self) wife:(spouse.isMale ? self : spouse)]];
 			}
 
-			[(NSMutableArray *)*duplicates addObject:person];
+			[duplicates addObject:person];
 		}
 	}
 	
-	return response;
+	return duplicates;
 }
 
 - (void)addUnofficialOrdinanceWithType:(FSOrdinanceType)type date:(NSDate *)date templeCode:(NSString *)templeCode
@@ -830,6 +833,8 @@
 		FSLineageTypeOther
 	];
 }
+
+
 
 
 

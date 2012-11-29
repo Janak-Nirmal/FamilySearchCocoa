@@ -1,0 +1,4 @@
+Documentation set was installed to Xcode!
+
+Path: /Users/adamkirk/Library/Developer/Shared/Documentation/DocSets/org.cocoapods.MTPocket-0.6.2.docset
+Time: 2012-11-28 16:06:54 +0000

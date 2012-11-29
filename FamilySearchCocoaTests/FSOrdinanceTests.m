@@ -172,8 +172,8 @@
 	response = [FSOrdinance people:&people reservedByCurrentUserWithSessionID:_sessionID];
 	STAssertTrue(response.success, nil);
 
-	NSURL *url = nil;
-	response = [FSOrdinance familyOrdinanceRequestPDFURL:&url forPeople:people];
+	NSURL *url = [FSOrdinance familyOrdinanceRequestPDFURLForPeople:people response:&response];
+
 	STAssertTrue(response.success, nil);
 	STAssertNotNil(url, nil);
 }

@@ -12,6 +12,7 @@
 #import "FSEvent.h"
 #import "FSURL.h"
 #import "FSOrdinance.h"
+#import "FSArtifact.h"
 #import <NSObject+MTJSONUtils.h>
 
 
@@ -102,7 +103,8 @@ FSQueryParameter familyQueryParameters();
 
 
 @interface FSPerson ()
-@property (readonly)			BOOL		isMale;
+@property (readonly)			BOOL            isMale;
+@property (strong, nonatomic)   NSMutableArray  *taggedPersonIDs;   // TODO
 - (void)populateFromPersonDictionary:(NSDictionary *)person;
 - (void)removeMarriage:(FSMarriage *)marriage;
 - (void)addOrReplaceOrdinance:(FSOrdinance *)ordinance;
@@ -149,6 +151,7 @@ FSQueryParameter familyQueryParameters();
 - (void)addPerson:(FSPerson *)person;
 - (BOOL)isEqualToOrdinance:(FSOrdinance *)ordinance;
 @end
+
 
 
 
