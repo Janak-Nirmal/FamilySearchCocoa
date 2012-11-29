@@ -351,6 +351,8 @@
 
 + (FSArtifactTag *)tagWithPerson:(FSPerson *)person title:(NSString *)title rect:(CGRect)rect
 {
+    if (!person) raiseParamException(@"person");
+    if (!title) raiseParamException(@"title");
 	return [[FSArtifactTag alloc] initWithPerson:person title:title rect:rect];
 }
 
