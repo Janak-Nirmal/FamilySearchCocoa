@@ -23,6 +23,7 @@
 @property (strong, nonatomic)	NSMutableArray		*properties;
 @property (strong, nonatomic)	NSMutableDictionary	*characteristics;
 @property (strong, nonatomic)	NSMutableArray		*relationships;
+- (void)markAsFetched;
 @end
 
 
@@ -80,6 +81,7 @@
 		_identifier			= identifier;
 		_properties			= [NSMutableArray array];
 		_isAlive			= NO;
+        _isFetched          = NO;
 		_relationships		= [NSMutableArray array];
 		_characteristics	= [NSMutableDictionary dictionary];
 		_marriages			= [NSMutableArray array];
@@ -345,6 +347,7 @@
 			FSPerson *person = people.count == 1 ? anyPerson : [FSPerson personWithSessionID:anyPerson.sessionID identifier:id];
 			[person empty]; // empty out this object so it only contains what's on the server
 			[person populateFromPersonDictionary:personDictionary];
+            [person markAsFetched];
 			person.onSync(person, FSPersonSyncResultFetched);
 		}
 	}
@@ -1184,7 +1187,13 @@
 		if ([event.type isEqualToString:eventType])
 			return event.place;
 
-	return nil;}
+	return nil;
+}
+
+- (void)markAsFetched
+{
+    _isFetched = YES;
+}
 
 
 @end

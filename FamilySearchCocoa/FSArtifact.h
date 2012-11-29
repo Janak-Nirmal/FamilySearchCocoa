@@ -53,7 +53,7 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 @property (readonly, nonatomic) NSString    *identifier;
 @property (readonly, nonatomic) FSPerson	*person;
 @property (readonly, nonatomic)	NSString	*title;
-@property (readonly, nonatomic) CGRect		rect;
+@property (readonly, nonatomic) CGRect		rect;       // These are percentage values not pixels
 + (FSArtifactTag *)tagWithPerson:(FSPerson *)person title:(NSString *)title rect:(CGRect)rect;
 - (MTPocketResponse *)saveAsPortraitOfPerson;
 @end
