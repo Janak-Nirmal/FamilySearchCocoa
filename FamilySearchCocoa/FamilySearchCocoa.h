@@ -12,4 +12,5 @@
 #import "FSMarriage.h"
 #import "FSOrdinance.h"
 #import "FSSearch.h"
+#import "FSArtifact.h"
 #import "FSURL.h"
