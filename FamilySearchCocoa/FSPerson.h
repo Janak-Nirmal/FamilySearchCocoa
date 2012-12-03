@@ -18,7 +18,7 @@
 #import "FSOrdinance.h"
 #import "FSEvent.h"
 
-@class FSMarriage, FSOrdinance, FSAuth;
+@class FSMarriage, FSOrdinance, FSUser;
 
 
 // Person Property

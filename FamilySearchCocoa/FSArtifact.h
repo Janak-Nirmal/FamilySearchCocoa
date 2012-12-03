@@ -23,7 +23,9 @@ typedef NSString * FSArtifactMIMEType;
 #define FSArtifactMIMETypeTextXML           @"text/xml"
 #define FSArtifactMIMETypeTextHTML          @"text/html"
 #define FSArtifactMIMETypeVideoMPEG         @"video/mpeg"
-#define FSArtifactMIMETypeAudioMPEG         @"audio/mpeg"
+#define FSArtifactMIMETypeVideoMP4          @"video/mp4"
+#define FSArtifactMIMETypeAudioMP3          @"audio/mpeg"
+#define FASrtifactMIMETypeAudioMP4          @"audio/mp4"
 
 
 typedef NSString * FSArtifactCategory;
@@ -34,6 +36,7 @@ typedef NSString * FSArtifactCategory;
 #define FSArtifactCategoryVideo             @"VIDEO"
 #define FSArtifactCategoryStory             @"STORY"
 #define FSArtifactCategoryAny               @"ANY"
+#define FSArtifactCategoryPortrait          @"PORTRAIT" // read-only
 
 
 extern NSString *const FSArtifactThumbnailStyleNormalKey;
@@ -50,7 +53,7 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 @property (readonly, nonatomic)	NSString	*title;
 @property (readonly, nonatomic) CGRect		rect;       // These are percentage values not pixels
 + (FSArtifactTag *)tagWithPerson:(FSPerson *)person title:(NSString *)title rect:(CGRect)rect;
-- (MTPocketResponse *)saveAsPortraitOfPerson;
+- (FSArtifact *)artficactFromSavingTagAsPortraitWithResponse:(MTPocketResponse **)response;         // this call blocks, do not call on main thread
 @end
 
 
@@ -75,7 +78,9 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 + (FSArtifact *)artifactWithData:(NSData *)data MIMEType:(FSArtifactMIMEType)MIMEType sessionID:(NSString *)sessionID;              // For creating and uploading a new artifact
 + (FSArtifact *)artifactWithIdentifier:(NSString *)identifier sessionID:(NSString *)sessiongID;                                     // For fetching an existing artifact
 + (NSArray *)artifactsForPerson:(FSPerson *)person category:(FSArtifactCategory)category response:(MTPocketResponse **)response;    // This will block, do not call on main thread.
-+ (FSArtifact *)portraitArtifactForPerson:(FSPerson *)person response:(MTPocketResponse **)response;                                // This will block, do not call on main thread.
+//+ (FSArtifact *)portraitArtifactForPerson:(FSPerson *)person response:(MTPocketResponse **)response;                                // This will block, do not call on main thread.
++ (NSArray *)artifactsUploadedByCurrentUserWithSessionID:(NSString *)sessionID response:(MTPocketResponse **)response;              // This will block, do not call on main thread.
+
 
 #pragma mark - Syncing
 - (MTPocketResponse *)save;

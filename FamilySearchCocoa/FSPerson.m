@@ -235,7 +235,7 @@
 		FSPersonSyncResult status = FSPersonSyncResultUpdated;
 
 		if (!_identifier) {
-			_identifier = [response.body valueForComplexKeyPath:@"persons[first].id"];
+			_identifier = NILL([response.body valueForComplexKeyPath:@"persons[first].id"]);
 			status = FSPersonSyncResultCreated;
 		}
 
@@ -281,22 +281,22 @@
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
 	if (response.success) {
-		NSDictionary *pedigree = [response.body valueForComplexKeyPath:@"pedigrees[first]"];
+		NSDictionary *pedigree = NILL([response.body valueForComplexKeyPath:@"pedigrees[first]"]);
 		NSArray *people = pedigree[@"persons"];
 		for (NSDictionary *personDict in people) {
 			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:personDict[@"id"]];
 			[person populateFromPersonDictionary:personDict];
 
 			// PARENTS GENDER
-			NSArray *parents = [personDict valueForComplexKeyPath:@"parents[first].parent"];
+			NSArray *parents = NILL([personDict valueForComplexKeyPath:@"parents[first].parent"]);
 			for (NSDictionary *parentDict in parents) {
 				FSPerson *parent = [FSPerson personWithSessionID:_sessionID identifier:parentDict[@"id"]];
 				parent.gender = parentDict[@"gender"];
 			}
 
 			// EVENTS
-			NSString *birth = [personDict valueForComplexKeyPath:@"properties.lifespan.birth.text"];
-			NSString *death = [personDict valueForComplexKeyPath:@"properties.lifespan.death.text"];
+			NSString *birth = NILL([personDict valueForKeyPath:@"properties.lifespan.birth.text"]);
+			NSString *death = NILL([personDict valueForKeyPath:@"properties.lifespan.death.text"]);
 
 			if ([birth isKindOfClass:[NSString class]]) {
 				FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeBirth identifier:nil];
@@ -703,8 +703,8 @@
 	MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
 	if (resp.success) {
-		NSDictionary *search = [resp.body valueForComplexKeyPath:@"matches[first]"];
-		NSArray *searches = [search valueForComplexKeyPath:@"match"];
+		NSDictionary *search = NILL([resp.body valueForComplexKeyPath:@"matches[first]"]);
+		NSArray *searches = NILL([search valueForKeyPath:@"match"]);
 		for (NSDictionary *searchDictionary in searches) {
 			NSDictionary *personDictionary = searchDictionary[@"person"];
 			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:personDictionary[@"id"]];
@@ -776,7 +776,7 @@
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
 	if (response.success) {
-		NSDictionary *combinedPersonDictionary = [response.body valueForComplexKeyPath:@"persons[first]"];
+		NSDictionary *combinedPersonDictionary = NILL([response.body valueForComplexKeyPath:@"persons[first]"]);
 		_identifier = combinedPersonDictionary[@"id"];
 		[self fetch];
 		_onSync(self, FSPersonSyncResultCreated);
@@ -1051,78 +1051,78 @@
 {
 	// GENERAL INFO
 	_identifier			= person[@"id"];
-	_isAlive			= [[person valueForComplexKeyPath:@"properties.living"] intValue] == YES;
-	_isModifiable		= [[person valueForComplexKeyPath:@"properties.modifiable"] intValue] == YES;
-	_lastModifiedDate	= [NSDate dateWithTimeIntervalSince1970:[[person valueForComplexKeyPath:@"properties.modified"] intValue]];
+	_isAlive			= [NILL([person valueForKeyPath:@"properties.living"]) intValue] == YES;
+	_isModifiable		= [NILL([person valueForKeyPath:@"properties.modifiable"]) intValue] == YES;
+	_lastModifiedDate	= [NSDate dateWithTimeIntervalSince1970:[NILL([person valueForKeyPath:@"properties.modified"]) intValue]];
 
-	NSArray *names = [person valueForComplexKeyPath:@"assertions.names"];
+	NSArray *names = NILL([person valueForKeyPath:@"assertions.names"]);
 	for (NSDictionary *nameDict in names) {
-		NSString	*identifier		= [nameDict valueForComplexKeyPath:@"value.id"];
-		FSSummary	selected		= [nameDict valueForComplexKeyPath:@"selected"] != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
-		NSString	*name			= [nameDict valueForComplexKeyPath:@"value.forms[first].fullText"];
+		NSString	*identifier		= NILL([nameDict valueForKeyPath:@"value.id"]);
+		FSSummary	selected		= NILL([nameDict valueForKeyPath:@"selected"]) != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
+		NSString	*name			= NILL([nameDict valueForComplexKeyPath:@"value.forms[first].fullText"]);
 		[self setValue:name forPropertyType:FSPropertyTypeName identifier:identifier summary:selected];
 	}
 
-	NSArray *genders = [person valueForComplexKeyPath:@"assertions.genders"];
+	NSArray *genders = NILL([person valueForKeyPath:@"assertions.genders"]);
 	for (NSDictionary *genderDict in genders) {
-		NSString	*identifier		= [genderDict valueForComplexKeyPath:@"value.id"];
-		FSSummary	selected		= [genderDict valueForComplexKeyPath:@"selected"] != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
-		NSString	*gender			= [genderDict valueForComplexKeyPath:@"value.type"];
+		NSString	*identifier		= NILL([genderDict valueForKeyPath:@"value.id"]);
+		FSSummary	selected		= NILL([genderDict valueForKeyPath:@"selected"]) != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
+		NSString	*gender			= NILL([genderDict valueForKeyPath:@"value.type"]);
 		[self setValue:gender forPropertyType:FSPropertyTypeGender identifier:identifier summary:selected];
 	}
 
 	// CHARACTERISTICS
-	NSArray *characteristics = [person valueForComplexKeyPath:@"assertions.characteristics"];
+	NSArray *characteristics = NILL([person valueForKeyPath:@"assertions.characteristics"]);
 	if (characteristics && [characteristics isKindOfClass:[NSArray class]])
 		for (NSDictionary *characteristicDict in characteristics) {
 			FSCharacteristic *characteristic		= [[FSCharacteristic alloc] init];
-			characteristic.identifier				= [characteristicDict valueForComplexKeyPath:@"value.id"];
-			characteristic.key						= [characteristicDict valueForComplexKeyPath:@"value.type"];
-			characteristic.value					= [characteristicDict valueForComplexKeyPath:@"value.detail"];
-			characteristic.title					= [characteristicDict valueForComplexKeyPath:@"value.title"];
-			characteristic.lineage					= [characteristicDict valueForComplexKeyPath:@"value.lineage"];
+			characteristic.identifier				= NILL([characteristicDict valueForKeyPath:@"value.id"]);
+			characteristic.key						= NILL([characteristicDict valueForKeyPath:@"value.type"]);
+			characteristic.value					= NILL([characteristicDict valueForKeyPath:@"value.detail"]);
+			characteristic.title					= NILL([characteristicDict valueForKeyPath:@"value.title"]);
+			characteristic.lineage					= NILL([characteristicDict valueForKeyPath:@"value.lineage"]);
 			characteristic.date						= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristicDict, @"value.date.normalized", @"value.date.original")];
-			characteristic.place					= [characteristicDict valueForComplexKeyPath:@"value.place.original"];
+			characteristic.place					= NILL([characteristicDict valueForKeyPath:@"value.place.original"]);
 			_characteristics[characteristic.key]	= characteristic;
 		}
 
 
 	// EVENTS
-	NSArray *events = [person valueForComplexKeyPath:@"assertions.events"];
+	NSArray *events = NILL([person valueForKeyPath:@"assertions.events"]);
 	if (events && [events isKindOfClass:[NSArray class]])
 		for (NSDictionary *eventDict in events) {
-			FSPersonEventType	type		= [eventDict valueForComplexKeyPath:@"value.type"];
-			NSString			*identifier	= [eventDict valueForComplexKeyPath:@"value.id"];
+			FSPersonEventType	type		= NILL([eventDict valueForKeyPath:@"value.type"]);
+			NSString			*identifier	= NILL([eventDict valueForKeyPath:@"value.id"]);
 			FSEvent				*event		= [FSEvent eventWithType:type identifier:identifier];
-			FSSummary			selected	= [eventDict valueForComplexKeyPath:@"selected"] != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
+			FSSummary			selected	= NILL([eventDict valueForKeyPath:@"selected"]) != nil ? FSSummaryRemoteYES : FSSummaryRemoteNO;
 			event.date						= [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
-			event.place						= [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
+			event.place						= NILL([eventDict valueForKeyPath:@"value.place.normalized.value"]);
 			[self addEvent:event summary:selected];
 			event.changed = NO;
 		}
 
 
 	// RELATIONSHIPS
-	NSArray *parents = [person valueForComplexKeyPath:@"parents"];
+	NSArray *parents = NILL([person valueForKeyPath:@"parents"]);
 	for (NSDictionary *parent in parents) {
 		NSArray *coupledParents = parent[@"parent"];
 		for (NSDictionary *coupledParent in coupledParents) {
 			FSPerson		*p				= [[FSPerson alloc] initWithSessionID:_sessionID identifier:coupledParent[@"id"]];
-			NSString		*lineage		= [coupledParent valueForComplexKeyPath:@"characteristics[first].value.lineage"];
+			NSString		*lineage		= NILL([coupledParent valueForComplexKeyPath:@"characteristics[first].value.lineage"]);
 			FSRelationship	*relationship	= [FSRelationship relationshipWithParent:p child:self lineage:lineage];
 			[self addRelationship:relationship];
 		}
 	}
 
-	NSArray *families = [person valueForComplexKeyPath:@"families"];
+	NSArray *families = NILL([person valueForKeyPath:@"families"]);
 	for (NSDictionary *family in families) {
-		NSArray *children = [family valueForComplexKeyPath:@"child"];
+		NSArray *children = NILL([family valueForKeyPath:@"child"]);
 		for (NSDictionary *child in children) {
 			FSPerson		*p				= [[FSPerson alloc] initWithSessionID:_sessionID identifier:child[@"id"]];
 			FSRelationship	*relationship	= [FSRelationship relationshipWithParent:self child:p lineage:FSLineageTypeBiological];
 			[self addRelationship:relationship];
 		}
-		NSArray *spouses = [family valueForComplexKeyPath:@"parent"];
+		NSArray *spouses = NILL([family valueForKeyPath:@"parent"]);
 		for (NSDictionary *spouse in spouses) {
 			FSPerson	*p			= [[FSPerson alloc] initWithSessionID:_sessionID identifier:spouse[@"id"]];
 			if ([p isSamePerson:self]) continue;
@@ -1134,22 +1134,21 @@
 	}
 
 	// ORDINANCES
-	NSArray *ordinances = [person valueForComplexKeyPath:@"ordinances"];
-	if (![ordinances isKindOfClass:[NSNull class]])
-		for (NSDictionary *ordinanceDictionary in ordinances) {
-			NSString		*identifer	= [ordinanceDictionary valueForComplexKeyPath:@"value.id"];
-			FSOrdinanceType	type		= [ordinanceDictionary valueForComplexKeyPath:@"value.type"];
-			BOOL			official	= [ordinanceDictionary[@"official"] boolValue];
-			NSDate			*date		= [NSDate dateFromString:[ordinanceDictionary valueForComplexKeyPath:@"value.date.numeric"] usingFormat:MTDatesFormatISODate];
-			NSString		*templeCode	= [ordinanceDictionary valueForComplexKeyPath:@"value.temple"];
+	NSArray *ordinances = NILL([person valueForKeyPath:@"ordinances"]);
+    for (NSDictionary *ordinanceDictionary in ordinances) {
+        NSString		*identifer	= NILL([ordinanceDictionary valueForKeyPath:@"value.id"]);
+        FSOrdinanceType	type		= NILL([ordinanceDictionary valueForKeyPath:@"value.type"]);
+        BOOL			official	= [ordinanceDictionary[@"official"] boolValue];
+        NSDate			*date		= [NSDate dateFromString:NILL([ordinanceDictionary valueForKeyPath:@"value.date.numeric"]) usingFormat:MTDatesFormatISODate];
+        NSString		*templeCode	= NILL([ordinanceDictionary valueForKeyPath:@"value.temple"]);
 
-			FSOrdinance *ordinance		= [FSOrdinance ordinanceWithType:type];
-			ordinance.identifier		= identifer;
-			[ordinance setDate:date];
-			[ordinance setTempleCode:templeCode];
-			[ordinance setOfficial:official];
-			[self addOrReplaceOrdinance:ordinance];
-		}
+        FSOrdinance *ordinance		= [FSOrdinance ordinanceWithType:type];
+        ordinance.identifier		= identifer;
+        [ordinance setDate:date];
+        [ordinance setTempleCode:templeCode];
+        [ordinance setOfficial:official];
+        [self addOrReplaceOrdinance:ordinance];
+    }
 
 	_onChange(self);
 }
@@ -1305,7 +1304,7 @@
 
 	if (response.success) {
 		NSMutableDictionary *relationshipTypesToDelete = [NSMutableDictionary dictionary];
-		NSDictionary *relationshipTypes = [response.body valueForComplexKeyPath:@"persons[first].relationships"];
+		NSDictionary *relationshipTypes = NILL([response.body valueForComplexKeyPath:@"persons[first].relationships"]);
 		for (NSString *key in [relationshipTypes allKeys]) {
 			if (![key isEqualToString:@"parent"]) continue;
 			NSMutableArray *relationshipsToDelete = [NSMutableArray array];
@@ -1317,7 +1316,7 @@
 					NSMutableArray *assertionsToDelete = [NSMutableArray array];
 					NSArray *assertionType = assertionTypes[aKey];
 					for (NSDictionary *assertion in assertionType) {
-						NSArray *valueID = [assertion valueForComplexKeyPath:@"value.id"];
+						NSArray *valueID = NILL([assertion valueForKeyPath:@"value.id"]);
 						[assertionsToDelete addObject: @{ @"value" : @{ @"id" : valueID }, @"action" : @"Delete" } ];
 					}
 					assertionTypesToDelete[aKey] = assertionsToDelete;

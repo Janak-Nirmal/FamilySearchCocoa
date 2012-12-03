@@ -8,7 +8,7 @@
 
 #import "FSPersonTests.h"
 #import "FSURL.h"
-#import "FSAuth.h"
+#import "FSUser.h"
 #import "FSPerson.h"
 #import "FSMarriage.h"
 #import "constants.h"
@@ -28,9 +28,9 @@
 {
 	[FSURL setSandboxed:YES];
 
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-	_sessionID = auth.sessionID;
+	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
+	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	_sessionID = user.sessionID;
 
 	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	_person.name = @"Adam Kirk";
@@ -43,9 +43,9 @@
 {
 	[FSURL setSandboxed:NO];
 
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
-	[auth loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
-	_sessionID = auth.sessionID;
+	FSUser *user = [[FSUser alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
+	[user loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
+	_sessionID = user.sessionID;
 
 	_person = [FSPerson personWithSessionID:_sessionID identifier:@"KPQH-N6L"]; // Don Kirk, my real grandpa
 }

@@ -73,12 +73,12 @@
 
 	if (response.success) {
 
-		NSArray *peopleDictionaries = [response.body valueForComplexKeyPath:@"persons.person"];
+		NSArray *peopleDictionaries = NILL([response.body valueForKeyPath:@"persons.person"]);
 		for (NSDictionary *personDictionary in peopleDictionaries) {
 			
 			FSPerson *person = [FSPerson personWithSessionID:anyPerson.sessionID identifier:personDictionary[@"ref"]];
 
-			NSString *notes = [personDictionary valueForComplexKeyPath:@"userNotifications.userNotification[first].message"];
+			NSString *notes = NILL([personDictionary valueForComplexKeyPath:@"userNotifications.userNotification[first].message"]);
 
 			for (NSString *ordinanceType in [FSOrdinance ordinanceTypes]) {
 				NSString *reservationType = [FSOrdinance reservationTypeFromOrdinanceType:ordinanceType];
@@ -107,11 +107,11 @@
 					if (notes) [ordinance setNotes:notes];
 
 					// DATE
-					NSString *dateString = [ordinanceDictionary valueForComplexKeyPath:@"date.normalized"];
+					NSString *dateString = NILL([ordinanceDictionary valueForKeyPath:@"date.normalized"]);
 					if (dateString) [ordinance setDate:[NSDate dateFromString:dateString usingFormat:DATE_FORMAT]];
 
 					// TEMPLE
-					NSString *templeCodeString = [ordinanceDictionary valueForComplexKeyPath:@"temple.code"];
+					NSString *templeCodeString = NILL([ordinanceDictionary valueForKeyPath:@"temple.code"]);
 					if (templeCodeString) [ordinance setTempleCode:templeCodeString];
 
 					// BORN IN THE COVENANT
@@ -119,7 +119,7 @@
 					if (bornInCovenantString) [ordinance setBornInTheCovenant:[bornInCovenantString boolValue]];
 
 					// PREREQS
-					NSArray *preReqPeople = [ordinanceDictionary valueForComplexKeyPath:@"prerequisitesForTrip"];
+					NSArray *preReqPeople = NILL([ordinanceDictionary valueForKeyPath:@"prerequisitesForTrip"]);
 					for (NSDictionary *preReqPersonDictionary in preReqPeople) {
 						FSPerson *preReqPerson = [FSPerson personWithSessionID:anyPerson.sessionID identifier:preReqPersonDictionary[@"ref"]];
 						for (NSString *ordName in [FSOrdinance ordinanceTypes]) {
@@ -137,18 +137,18 @@
 					}
 
 					// PARENTS
-					NSArray *parents = [ordinanceDictionary valueForComplexKeyPath:@"parent"];
+					NSArray *parents = NILL([ordinanceDictionary valueForKeyPath:@"parent"]);
 					for (NSDictionary *parent in parents) {
 						FSPerson *p = [FSPerson personWithSessionID:anyPerson.sessionID identifier:parent[@"ref"]];
-						p.name = [parent valueForComplexKeyPath:@"qualification.name.fullText"];
+						p.name = NILL([parent valueForKeyPath:@"qualification.name.fullText"]);
 						[p addOrReplaceOrdinance:ordinance];
 					}
 
 					// SPOUSES
-					NSArray *spouses = [ordinanceDictionary valueForComplexKeyPath:@"spouses"];
+					NSArray *spouses = NILL([ordinanceDictionary valueForKeyPath:@"spouses"]);
 					for (NSDictionary *spouse in spouses) {
 						FSPerson *p = [FSPerson personWithSessionID:anyPerson.sessionID identifier:spouse[@"ref"]];
-						p.name = [spouse valueForComplexKeyPath:@"qualification.name.fullText"];
+						p.name = NILL([spouse valueForKeyPath:@"qualification.name.fullText"]);
 						[p addOrReplaceOrdinance:ordinance];
 					}
 					
@@ -179,9 +179,9 @@
 
 	if (response.success) {
 		*people = [NSMutableArray array];
-		NSArray *persons = [response.body valueForComplexKeyPath:@"persons.person"];
+		NSArray *persons = NILL([response.body valueForKeyPath:@"persons.person"]);
 		for (NSDictionary *personDictionary in persons) {
-			NSString *identifier = [personDictionary valueForComplexKeyPath:@"ref"];
+			NSString *identifier = NILL([personDictionary valueForKeyPath:@"ref"]);
 			FSPerson *person = [FSPerson personWithSessionID:sessionID identifier:identifier];
 			[(NSMutableArray *)*people addObject:person];
 		}
@@ -433,7 +433,7 @@
 		resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
 		if (resp.success) {
-			NSString *identifier = [resp.body valueForComplexKeyPath:@"trips.trip[first].id"];
+			NSString *identifier = NILL([resp.body valueForComplexKeyPath:@"trips.trip[first].id"]);
 			PDFURL = [fsURL urlWithModule:@"reservation"
 								   version:1
 								  resource:[NSString stringWithFormat:@"trip/%@/pdf", identifier]

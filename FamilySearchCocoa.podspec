@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "FamilySearchCocoa"
-  s.version      = "0.8.1"
+  s.version      = "0.8.2"
   s.summary      = "An easy to use library for interacting with the FamilySearch.org API on iOS or OS X"
   s.description  = <<-DESC
 					You need to get a developer key from https://devnet.familysearch.org/ first. Then you can easily get the current user, add
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/FamilySearch/FamilySearchCocoa"
   s.license      = 'BSD'
   s.author       = { "Adam Kirk" => "akirk@familysearch.org" }
-  s.source       = { :git => "https://github.com/FamilySearch/FamilySearchCocoa.git", :tag => "0.8.1" }
+  s.source       = { :git => "https://github.com/FamilySearch/FamilySearchCocoa.git", :tag => "0.8.2" }
   s.source_files = 'FamilySearchCocoa/*.{h,m}'
   s.requires_arc = true
   s.dependency 'MTPocket'

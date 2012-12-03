@@ -52,9 +52,6 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 
 
 
-@interface FSURL ()
-@property (strong, nonatomic) NSString *sessionID;
-@end
 
 
 

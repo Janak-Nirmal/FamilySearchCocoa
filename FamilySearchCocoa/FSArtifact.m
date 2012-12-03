@@ -8,9 +8,8 @@
 
 #import "FSArtifact.h"
 #import "private.h"
+#import <NSObject+MTJSONUtils.h>
 
-
-#define NIL_IF_NSNULL(a) ([a isKindOfClass:[NSNull class]] ? nil : a)
 
 
 
@@ -21,6 +20,7 @@
 @property (nonatomic)                       BOOL        deleted;
 - (MTPocketResponse *)save;
 - (MTPocketResponse *)destroy;
+- (void)populateFromDictionary:(NSDictionary *)dictionary;
 @end
 
 
@@ -117,6 +117,30 @@
     return nil;
 }
 
++ (NSArray *)artifactsUploadedByCurrentUserWithSessionID:(NSString *)sessionID response:(MTPocketResponse **)response
+{
+    FSURL *connectionURL = [[FSURL alloc] initWithSessionID:sessionID];
+    NSURL *url = [connectionURL  urlWithModule:@"artifactmanager"
+                                       version:0
+                                      resource:@"users/unknown/artifacts"
+                                   identifiers:nil
+                                        params:0
+                                          misc:@"includeTags=true"];
+
+    MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+
+    if (resp.success) {
+        NSMutableArray *artifacts = [NSMutableArray array];
+        for (NSDictionary *artifactDict in resp.body[@"artifact"]) {
+            FSArtifact *artifact = [FSArtifact artifactWithIdentifier:nil sessionID:sessionID];
+            [artifact populateFromDictionary:artifactDict];
+            [artifacts addObject:artifact];
+        }
+        return artifacts;
+    }
+
+    return nil;
+}
 
 
 
@@ -313,6 +337,15 @@
     _uploaderID				= dictionary[@"uploaderId"];
     _url					= dictionary[@"url"];
     _size.width				= [dictionary[@"width"] floatValue];
+
+    // add tags
+    if (NILL(dictionary[@"photoTags"]) && ((NSArray *)dictionary[@"photoTags"]).count > 0) {
+        for (NSDictionary *tagDict in dictionary[@"photoTags"]) {
+            FSArtifactTag *tag = [[FSArtifactTag alloc] init];
+            [tag populateFromDictionary:tagDict];
+            [self addTag:tag];
+        }
+    }
 }
 
 @end
@@ -381,7 +414,7 @@
     return response;
 }
 
-- (MTPocketResponse *)saveAsPortraitOfPerson
+- (FSArtifact *)artficactFromSavingTagAsPortraitWithResponse:(MTPocketResponse **)response
 {
     if (!_artifact) raiseException(@"No artifact", @"This tag must be added to an artifact before it can be saved");
     if (!_person) raiseException(@"No Person", @"You cannot save a tag until you've set the 'person' property");
@@ -393,13 +426,15 @@
                                                  params:0
                                                    misc:nil];
 
-    MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:nil];
     
-    if (response.success) {
-        
+    if (resp.success) {
+        FSArtifact *createdArtifact = [FSArtifact artifactWithIdentifier:nil sessionID:_artifact.sessionID];
+        [createdArtifact populateFromDictionary:resp.body[@"artifact"]];
+        return createdArtifact;
     }
     
-    return response;
+    return nil;
 }
 
 - (MTPocketResponse *)destroy

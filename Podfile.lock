@@ -2,10 +2,10 @@
 PODS:
 - Base64 (1.0.0)
 - MTDates (0.6.1)
-- MTJSONUtils (0.0.1)
+- MTJSONUtils (0.1.0)
 - MTPocket (0.6.2):
   - Base64
-  - MTJSONUtils (~> 0.0.1)
+  - MTJSONUtils (~> 0.1.0)
   - XMLDictionary (~> 2.0.0)
 - XMLDictionary (2.0.0)
 
@@ -17,8 +17,8 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Base64: 285e4864ccacb72cb921c09fd7a19af3b47f450d
   MTDates: 348df6b3183fd92a9c4c6db8f5ab1a1c5b0bdd9b
-  MTJSONUtils: e4828f9c0cb87796b8d8ca8e47a54980e76c08e4
-  MTPocket: 2f3e9f0fd16f832f6be71a499b8103f80d1b2991
+  MTJSONUtils: 6f36d8d1bf0d370f91201cd5daf4fd90e0bbdfd5
+  MTPocket: 8017a87ab4c205f56ec32809bb94e505a10d4722
   XMLDictionary: d41dcb25b03e480f374551037396f4fc1307ff1c
 
 COCOAPODS: 0.16.0

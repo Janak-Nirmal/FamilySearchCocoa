@@ -7,7 +7,7 @@
 //
 
 #import "FSPerson.h"
-#import "FSAuth.h"
+#import "FSUser.h"
 #import "FSMarriage.h"
 #import "FSEvent.h"
 #import "FSURL.h"
@@ -31,8 +31,8 @@ static inline void raiseParamException(NSString *paramName)
 
 static inline id objectForPreferredKeys(id obj, NSString *key1, NSString *key2)
 {
-	id key1Result = [obj valueForComplexKeyPath:key1];
-	id key2Result = [obj valueForComplexKeyPath:key2];
+	id key1Result = NILL([obj valueForKeyPath:key1]);
+	id key2Result = NILL([obj valueForKeyPath:key2]);
 	return key1Result ? key1Result : key2Result;
 }
 
@@ -90,6 +90,7 @@ FSQueryParameter defaultQueryParameters();
 FSQueryParameter familyQueryParameters();
 
 @interface FSURL ()
+@property (strong, nonatomic) NSString *sessionID;
 - (id)initWithSessionID:(NSString *)sessionID;
 - (NSURL *)urlWithModule:(NSString *)module
 				 version:(NSUInteger)version

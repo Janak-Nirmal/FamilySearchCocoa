@@ -13,26 +13,26 @@
 		C2058CE015EC169A0040F234 /* private.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E87015E56B0B00107376 /* private.h */; };
 		C2058CE115EC169F0040F234 /* FSEvent.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2D9E85615E41EF800107376 /* FSEvent.h */; };
 		C21C9D1015ECFAC800311404 /* FSURL.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C9D0F15ECFAC800311404 /* FSURL.m */; };
-		C232766915D585C7004EDE08 /* FSAuth.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B715D5744F000A34A1 /* FSAuth.h */; };
+		C232766915D585C7004EDE08 /* FSUser.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B715D5744F000A34A1 /* FSUser.h */; };
 		C232766A15D585C7004EDE08 /* FSPerson.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B915D5744F000A34A1 /* FSPerson.h */; };
 		C23E813A15FE87C300A92A44 /* FSOrdinanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C23E813915FE87C300A92A44 /* FSOrdinanceTests.m */; };
 		C24DAA311600EB6A00CB46B9 /* FSTestSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = C24DAA301600EB6A00CB46B9 /* FSTestSupport.m */; };
 		C2626EF716663F48001AD7BB /* FSArtifactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2626EF616663F48001AD7BB /* FSArtifactTests.m */; };
 		C2626EFB16663F5F001AD7BB /* FSArtifact.m in Sources */ = {isa = PBXBuildFile; fileRef = C2626EFA16663F5F001AD7BB /* FSArtifact.m */; };
-		C2626EFE16663F8B001AD7BB /* arthur-young.png in Resources */ = {isa = PBXBuildFile; fileRef = C2626EFC16663F8B001AD7BB /* arthur-young.png */; };
 		C2626F0216664045001AD7BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2626F0016664035001AD7BB /* CoreGraphics.framework */; };
 		C2626F031666404E001AD7BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2626F0016664035001AD7BB /* CoreGraphics.framework */; };
 		C2626F0516664BFC001AD7BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2626F0416664BFC001AD7BB /* UIKit.framework */; };
 		C26EEDB015E7D90E00C7714F /* FSMarriageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C26EEDAF15E7D90E00C7714F /* FSMarriageTests.m */; };
 		C27BC94815E69B9B00D7E01F /* FSEventTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C27BC94715E69B9B00D7E01F /* FSEventTests.m */; };
+		C291B7D8166D09DA0076F2E3 /* arthur-young.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C291B7D6166D09DA0076F2E3 /* arthur-young.jpg */; };
 		C2ABA78315D573EF000A34A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2ABA78215D573EF000A34A1 /* Foundation.framework */; };
 		C2ABA79215D573EF000A34A1 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2ABA79115D573EF000A34A1 /* SenTestingKit.framework */; };
 		C2ABA79515D573EF000A34A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2ABA78215D573EF000A34A1 /* Foundation.framework */; };
 		C2ABA79815D573EF000A34A1 /* libFamilySearchCocoa.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2ABA77F15D573EF000A34A1 /* libFamilySearchCocoa.a */; };
-		C2ABA7BB15D5744F000A34A1 /* FSAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ABA7B815D5744F000A34A1 /* FSAuth.m */; };
+		C2ABA7BB15D5744F000A34A1 /* FSUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ABA7B815D5744F000A34A1 /* FSUser.m */; };
 		C2ABA7BD15D5744F000A34A1 /* FSPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ABA7BA15D5744F000A34A1 /* FSPerson.m */; };
 		C2ABA7C815D5746B000A34A1 /* FSPersonTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ABA7C215D5745B000A34A1 /* FSPersonTests.m */; };
-		C2ABA7C915D57471000A34A1 /* FSAuthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ABA7C015D5745B000A34A1 /* FSAuthTests.m */; };
+		C2ABA7C915D57471000A34A1 /* FSUserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ABA7C015D5745B000A34A1 /* FSUserTests.m */; };
 		C2C23DD316446A6800971B0F /* FSBugFixes.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C23DD216446A6800971B0F /* FSBugFixes.m */; };
 		C2D9E85815E41EF800107376 /* FSEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9E85715E41EF800107376 /* FSEvent.m */; };
 		C2D9E85D15E41F1D00107376 /* FSMarriage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D9E85C15E41F1D00107376 /* FSMarriage.m */; };
@@ -62,7 +62,7 @@
 				C2058CE015EC169A0040F234 /* private.h in CopyFiles */,
 				C2058CDE15EC168F0040F234 /* FSOrdinance.h in CopyFiles */,
 				C2058CDC15EC168B0040F234 /* FSMarriage.h in CopyFiles */,
-				C232766915D585C7004EDE08 /* FSAuth.h in CopyFiles */,
+				C232766915D585C7004EDE08 /* FSUser.h in CopyFiles */,
 				C232766A15D585C7004EDE08 /* FSPerson.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,23 +85,23 @@
 		C2626EF616663F48001AD7BB /* FSArtifactTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSArtifactTests.m; sourceTree = "<group>"; };
 		C2626EF916663F5F001AD7BB /* FSArtifact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSArtifact.h; sourceTree = "<group>"; };
 		C2626EFA16663F5F001AD7BB /* FSArtifact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSArtifact.m; sourceTree = "<group>"; };
-		C2626EFD16663F8B001AD7BB /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = "arthur-young.png"; sourceTree = "<group>"; };
 		C2626F0016664035001AD7BB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C2626F0416664BFC001AD7BB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C26EEDAE15E7D90E00C7714F /* FSMarriageTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSMarriageTests.h; sourceTree = "<group>"; };
 		C26EEDAF15E7D90E00C7714F /* FSMarriageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSMarriageTests.m; sourceTree = "<group>"; };
 		C27BC94615E69B9B00D7E01F /* FSEventTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSEventTests.h; sourceTree = "<group>"; };
 		C27BC94715E69B9B00D7E01F /* FSEventTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSEventTests.m; sourceTree = "<group>"; };
+		C291B7D7166D09DA0076F2E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = en; path = "arthur-young.jpg"; sourceTree = "<group>"; };
 		C2ABA77F15D573EF000A34A1 /* libFamilySearchCocoa.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libFamilySearchCocoa.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2ABA78215D573EF000A34A1 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C2ABA79015D573EF000A34A1 /* FamilySearchCocoaTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FamilySearchCocoaTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2ABA79115D573EF000A34A1 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		C2ABA7B715D5744F000A34A1 /* FSAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSAuth.h; sourceTree = "<group>"; };
-		C2ABA7B815D5744F000A34A1 /* FSAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSAuth.m; sourceTree = "<group>"; };
+		C2ABA7B715D5744F000A34A1 /* FSUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSUser.h; sourceTree = "<group>"; };
+		C2ABA7B815D5744F000A34A1 /* FSUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSUser.m; sourceTree = "<group>"; };
 		C2ABA7B915D5744F000A34A1 /* FSPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSPerson.h; sourceTree = "<group>"; };
 		C2ABA7BA15D5744F000A34A1 /* FSPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSPerson.m; sourceTree = "<group>"; };
-		C2ABA7BF15D5745B000A34A1 /* FSAuthTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSAuthTests.h; sourceTree = "<group>"; };
-		C2ABA7C015D5745B000A34A1 /* FSAuthTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSAuthTests.m; sourceTree = "<group>"; };
+		C2ABA7BF15D5745B000A34A1 /* FSUserTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSUserTests.h; sourceTree = "<group>"; };
+		C2ABA7C015D5745B000A34A1 /* FSUserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSUserTests.m; sourceTree = "<group>"; };
 		C2ABA7C115D5745B000A34A1 /* FSPersonTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSPersonTests.h; sourceTree = "<group>"; };
 		C2ABA7C215D5745B000A34A1 /* FSPersonTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSPersonTests.m; sourceTree = "<group>"; };
 		C2ABA7C315D5745B000A34A1 /* constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
@@ -161,7 +161,7 @@
 		C23276E015D58F1F004EDE08 /* en.lproj */ = {
 			isa = PBXGroup;
 			children = (
-				C2626EFC16663F8B001AD7BB /* arthur-young.png */,
+				C291B7D6166D09DA0076F2E3 /* arthur-young.jpg */,
 				C23276E115D58F1F004EDE08 /* InfoPlist.strings */,
 			);
 			path = en.lproj;
@@ -203,8 +203,8 @@
 			isa = PBXGroup;
 			children = (
 				C2F7728415FFCFFC00942268 /* FamilySearchCocoa.h */,
-				C2ABA7B715D5744F000A34A1 /* FSAuth.h */,
-				C2ABA7B815D5744F000A34A1 /* FSAuth.m */,
+				C2ABA7B715D5744F000A34A1 /* FSUser.h */,
+				C2ABA7B815D5744F000A34A1 /* FSUser.m */,
 				C2ABA7B915D5744F000A34A1 /* FSPerson.h */,
 				C2ABA7BA15D5744F000A34A1 /* FSPerson.m */,
 				C2D9E85615E41EF800107376 /* FSEvent.h */,
@@ -236,8 +236,8 @@
 		C2ABA79915D573EF000A34A1 /* FamilySearchCocoaTests */ = {
 			isa = PBXGroup;
 			children = (
-				C2ABA7BF15D5745B000A34A1 /* FSAuthTests.h */,
-				C2ABA7C015D5745B000A34A1 /* FSAuthTests.m */,
+				C2ABA7BF15D5745B000A34A1 /* FSUserTests.h */,
+				C2ABA7C015D5745B000A34A1 /* FSUserTests.m */,
 				C2ABA7C115D5745B000A34A1 /* FSPersonTests.h */,
 				C2ABA7C215D5745B000A34A1 /* FSPersonTests.m */,
 				C27BC94615E69B9B00D7E01F /* FSEventTests.h */,
@@ -330,7 +330,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2626EFE16663F8B001AD7BB /* arthur-young.png in Resources */,
+				C291B7D8166D09DA0076F2E3 /* arthur-young.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,7 +371,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2ABA7BB15D5744F000A34A1 /* FSAuth.m in Sources */,
+				C2ABA7BB15D5744F000A34A1 /* FSUser.m in Sources */,
 				C2ABA7BD15D5744F000A34A1 /* FSPerson.m in Sources */,
 				C2D9E85815E41EF800107376 /* FSEvent.m in Sources */,
 				C2D9E85D15E41F1D00107376 /* FSMarriage.m in Sources */,
@@ -387,7 +387,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C2ABA7C815D5746B000A34A1 /* FSPersonTests.m in Sources */,
-				C2ABA7C915D57471000A34A1 /* FSAuthTests.m in Sources */,
+				C2ABA7C915D57471000A34A1 /* FSUserTests.m in Sources */,
 				C27BC94815E69B9B00D7E01F /* FSEventTests.m in Sources */,
 				C26EEDB015E7D90E00C7714F /* FSMarriageTests.m in Sources */,
 				C2E8510115F922100027C027 /* FSSearchTests.m in Sources */,
@@ -417,12 +417,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		C2626EFC16663F8B001AD7BB /* arthur-young.png */ = {
+		C291B7D6166D09DA0076F2E3 /* arthur-young.jpg */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C2626EFD16663F8B001AD7BB /* en */,
+				C291B7D7166D09DA0076F2E3 /* en */,
 			);
-			name = "arthur-young.png";
+			name = "arthur-young.jpg";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

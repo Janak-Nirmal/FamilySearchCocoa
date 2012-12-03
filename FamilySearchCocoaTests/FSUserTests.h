@@ -1,5 +1,5 @@
 //
-//  FSAuthTests.h
+//  FSUserTests.h
 //  FamilySearchCocoa
 //
 //  Created by Adam Kirk on 8/2/12.
@@ -8,6 +8,6 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface FSAuthTests : SenTestCase
+@interface FSUserTests : SenTestCase
 
 @end

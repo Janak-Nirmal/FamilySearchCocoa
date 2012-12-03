@@ -10,7 +10,7 @@
 #import <NSDateComponents+MTDates.h>
 #import "FSMarriageTests.h"
 #import "FSURL.h"
-#import "FSAuth.h"
+#import "FSUser.h"
 #import "FSPerson.h"
 #import "FSEvent.h"
 #import "FSMarriage.h"
@@ -28,9 +28,9 @@
 {
 	[FSURL setSandboxed:YES];
 
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-	_sessionID = auth.sessionID;
+	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
+	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	_sessionID = user.sessionID;
 
 	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
 	_person.name = @"Adam Kirk";

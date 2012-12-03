@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 FamilySearch. All rights reserved.
 //
 
-#import "FSAuth.h"
+#import "FSUser.h"
 #import "FSPerson.h"
 #import "FSEvent.h"
 #import "FSMarriage.h"

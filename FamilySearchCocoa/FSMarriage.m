@@ -101,41 +101,39 @@
 
 
 	if (response.success) {
-		NSArray *spouses = [response.body valueForComplexKeyPath:@"persons[first].relationships.spouse"];
+		NSArray *spouses = NILL([response.body valueForComplexKeyPath:@"persons[first].relationships.spouse"]);
 		for (NSDictionary *spouse in spouses) {
 			NSString *wifeID = spouse[@"id"];
 			if ([wifeID isEqualToString:self.wife.identifier]) {
 
-				_version = [[spouse valueForComplexKeyPath:@"version"] integerValue];
+				_version = [NILL([spouse valueForKeyPath:@"version"]) integerValue];
 
 				// CHARACTERISTICS
-				NSArray *characteristics = [spouse valueForComplexKeyPath:@"assertions.characteristics"];
-				if (![characteristics isKindOfClass:[NSNull class]])
-					for (NSDictionary *characteristicDict in characteristics) {
-						NSString *dateString = [characteristicDict valueForComplexKeyPath:@"value.date.normalized"];
-						if (!dateString) dateString = [characteristicDict valueForComplexKeyPath:@"value.date.original"];
-						FSCharacteristic *characteristic = [[FSCharacteristic alloc] init];
-						characteristic.identifier = [characteristicDict valueForComplexKeyPath:@"value.id"];
-						characteristic.key		= [characteristicDict valueForComplexKeyPath:@"value.type"];
-						characteristic.value	= [characteristicDict valueForComplexKeyPath:@"value.detail"];
-						characteristic.title	= [characteristicDict valueForComplexKeyPath:@"value.title"];
-						characteristic.lineage	= [characteristicDict valueForComplexKeyPath:@"value.lineage"];
-						characteristic.date		= [NSDateComponents componentsFromString:objectForPreferredKeys(characteristicDict, @"value.date.normalized", @"value.date.original")];
-						characteristic.place	= [characteristicDict valueForComplexKeyPath:@"value.place.original"];
-						(self.characteristics)[characteristic.key] = characteristic;
-					}
+				NSArray *characteristics = NILL([spouse valueForKeyPath:@"assertions.characteristics"]);
+                for (NSDictionary *characteristicDict in characteristics) {
+                    FSCharacteristic *characteristic    = [[FSCharacteristic alloc] init];
+                    NSString *dateString                = NILL([characteristicDict valueForKeyPath:@"value.date.normalized"]);
+                    if (!dateString) dateString         = NILL([characteristicDict valueForKeyPath:@"value.date.original"]);
+                    characteristic.identifier           = NILL([characteristicDict valueForKeyPath:@"value.id"]);
+                    characteristic.key                  = NILL([characteristicDict valueForKeyPath:@"value.type"]);
+                    characteristic.value                = NILL([characteristicDict valueForKeyPath:@"value.detail"]);
+                    characteristic.title                = NILL([characteristicDict valueForKeyPath:@"value.title"]);
+                    characteristic.lineage              = NILL([characteristicDict valueForKeyPath:@"value.lineage"]);
+                    characteristic.date                 = [NSDateComponents componentsFromString:objectForPreferredKeys(characteristicDict, @"value.date.normalized", @"value.date.original")];
+                    characteristic.place                = NILL([characteristicDict valueForKeyPath:@"value.place.original"]);
+                    (self.characteristics)[characteristic.key] = characteristic;
+                }
 
 				// EVENTS
-				NSArray *events = [spouse valueForComplexKeyPath:@"assertions.events"];
-				if (![events isKindOfClass:[NSNull class]])
-					for (NSDictionary *eventDict in events) {
-						FSMarriageEventType type = [eventDict valueForComplexKeyPath:@"value.type"];
-						NSString *identifier = [eventDict valueForComplexKeyPath:@"value.id"];
-						FSMarriageEvent *event = [FSMarriageEvent marriageEventWithType:type identifier:identifier];
-						event.date = [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
-						event.place = [eventDict valueForComplexKeyPath:@"value.place.normalized.value"];
-						[self addMarriageEvent:event];
-					}
+				NSArray *events = NILL([spouse valueForKeyPath:@"assertions.events"]);
+                for (NSDictionary *eventDict in events) {
+                    FSMarriageEventType type    = NILL([eventDict valueForKeyPath:@"value.type"]);
+                    NSString *identifier        = NILL([eventDict valueForKeyPath:@"value.id"]);
+                    FSMarriageEvent *event      = [FSMarriageEvent marriageEventWithType:type identifier:identifier];
+                    event.date                  = [NSDateComponents componentsFromString:objectForPreferredKeys(eventDict, @"value.date.normalized", @"value.date.original")];
+                    event.place                 = NILL([eventDict valueForKeyPath:@"value.place.normalized.value"]);
+                    [self addMarriageEvent:event];
+                }
 			}
 		}
 	}
@@ -335,7 +333,7 @@
 	if (response.success) {
 		_changed = NO;
 		_deleted = NO;
-		_version = [[response.body valueForComplexKeyPath:@"persons[first].relationships.spouse[first].version"] integerValue];
+		_version = [NILL([response.body valueForComplexKeyPath:@"persons[first].relationships.spouse[first].version"]) integerValue];
 	}
 
 	return response;
@@ -355,7 +353,7 @@
 
 	if (response.success) {
 		NSMutableDictionary *relationshipTypesToDelete = [NSMutableDictionary dictionary];
-		NSDictionary *relationshipTypes = [response.body valueForComplexKeyPath:@"persons[first].relationships"];
+		NSDictionary *relationshipTypes = NILL([response.body valueForComplexKeyPath:@"persons[first].relationships"]);
 		for (NSString *key in [relationshipTypes allKeys]) {
 			if (![key isEqualToString:@"spouse"]) continue;
 			NSMutableArray *relationshipsToDelete = [NSMutableArray array];
@@ -367,7 +365,7 @@
 					NSMutableArray *assertionsToDelete = [NSMutableArray array];
 					NSArray *assertionType = assertionTypes[aKey];
 					for (NSDictionary *assertion in assertionType) {
-						NSArray *valueID = [assertion valueForComplexKeyPath:@"value.id"];
+						NSArray *valueID = NILL([assertion valueForKeyPath:@"value.id"]);
 						[assertionsToDelete addObject: @{ @"value" : @{ @"id" : valueID }, @"action" : @"Delete" } ];
 					}
 					assertionTypesToDelete[aKey] = assertionsToDelete;

@@ -11,14 +11,14 @@
 #import "FSPerson.h"
 #import "FSArtifact.h"
 #import "constants.h"
-#import "FSAuth.h"
+#import "FSUser.h"
 #import "FSURL.h"
 #import <MF_Base64Additions.h>
 
 
 @interface FSArtifactTests ()
-@property (strong, nonatomic) NSString *sessionID;
-@property (strong, nonatomic) FSPerson *person;
+@property (strong, nonatomic) NSString  *sessionID;
+@property (strong, nonatomic) FSPerson  *person;
 @end
 
 
@@ -29,9 +29,9 @@
 {
 	[FSURL setSandboxed:NO];
 
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
-	[auth loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
-	_sessionID = auth.sessionID;
+    FSUser *user = [[FSUser alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
+	[user loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
+	_sessionID = user.sessionID;
 
 	_person = [FSPerson personWithSessionID:_sessionID identifier:PRODUCTION_PERSON_ID]; 
 }
@@ -41,7 +41,7 @@
 	MTPocketResponse *response = nil;
 
 	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"png"];
+	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
 
     // upload
 	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
@@ -96,7 +96,7 @@
 	MTPocketResponse *response = nil;
 
 	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"png"];
+	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
 
     // create artifact
 	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
@@ -128,27 +128,50 @@
 //    MTPocketResponse *response = nil;
 //
 //   	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-//	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"png"];
+//	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
 //
 //    // create artifact
 //	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
 //
 //    // add tag
-//    FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 60, 88)];
+//    FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 1, 1)];
 //    [artifact addTag:tag];
 //	response = [artifact save];
 //	STAssertTrue(response.success, nil);
 //    STAssertNotNil(tag.identifier, nil);
 //
 //    // set tag as portrait
-//    response = [tag saveAsPortraitOfPerson];
+//    FSArtifact *portraitArtifact = [tag artficactFromSavingTagAsPortraitWithResponse:&response];
 //    STAssertTrue(response.success, nil);
+//    STAssertNotNil(portraitArtifact, nil);
 //
 //    // get portrait for person
 //    FSArtifact *portrait = [FSArtifact portraitArtifactForPerson:_person response:&response];
 //    STAssertTrue(response.success, nil);
 //    STAssertNotNil(portrait, nil);
 //}
+
+- (void)testFetchUsersArtifacts
+{
+    MTPocketResponse *response = nil;
+
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
+
+    // create artifact
+	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+
+    // add tag
+    FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 60, 88)];
+    [artifact addTag:tag];
+	response = [artifact save];
+	STAssertTrue(response.success, nil);
+    STAssertNotNil(tag.identifier, nil);
+
+    NSArray *artifacts = [FSArtifact artifactsUploadedByCurrentUserWithSessionID:_sessionID response:&response];
+    STAssertTrue(response.success, nil);
+    STAssertTrue(artifacts.count > 0, nil);
+}
 
 
 @end

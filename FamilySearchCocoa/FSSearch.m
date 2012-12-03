@@ -178,11 +178,11 @@
 		
 		[self removeAllObjects];
 		
-		NSDictionary *search = [response.body valueForComplexKeyPath:@"searches[first]"];
+		NSDictionary *search = NILL([response.body valueForComplexKeyPath:@"searches[first]"]);
 		_contextID			= search[@"contextId"];
 		_numberOfResults	= [search[@"partial"] integerValue];
 		
-		NSArray *searches = [search valueForComplexKeyPath:@"search"];
+		NSArray *searches = NILL([search valueForKeyPath:@"search"]);
 		for (NSDictionary *searchDictionary in searches) {
 			NSDictionary *personDictionary = searchDictionary[@"person"];
 			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:personDictionary[@"id"]];
