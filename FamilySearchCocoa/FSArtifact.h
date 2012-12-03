@@ -62,6 +62,7 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 @interface FSArtifact : NSObject
 
 @property (readonly, nonatomic) NSString			*identifier;
+@property (strong,   nonatomic) NSURL               *url;
 @property (readonly, nonatomic) NSData              *data;
 @property (readonly, nonatomic) NSString			*MIMEType;
 @property (strong,	 nonatomic) NSString			*title;
@@ -70,6 +71,9 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 @property (readonly, nonatomic) NSString            *screeningStatus;
 @property (strong,	 nonatomic) NSString			*description;
 @property (strong,	 nonatomic) FSArtifactCategory	category;
+@property (strong,   nonatomic) NSString            *apID;
+@property (strong,   nonatomic) NSString            *folderID;
+@property (strong,   nonatomic) NSString            *uploaderID;
 @property (readonly, nonatomic) NSDictionary        *thumbnails;
 @property (readonly, nonatomic) CGSize				size;
 

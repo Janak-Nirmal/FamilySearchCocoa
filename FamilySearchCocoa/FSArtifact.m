@@ -30,10 +30,6 @@
 @interface FSArtifact ()
 @property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSURL *connectionURL;
-@property (strong, nonatomic) NSString *apID;
-@property (strong, nonatomic) NSString *folderID;
-@property (strong, nonatomic) NSString *uploaderID;
-@property (strong, nonatomic) NSURL *url;
 @property (strong, nonatomic) NSArray *tags;
 @end
 
