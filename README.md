@@ -28,13 +28,13 @@ See the header files for the full API and more documentation.
 
 ### Usage
 
-Use FSAuth to log in and get a session id:
+Use FSUser to log in and get a session id:
 
-	FSAuth *auth = [[FSAuth alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	MTPocketResponse *response = [auth loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
+	MTPocketResponse *response = [user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
 	
 	if (response.success) {
-		_sessionID = auth.sessionID;;
+		_sessionID = user.sessionID;;
 	}
 
 If you want to use the sandbox environment:
