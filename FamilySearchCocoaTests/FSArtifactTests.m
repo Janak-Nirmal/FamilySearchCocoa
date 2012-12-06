@@ -47,6 +47,7 @@
 	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
     artifact.title = @"test";
     artifact.description = @"testdescription";
+    artifact.originalFilename = @"unit_test.jpg";
 	response = [artifact save];
 	STAssertTrue(response.success, nil);
     STAssertNotNil(artifact.category, nil);
@@ -102,6 +103,7 @@
 
     // create artifact
 	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+    artifact.originalFilename = @"unit_test.jpg";
 
     // add tag
     FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 60, 88)];
@@ -162,6 +164,7 @@
 
     // create artifact
 	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+    artifact.originalFilename = @"unit_test.jpg";
 
     // add tag
     FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 60, 88)];

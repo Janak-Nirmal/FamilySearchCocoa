@@ -205,8 +205,8 @@
         [self populateFromDictionary:response.body[@"artifact"]];
 
         // hack around the empty strings returned overwriting attributes set before the save
-        _title = ![_title isEqualToString:@""] ? _title : setTitle;
-        _description = ![_description isEqualToString:@""] ? _description : setDescription;
+        _title          = _title && ![_title isEqualToString:@""]               ? _title        : setTitle;
+        _description    = _description && ![_description isEqualToString:@""]   ? _description  : setDescription;
 
         for (FSArtifactTag *tag in _tags) {
             if (!tag.identifier)
