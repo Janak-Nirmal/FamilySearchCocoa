@@ -199,7 +199,14 @@
 	MTPocketResponse *response = [request fetch];
 
 	if (response.success) {
+
+        NSString *setTitle = [_title copy];
+        NSString *setDescription = [_description copy];
         [self populateFromDictionary:response.body[@"artifact"]];
+
+        // hack around the empty strings returned overwriting attributes set before the save
+        _title = ![_title isEqualToString:@""] ? _title : setTitle;
+        _description = ![_description isEqualToString:@""] ? _description : setDescription;
 
         for (FSArtifactTag *tag in _tags) {
             if (!tag.identifier)
@@ -207,7 +214,7 @@
         }
 
         // TEMP: if they add a &title= param to /artifacts/files, we can ditch this extra request
-        if (_title || _description) {
+        if (setTitle || setDescription) {
             [self update];
         }
 	}
@@ -330,17 +337,16 @@
 
 - (void)populateFromDictionary:(NSDictionary *)dictionary
 {
-    _apID					= dictionary[@"apid"];
-    _category				= dictionary[@"category"];
-    NSString *desc          = dictionary[@"description"];
-    _description			= desc && ![desc isEqualToString:@""] ? desc : _description;
-    _folderID				= dictionary[@"folderId"];
+    _apID					= NILL(dictionary[@"apid"]);
+    _category				= NILL(dictionary[@"category"]);
+    _description            = NILL(dictionary[@"description"]);
+    _folderID				= NILL(dictionary[@"folderId"]);
     _size.height			= [dictionary[@"height"] floatValue];
-    _identifier				= [dictionary[@"id"] stringValue];
-    _MIMEType				= dictionary[@"mimeType"];
-    _originalFilename		= dictionary[@"originalFilename"];
-    _screeningStatus        = dictionary[@"screeningState"];
-    _status					= dictionary[@"status"];
+    _identifier				= NILL([dictionary[@"id"] stringValue]);
+    _MIMEType				= NILL(dictionary[@"mimeType"]);
+    _originalFilename		= NILL(dictionary[@"originalFilename"]);
+    _screeningStatus        = NILL(dictionary[@"screeningState"]);
+    _status					= NILL(dictionary[@"status"]);
     if (dictionary[FSArtifactThumbnailStyleNormalKey]) {
         _thumbnails         = @{
                                     FSArtifactThumbnailStyleNormalKey   : dictionary[FSArtifactThumbnailStyleNormalKey],
@@ -348,9 +354,8 @@
                                     FSArtifactThumbnailStyleSquareKey   : dictionary[FSArtifactThumbnailStyleSquareKey]
                                 };
     }
-    NSString *title         = dictionary[@"title"];
-    _title					= title && ![title isEqualToString:@""] ? title : _title;
-    _uploaderID				= dictionary[@"uploaderId"];
+    _title                  = NILL(dictionary[@"title"]);
+    _uploaderID				= NILL(dictionary[@"uploaderId"]);
     _url					= [NSURL URLWithString:dictionary[@"url"]];
     _size.width				= [dictionary[@"width"] floatValue];
 

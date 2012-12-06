@@ -45,10 +45,11 @@
 
     // upload
 	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+    artifact.title = @"test";
+    artifact.description = @"testdescription";
 	response = [artifact save];
 	STAssertTrue(response.success, nil);
     STAssertNotNil(artifact.category, nil);
-    STAssertNotNil(artifact.description, nil);
     STAssertNotNil(artifact.identifier, nil);
     STAssertNotNil(artifact.MIMEType, nil);
     STAssertNotNil(artifact.screeningStatus, nil);
@@ -56,14 +57,15 @@
     STAssertNotNil(artifact.thumbnails[FSArtifactThumbnailStyleNormalKey], nil);
     STAssertNotNil(artifact.thumbnails[FSArtifactThumbnailStyleIconKey], nil);
     STAssertNotNil(artifact.thumbnails[FSArtifactThumbnailStyleSquareKey], nil);
-    STAssertNotNil(artifact.title, nil);
+    STAssertTrue([artifact.title isEqualToString:@"test"], nil);
+    STAssertTrue([artifact.description isEqualToString:@"testdescription"], nil);
+
 
     // fetch
     FSArtifact *fetchedArtifact = [FSArtifact artifactWithIdentifier:artifact.identifier sessionID:_sessionID];
     response = [fetchedArtifact fetch];
     STAssertTrue(response.success, nil);
     STAssertNotNil(fetchedArtifact.category, nil);
-    STAssertNotNil(fetchedArtifact.description, nil);
     STAssertNotNil(fetchedArtifact.identifier, nil);
     STAssertNotNil(fetchedArtifact.MIMEType, nil);
     STAssertNotNil(fetchedArtifact.screeningStatus, nil);
