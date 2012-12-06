@@ -303,7 +303,7 @@
 											params:0
 											  misc:nil];
 
-	NSDictionary *body = @{ @"title" : _title, @"description" : _description };
+	NSDictionary *body = @{ @"title" : NUL(_title), @"description" : NUL(_description) };
 	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
 
     if (response.success) {
