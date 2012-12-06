@@ -102,12 +102,24 @@
                                       resource:[NSString stringWithFormat:@"persons/personsByTreePersonId/%@", person.identifier]
                                    identifiers:nil
                                         params:0
-                                          misc:nil];
+                                          misc:@"includePortraitArtifact=true"];
 
     MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
     if (resp.success) {
 
+        NSURL *url = [connectionURL urlWithModule:@"artifactmanager"
+                                          version:0
+                                         resource:@"persons"
+                                      identifiers:@[[resp.body valueForComplexKeyPath:@"taggedPerson[first].id"]]
+                                           params:0
+                                             misc:@"includePortraitArtifact=true"];
+
+        resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+
+        if (resp.success) {
+            
+        }
     }
     
     return nil;
@@ -183,6 +195,7 @@
 	request.format		= MTPocketFormatJSON;
 	request.headers		= @{ @"Content-Type" : _MIMEType };
 	request.body		= _data;
+    
 	MTPocketResponse *response = [request fetch];
 
 	if (response.success) {
@@ -191,6 +204,11 @@
         for (FSArtifactTag *tag in _tags) {
             if (!tag.identifier)
                 [tag save];
+        }
+
+        // TEMP: if they add a &title= param to /artifacts/files, we can ditch this extra request
+        if (_title || _description) {
+            [self update];
         }
 	}
 
