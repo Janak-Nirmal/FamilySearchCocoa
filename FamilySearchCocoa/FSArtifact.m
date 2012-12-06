@@ -331,7 +331,7 @@
     }
     _title					= dictionary[@"title"];
     _uploaderID				= dictionary[@"uploaderId"];
-    _url					= dictionary[@"url"];
+    _url					= [NSURL URLWithString:dictionary[@"url"]];
     _size.width				= [dictionary[@"width"] floatValue];
 
     // add tags
@@ -343,6 +343,7 @@
         }
     }
 }
+
 
 @end
 

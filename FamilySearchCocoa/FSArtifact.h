@@ -96,6 +96,9 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 - (void)addTag:(FSArtifactTag *)tag;
 - (void)removeTag:(FSArtifactTag *)tag;
 
+#pragma mark - Misc
+- (void)populateFromDictionary:(NSDictionary *)dictionary;
+
 @end
 
 
