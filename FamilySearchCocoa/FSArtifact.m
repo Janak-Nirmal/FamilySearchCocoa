@@ -332,7 +332,8 @@
 {
     _apID					= dictionary[@"apid"];
     _category				= dictionary[@"category"];
-    _description			= dictionary[@"description"];
+    NSString *desc          = dictionary[@"description"];
+    _description			= desc && ![desc isEqualToString:@""] ? desc : _description;
     _folderID				= dictionary[@"folderId"];
     _size.height			= [dictionary[@"height"] floatValue];
     _identifier				= [dictionary[@"id"] stringValue];
@@ -347,7 +348,8 @@
                                     FSArtifactThumbnailStyleSquareKey   : dictionary[FSArtifactThumbnailStyleSquareKey]
                                 };
     }
-    _title					= dictionary[@"title"];
+    NSString *title         = dictionary[@"title"];
+    _title					= title && ![title isEqualToString:@""] ? title : _title;
     _uploaderID				= dictionary[@"uploaderId"];
     _url					= [NSURL URLWithString:dictionary[@"url"]];
     _size.width				= [dictionary[@"width"] floatValue];
