@@ -127,33 +127,33 @@
     STAssertTrue(response.success, nil);
 }
 
-//- (void)testPortraitArtifacts
-//{
-//    MTPocketResponse *response = nil;
-//
-//   	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-//	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
-//
-//    // create artifact
-//	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
-//
-//    // add tag
-//    FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 1, 1)];
-//    [artifact addTag:tag];
-//	response = [artifact save];
-//	STAssertTrue(response.success, nil);
-//    STAssertNotNil(tag.identifier, nil);
-//
-//    // set tag as portrait
-//    FSArtifact *portraitArtifact = [tag artficactFromSavingTagAsPortraitWithResponse:&response];
-//    STAssertTrue(response.success, nil);
-//    STAssertNotNil(portraitArtifact, nil);
-//
-//    // get portrait for person
-//    FSArtifact *portrait = [FSArtifact portraitArtifactForPerson:_person response:&response];
-//    STAssertTrue(response.success, nil);
-//    STAssertNotNil(portrait, nil);
-//}
+- (void)testPortraitArtifacts
+{
+    MTPocketResponse *response = nil;
+
+   	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
+
+    // create artifact
+	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+
+    // add tag
+    FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 1, 1)];
+    [artifact addTag:tag];
+	response = [artifact save];
+	STAssertTrue(response.success, nil);
+    STAssertNotNil(tag.identifier, nil);
+
+    // set tag as portrait
+    FSArtifact *portraitArtifact = [tag artifactFromSavingTagAsPortraitWithResponse:&response];
+    STAssertTrue(response.success, nil);
+    STAssertNotNil(portraitArtifact, nil);
+
+    // get portrait for person
+    FSArtifact *portrait = [FSArtifact portraitArtifactForPerson:_person response:&response];
+    STAssertTrue(response.success, nil);
+    STAssertNotNil(portrait, nil);
+}
 
 - (void)testFetchUsersArtifacts
 {
@@ -177,6 +177,19 @@
     STAssertTrue(response.success, nil);
     STAssertTrue(artifacts.count > 0, nil);
 }
+
+//- (void)test
+//{
+//    NSURL *url = [NSURL URLWithString:@"https://api.familysearch.org/artifactmanager/users/unknown/taggedPersons?maxRecords=50&sessionId=USYS2AEBA31662BF5B6AF91E0D53F89907DB_ses002.app.prod.id.fsglobal.net&agent=akirk-at-familysearch-dot-org/1.0"];
+//    MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+//    if (response.success) {
+//        for (NSDictionary *taggedPerson in response.body[@"taggedPerson"]) {
+//            NSString *identifier = taggedPerson[@"id"];
+//            url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.familysearch.org/artifactmanager/persons/%@?sessionId=USYS2AEBA31662BF5B6AF91E0D53F89907DB_ses002.app.prod.id.fsglobal.net&agent=akirk-at-familysearch-dot-org/1.0", identifier ]];
+//            response = [MTPocketRequest objectAtURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil];
+//        }
+//    }
+//}
 
 
 @end

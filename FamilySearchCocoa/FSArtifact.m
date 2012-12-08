@@ -107,19 +107,10 @@
     MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
 
     if (resp.success) {
-
-        NSURL *url = [connectionURL urlWithModule:@"artifactmanager"
-                                          version:0
-                                         resource:@"persons"
-                                      identifiers:@[[resp.body valueForComplexKeyPath:@"taggedPerson[first].id"]]
-                                           params:0
-                                             misc:@"includePortraitArtifact=true"];
-
-        resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
-
-        if (resp.success) {
-            
-        }
+        NSDictionary *portraitArtifactDict = [resp.body valueForComplexKeyPath:@"taggedPerson[first].portraitArtifact"];
+        FSArtifact *portraitArtifact = [FSArtifact artifactWithIdentifier:nil sessionID:person.sessionID];
+        [portraitArtifact populateFromDictionary:portraitArtifactDict];
+        return portraitArtifact;
     }
     
     return nil;
@@ -200,13 +191,13 @@
 
 	if (response.success) {
 
-        NSString *setTitle = [_title copy];
-        NSString *setDescription = [_description copy];
+        // when first creating the artifact, whatever is returned for title and desc should be
+        // discarded in favor of the localy set _title and _description
+        NSString *title          = [_title copy];
+        NSString *description    = [_description copy];
         [self populateFromDictionary:response.body[@"artifact"]];
-
-        // hack around the empty strings returned overwriting attributes set before the save
-        _title          = _title && ![_title isEqualToString:@""]               ? _title        : setTitle;
-        _description    = _description && ![_description isEqualToString:@""]   ? _description  : setDescription;
+        _title          = title;
+        _description    = description;
 
         for (FSArtifactTag *tag in _tags) {
             if (!tag.identifier)
@@ -214,7 +205,7 @@
         }
 
         // TEMP: if they add a &title= param to /artifacts/files, we can ditch this extra request
-        if (setTitle || setDescription) {
+        if (_title || _description) {
             [self update];
         }
 	}
@@ -316,6 +307,7 @@
     if (response.success) {
         [self populateFromDictionary:response.body];
 
+        // TODO: should probably write a test for this
         for (FSArtifactTag *tag in _tags) {
             if (!tag.identifier)
                 [tag save];
@@ -430,13 +422,12 @@
 
     if (response.success) {
         [self populateFromDictionary:response.body];
-        [self linkTaggedPersonToTreePerson];
     }
 
     return response;
 }
 
-- (FSArtifact *)artficactFromSavingTagAsPortraitWithResponse:(MTPocketResponse **)response
+- (FSArtifact *)artifactFromSavingTagAsPortraitWithResponse:(MTPocketResponse **)response
 {
     if (!_artifact) raiseException(@"No artifact", @"This tag must be added to an artifact before it can be saved");
     if (!_person) raiseException(@"No Person", @"You cannot save a tag until you've set the 'person' property");
@@ -484,35 +475,6 @@
 
 
 
-#pragma mark - Protected
-
-- (MTPocketResponse *)saveAsPortrait
-{
-    if (!_artifact) raiseException(@"No artifact", @"This tag must be added to an artifact before it can be saved");
-    if (!_person) raiseException(@"No Person", @"You cannot save a tag until you've set the 'person' property");
-
-    NSMutableArray *params = [NSMutableArray array];
-    [params addObject:[NSString stringWithFormat:@"treePersonId=%@", _person.identifier]];
-
-    NSURL *url = [_artifact.connectionURL urlWithModule:@"artifactmanager"
-                                                version:0
-                                               resource:[NSString stringWithFormat:@"artifacts/%@/tags", _artifact.identifier]
-                                            identifiers:nil
-                                                 params:0
-                                                   misc:[params componentsJoinedByString:@"&"]];
-
-    MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:[self dictionaryValue]];
-    
-    if (response.success) {
-        [self populateFromDictionary:response.body];
-        [self linkTaggedPersonToTreePerson];
-    }
-    
-    return response;
-}
-
-
-
 #pragma mark - Private
 
 - (void)populateFromDictionary:(NSDictionary *)dictionary
@@ -536,23 +498,6 @@
 	dict[@"width"]      = @(_rect.size.width);
 	dict[@"height"]     = @(_rect.size.height);
 	return dict;
-}
-
-- (MTPocketResponse *)linkTaggedPersonToTreePerson
-{
-    NSMutableArray *params = [NSMutableArray array];
-    [params addObject:[NSString stringWithFormat:@"treePersonId=%@", _person.identifier]];
-
-    NSURL *url = [_artifact.connectionURL urlWithModule:@"artifactmanager"
-                                                version:0
-                                               resource:[NSString stringWithFormat:@"persons/%@/treePerson/%@", _taggedPersonID, _person.identifier]
-                                            identifiers:nil
-                                                 params:0
-                                                   misc:[params componentsJoinedByString:@"&"]];
-
-    MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPUT format:MTPocketFormatJSON body:nil];
-    
-    return response;
 }
 
 
