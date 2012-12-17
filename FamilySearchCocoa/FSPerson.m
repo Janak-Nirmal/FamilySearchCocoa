@@ -227,7 +227,8 @@
 	if (assertions.count > 0)		personDict[@"assertions"] = assertions;
 
 	NSDictionary *body = @{ @"persons" : @[ personDict ] };
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
+
 
 	// if newly created person, assign id and link relationships
 	if (response.success) {
@@ -278,7 +279,7 @@
 							   params:0
 								 misc:[NSString stringWithFormat:@"ancestors=%u&properties=all", generations]];
 	
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
 		NSDictionary *pedigree = NILL([response.body valueForComplexKeyPath:@"pedigrees[first]"]);
@@ -337,7 +338,7 @@
 							   params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics | FSQOrdinances
 								 misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
 
@@ -419,7 +420,7 @@
 	if (assertions.count > 0)		personDict[@"assertions"] = assertions;
 
 	NSDictionary *body = @{ @"persons" : @[ personDict ] };
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 	return response;
 }
@@ -700,7 +701,7 @@
 							  params:0
 								misc:nil];
 
-	MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (resp.success) {
 		NSDictionary *search = NILL([resp.body valueForComplexKeyPath:@"matches[first]"]);
@@ -773,7 +774,7 @@
 								}]
 							};
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 	if (response.success) {
 		NSDictionary *combinedPersonDictionary = NILL([response.body valueForComplexKeyPath:@"persons[first]"]);
@@ -1281,7 +1282,7 @@
 							}]
 						};
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 	if (response.success) {
 		_changed = NO;
@@ -1300,7 +1301,7 @@
 							  params:defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors
 								misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
 		NSMutableDictionary *relationshipTypesToDelete = [NSMutableDictionary dictionary];
@@ -1333,7 +1334,7 @@
 								}]
 							};
 
-		response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+        response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 		if (response.success) {
 			_changed = NO;

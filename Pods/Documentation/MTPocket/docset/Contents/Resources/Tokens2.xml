@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/MTPocketRequest.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/MTPocketRequest</TokenIdentifier>
+			<Abstract type="html">MTPocketRequest</Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>
+			
+			<NodeRef refid="2"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setURL:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSURL *URL</Declaration>
+			
+			
+			<Anchor>//api/name/URL</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/URL</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSURL *URL</Declaration>
+			
+			
+			<Anchor>//api/name/URL</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setMethod:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic) MTPocketMethod method</Declaration>
+			
+			
+			<Anchor>//api/name/method</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/method</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic) MTPocketMethod method</Declaration>
+			
+			
+			<Anchor>//api/name/method</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setFormat:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic) MTPocketFormat format</Declaration>
+			
+			
+			<Anchor>//api/name/format</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/format</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic) MTPocketFormat format</Declaration>
+			
+			
+			<Anchor>//api/name/format</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setUsername:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) NSString *username</Declaration>
+			
+			
+			<Anchor>//api/name/username</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/username</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) NSString *username</Declaration>
+			
+			
+			<Anchor>//api/name/username</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setPassword:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) NSString *password</Declaration>
+			
+			
+			<Anchor>//api/name/password</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/password</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) NSString *password</Declaration>
+			
+			
+			<Anchor>//api/name/password</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setBody:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) id body</Declaration>
+			
+			
+			<Anchor>//api/name/body</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/body</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) id body</Declaration>
+			
+			
+			<Anchor>//api/name/body</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setHeaders:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) NSDictionary *headers</Declaration>
+			
+			
+			<Anchor>//api/name/headers</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/headers</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) NSDictionary *headers</Declaration>
+			
+			
+			<Anchor>//api/name/headers</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setTimeout:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic) NSTimeInterval timeout</Declaration>
+			
+			
+			<Anchor>//api/name/timeout</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/timeout</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (nonatomic) NSTimeInterval timeout</Declaration>
+			
+			
+			<Anchor>//api/name/timeout</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketRequest/requestForURL:format:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketRequest *)requestForURL:(NSURL *)URL format:(MTPocketFormat)format</Declaration>
+			
+			
+			<Anchor>//api/name/requestForURL:format:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketRequest/requestForURL:method:format:body:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketRequest *)requestForURL:(NSURL *)URL method:(MTPocketMethod)method format:(MTPocketFormat)format body:(id)body</Declaration>
+			
+			
+			<Anchor>//api/name/requestForURL:method:format:body:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketRequest/requestForURL:method:format:username:password:body:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketRequest *)requestForURL:(NSURL *)URL method:(MTPocketMethod)method format:(MTPocketFormat)format username:(NSString *)username password:(NSString *)password body:(id)body</Declaration>
+			
+			
+			<Anchor>//api/name/requestForURL:method:format:username:password:body:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/send</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketRequest.h</DeclaredIn>			
+			
+			<Declaration>- (MTPocketResponse *)send</Declaration>
+			
+			
+			<Anchor>//api/name/send</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/setResponse:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) MTPocketResponse *response</Declaration>
+			
+			
+			<Anchor>//api/name/response</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketRequest/response</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) MTPocketResponse *response</Declaration>
+			
+			
+			<Anchor>//api/name/response</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/initWithURL:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (id)initWithURL:(NSURL *)URL</Declaration>
+			
+			
+			<Anchor>//api/name/initWithURL:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketRequest/requestWithResponse:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (NSMutableURLRequest *)requestWithResponse:(MTPocketResponse **)response</Declaration>
+			
+			
+			<Anchor>//api/name/requestWithResponse:</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

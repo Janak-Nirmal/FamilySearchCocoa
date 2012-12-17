@@ -31,9 +31,9 @@
 
     FSUser *user = [[FSUser alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
 	[user loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
-	_sessionID = user.sessionID;
+    _sessionID = user.sessionID;
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:PRODUCTION_PERSON_ID]; 
+	_person = [FSPerson personWithSessionID:_sessionID identifier:PRODUCTION_PERSON_ID];
 }
 
 - (void)testArtifacts
@@ -149,6 +149,9 @@
     STAssertTrue(response.success, nil);
     STAssertNotNil(portraitArtifact, nil);
 
+    // give the server time to process the image
+    [NSThread sleepForTimeInterval:10];
+    
     // get portrait for person
     FSArtifact *portrait = [FSArtifact portraitArtifactForPerson:_person response:&response];
     STAssertTrue(response.success, nil);

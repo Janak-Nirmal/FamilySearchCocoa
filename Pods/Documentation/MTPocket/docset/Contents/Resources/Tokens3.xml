@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/MTPocketResponse.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/MTPocketResponse</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>
+			
+			<NodeRef refid="3"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setSuccess:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) BOOL success</Declaration>
+			
+			
+			<Anchor>//api/name/success</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/success</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) BOOL success</Declaration>
+			
+			
+			<Anchor>//api/name/success</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setStatus:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) MTPocketStatus status</Declaration>
+			
+			
+			<Anchor>//api/name/status</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/status</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) MTPocketStatus status</Declaration>
+			
+			
+			<Anchor>//api/name/status</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setFormat:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) MTPocketFormat format</Declaration>
+			
+			
+			<Anchor>//api/name/format</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/format</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) MTPocketFormat format</Declaration>
+			
+			
+			<Anchor>//api/name/format</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setBody:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) id body</Declaration>
+			
+			
+			<Anchor>//api/name/body</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/body</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) id body</Declaration>
+			
+			
+			<Anchor>//api/name/body</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setError:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSError *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/error</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSError *error</Declaration>
+			
+			
+			<Anchor>//api/name/error</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setRequest:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSURLRequest *request</Declaration>
+			
+			
+			<Anchor>//api/name/request</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/request</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSURLRequest *request</Declaration>
+			
+			
+			<Anchor>//api/name/request</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setData:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSData *data</Declaration>
+			
+			
+			<Anchor>//api/name/data</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/data</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSData *data</Declaration>
+			
+			
+			<Anchor>//api/name/data</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setText:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSString *text</Declaration>
+			
+			
+			<Anchor>//api/name/text</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/text</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSString *text</Declaration>
+			
+			
+			<Anchor>//api/name/text</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setRequestData:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSData *requestData</Declaration>
+			
+			
+			<Anchor>//api/name/requestData</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/requestData</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSData *requestData</Declaration>
+			
+			
+			<Anchor>//api/name/requestData</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setRequestText:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSString *requestText</Declaration>
+			
+			
+			<Anchor>//api/name/requestText</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/requestText</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSString *requestText</Declaration>
+			
+			
+			<Anchor>//api/name/requestText</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setRequestHeaders:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSDictionary *requestHeaders</Declaration>
+			
+			
+			<Anchor>//api/name/requestHeaders</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/requestHeaders</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSDictionary *requestHeaders</Declaration>
+			
+			
+			<Anchor>//api/name/requestHeaders</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setStatusCode:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSInteger statusCode</Declaration>
+			
+			
+			<Anchor>//api/name/statusCode</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/statusCode</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSInteger statusCode</Declaration>
+			
+			
+			<Anchor>//api/name/statusCode</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setMIMEType:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSString *MIMEType</Declaration>
+			
+			
+			<Anchor>//api/name/MIMEType</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/MIMEType</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSString *MIMEType</Declaration>
+			
+			
+			<Anchor>//api/name/MIMEType</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setExpectedContentLength:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSInteger expectedContentLength</Declaration>
+			
+			
+			<Anchor>//api/name/expectedContentLength</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/expectedContentLength</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSInteger expectedContentLength</Declaration>
+			
+			
+			<Anchor>//api/name/expectedContentLength</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setFileDownloadedPath:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSString *fileDownloadedPath</Declaration>
+			
+			
+			<Anchor>//api/name/fileDownloadedPath</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/fileDownloadedPath</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketResponse.h</DeclaredIn>			
+			
+			<Declaration>@property (readonly) NSString *fileDownloadedPath</Declaration>
+			
+			
+			<Anchor>//api/name/fileDownloadedPath</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setStatusCode:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setStatusCode:(NSInteger)statusCode</Declaration>
+			
+			
+			<Anchor>//api/name/setStatusCode:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setStatus:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setStatus:(MTPocketStatus)status</Declaration>
+			
+			
+			<Anchor>//api/name/setStatus:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setError:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setError:(NSError *)error</Declaration>
+			
+			
+			<Anchor>//api/name/setError:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setRequestData:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setRequestData:(NSData *)requestData</Declaration>
+			
+			
+			<Anchor>//api/name/setRequestData:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setRequestText:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setRequestText:(NSString *)requestText</Declaration>
+			
+			
+			<Anchor>//api/name/setRequestText:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setRequest:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setRequest:(NSURLRequest *)request</Declaration>
+			
+			
+			<Anchor>//api/name/setRequest:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setFormat:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setFormat:(MTPocketFormat)format</Declaration>
+			
+			
+			<Anchor>//api/name/setFormat:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setData:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setData:(NSData *)data</Declaration>
+			
+			
+			<Anchor>//api/name/setData:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setRequestHeaders:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setRequestHeaders:(NSDictionary *)requestHeaders</Declaration>
+			
+			
+			<Anchor>//api/name/setRequestHeaders:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setMIMEType:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setMIMEType:(NSString *)MIMEType</Declaration>
+			
+			
+			<Anchor>//api/name/setMIMEType:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setExpectedContentLength:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setExpectedContentLength:(NSInteger)expectedContentLength</Declaration>
+			
+			
+			<Anchor>//api/name/setExpectedContentLength:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setFileDownloadedPath:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>- (void)setFileDownloadedPath:(NSString *)fileDownloadedPath</Declaration>
+			
+			
+			<Anchor>//api/name/setFileDownloadedPath:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketResponse/setIsFileDownload:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL isFileDownload</Declaration>
+			
+			
+			<Anchor>//api/name/isFileDownload</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketResponse/isFileDownload</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>private.h</DeclaredIn>			
+			
+			<Declaration>@property BOOL isFileDownload</Declaration>
+			
+			
+			<Anchor>//api/name/isFileDownload</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

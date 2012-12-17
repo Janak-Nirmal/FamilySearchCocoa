@@ -1,0 +1,473 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>MTPocketAsyncRequest Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<meta name="viewport" content="width=550" />
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.0.5 (build 789)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">MTPocket 0.8.0 </a></h1>
+				<a id="developerHome" href="../index.html">Adam Kirk</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">MTPocketAsyncRequest Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	<option value="properties">Properties</option>
+	
+	<option value="//api/name/downloadProgressHandler">&nbsp;&nbsp;&nbsp;&nbsp;downloadProgressHandler</option>
+	
+	<option value="//api/name/uploadProgressHandler">&nbsp;&nbsp;&nbsp;&nbsp;uploadProgressHandler</option>
+	
+	
+	
+	
+	<option value="class_methods">Class Methods</option>
+	
+	<option value="//api/name/asyncRequestForURL:destinationPath:downloadProgress:success:failure:">&nbsp;&nbsp;&nbsp;&nbsp;+ asyncRequestForURL:destinationPath:downloadProgress:success:failure:</option>
+	
+	<option value="//api/name/asyncRequestForURL:downloadProgress:success:failure:">&nbsp;&nbsp;&nbsp;&nbsp;+ asyncRequestForURL:downloadProgress:success:failure:</option>
+	
+	<option value="//api/name/asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:">&nbsp;&nbsp;&nbsp;&nbsp;+ asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:</option>
+	
+	<option value="//api/name/asyncRequestForURL:format:success:failure:">&nbsp;&nbsp;&nbsp;&nbsp;+ asyncRequestForURL:format:success:failure:</option>
+	
+	<option value="//api/name/asyncRequestForURL:method:format:body:success:failure:">&nbsp;&nbsp;&nbsp;&nbsp;+ asyncRequestForURL:method:format:body:success:failure:</option>
+	
+	<option value="//api/name/asyncRequestForURL:method:format:username:password:body:success:failure:">&nbsp;&nbsp;&nbsp;&nbsp;+ asyncRequestForURL:method:format:username:password:body:success:failure:</option>
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/send">&nbsp;&nbsp;&nbsp;&nbsp;- send</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+</ul></li>
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#properties">Properties</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/downloadProgressHandler">downloadProgressHandler</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/uploadProgressHandler">uploadProgressHandler</a></span></li>
+	
+</ul></li>
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#class_methods">Class Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/asyncRequestForURL:destinationPath:downloadProgress:success:failure:">asyncRequestForURL:destinationPath:downloadProgress:success:failure:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/asyncRequestForURL:downloadProgress:success:failure:">asyncRequestForURL:downloadProgress:success:failure:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:">asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/asyncRequestForURL:format:success:failure:">asyncRequestForURL:format:success:failure:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/asyncRequestForURL:method:format:body:success:failure:">asyncRequestForURL:method:format:body:success:failure:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/asyncRequestForURL:method:format:username:password:body:success:failure:">asyncRequestForURL:method:format:username:password:body:success:failure:</a></span></li>
+	
+</ul></li>
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/send">send</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="MTPocketAsyncRequest Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">MTPocketAsyncRequest Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value"><a href="../Classes/MTPocketRequest.html">MTPocketRequest</a> : NSObject</td>
+</tr><tr>
+	<td class="specification-title">Conforms to</td>
+	<td class="specification-value">NSURLConnectionDataDelegate<br />NSURLConnectionDelegate</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">MTPocketAsyncRequest.h</td>
+</tr>
+						</tbody></table></div>
+					
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/uploadProgressHandler">&nbsp;&nbsp;uploadProgressHandler</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/downloadProgressHandler">&nbsp;&nbsp;downloadProgressHandler</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/asyncRequestForURL:format:success:failure:">+&nbsp;asyncRequestForURL:format:success:failure:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/asyncRequestForURL:method:format:body:success:failure:">+&nbsp;asyncRequestForURL:method:format:body:success:failure:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/asyncRequestForURL:method:format:username:password:body:success:failure:">+&nbsp;asyncRequestForURL:method:format:username:password:body:success:failure:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/asyncRequestForURL:downloadProgress:success:failure:">+&nbsp;asyncRequestForURL:downloadProgress:success:failure:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/asyncRequestForURL:destinationPath:downloadProgress:success:failure:">+&nbsp;asyncRequestForURL:destinationPath:downloadProgress:success:failure:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:">+&nbsp;asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/send">&ndash;&nbsp;send</a></code>
+		
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Properties" name="properties"></a>
+						<h2 class="subtitle subtitle-methods">Properties</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/downloadProgressHandler" title="downloadProgressHandler"></a>
+	<h3 class="subsubtitle method-title">downloadProgressHandler</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) void ( ^ ) ( long long bytesLoaded , long long bytesTotal ) downloadProgressHandler</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/uploadProgressHandler" title="uploadProgressHandler"></a>
+	<h3 class="subsubtitle method-title">uploadProgressHandler</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (strong, nonatomic) void ( ^ ) ( long long bytesLoaded , long long bytesTotal ) uploadProgressHandler</code></div>
+
+    
+</div>
+						
+					</div>
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Class Methods" name="class_methods"></a>
+						<h2 class="subtitle subtitle-methods">Class Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/asyncRequestForURL:destinationPath:downloadProgress:success:failure:" title="asyncRequestForURL:destinationPath:downloadProgress:success:failure:"></a>
+	<h3 class="subsubtitle method-title">asyncRequestForURL:destinationPath:downloadProgress:success:failure:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)<em>URL</em> destinationPath:(NSString *)<em>filePath</em> downloadProgress:(void ( ^ ) ( long long bytesLoaded , long long bytesTotal ))<em>downloadProgressBlock</em> success:(void ( ^ ) ( MTPocketResponse *response ))<em>successBlock</em> failure:(void ( ^ ) ( MTPocketResponse *response ))<em>failureBlock</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/asyncRequestForURL:downloadProgress:success:failure:" title="asyncRequestForURL:downloadProgress:success:failure:"></a>
+	<h3 class="subsubtitle method-title">asyncRequestForURL:downloadProgress:success:failure:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)<em>URL</em> downloadProgress:(void ( ^ ) ( long long bytesLoaded , long long bytesTotal ))<em>downloadProgressBlock</em> success:(void ( ^ ) ( MTPocketResponse *response ))<em>successBlock</em> failure:(void ( ^ ) ( MTPocketResponse *response ))<em>failureBlock</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:" title="asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:"></a>
+	<h3 class="subsubtitle method-title">asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)<em>URL</em> format:(MTPocketFormat)<em>format</em> body:(id)<em>body</em> uploadFilename:(NSString *)<em>filename</em> uploadFormField:(NSString *)<em>fieldName</em> uploadMIMEType:(NSString *)<em>MIMEType</em> uploadProgress:(void ( ^ ) ( long long bytesLoaded , long long bytesTotal ))<em>uploadProgressBlock</em> success:(void ( ^ ) ( MTPocketResponse *response ))<em>successBlock</em> failure:(void ( ^ ) ( MTPocketResponse *response ))<em>failureBlock</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/asyncRequestForURL:format:success:failure:" title="asyncRequestForURL:format:success:failure:"></a>
+	<h3 class="subsubtitle method-title">asyncRequestForURL:format:success:failure:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)<em>URL</em> format:(MTPocketFormat)<em>format</em> success:(void ( ^ ) ( MTPocketResponse *response ))<em>successBlock</em> failure:(void ( ^ ) ( MTPocketResponse *response ))<em>failureBlock</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/asyncRequestForURL:method:format:body:success:failure:" title="asyncRequestForURL:method:format:body:success:failure:"></a>
+	<h3 class="subsubtitle method-title">asyncRequestForURL:method:format:body:success:failure:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)<em>URL</em> method:(MTPocketMethod)<em>method</em> format:(MTPocketFormat)<em>format</em> body:(id)<em>body</em> success:(void ( ^ ) ( MTPocketResponse *response ))<em>successBlock</em> failure:(void ( ^ ) ( MTPocketResponse *response ))<em>failureBlock</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/asyncRequestForURL:method:format:username:password:body:success:failure:" title="asyncRequestForURL:method:format:username:password:body:success:failure:"></a>
+	<h3 class="subsubtitle method-title">asyncRequestForURL:method:format:username:password:body:success:failure:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)<em>URL</em> method:(MTPocketMethod)<em>method</em> format:(MTPocketFormat)<em>format</em> username:(NSString *)<em>username</em> password:(NSString *)<em>password</em> body:(id)<em>body</em> success:(void ( ^ ) ( MTPocketResponse *response ))<em>successBlock</em> failure:(void ( ^ ) ( MTPocketResponse *response ))<em>failureBlock</em></code></div>
+
+    
+</div>
+						
+					</div>
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/send" title="send"></a>
+	<h3 class="subsubtitle method-title">send</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (NSURLConnection *)send</code></div>
+
+    
+</div>
+						
+					</div>
+					
+					
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2012 Adam Kirk. All rights reserved. (Last updated: 2012-12-17)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.0.5 (build 789)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

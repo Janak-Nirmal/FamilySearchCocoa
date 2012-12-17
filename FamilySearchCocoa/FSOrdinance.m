@@ -69,7 +69,7 @@
 							   params:0
 								 misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
 
@@ -175,7 +175,7 @@
 							   params:0
 								 misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
 		*people = [NSMutableArray array];
@@ -319,7 +319,7 @@
 							   params:0
 								 misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 	return response;
 }
@@ -349,7 +349,7 @@
 							   params:0
 								 misc:@"owner=me"];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 	return response;
 }
@@ -430,7 +430,7 @@
 								   params:0
 									 misc:nil];
 
-		resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+        resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 		if (resp.success) {
 			NSString *identifier = NILL([resp.body valueForComplexKeyPath:@"trips.trip[first].id"]);

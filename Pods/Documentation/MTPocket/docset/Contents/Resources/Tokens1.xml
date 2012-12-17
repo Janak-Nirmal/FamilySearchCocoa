@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/MTPocketAsyncRequest.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/MTPocketAsyncRequest</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>
+			
+			<NodeRef refid="1"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketAsyncRequest/setUploadProgressHandler:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) void ( ^ ) ( long long bytesLoaded , long long bytesTotal ) uploadProgressHandler</Declaration>
+			
+			
+			<Anchor>//api/name/uploadProgressHandler</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketAsyncRequest/uploadProgressHandler</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) void ( ^ ) ( long long bytesLoaded , long long bytesTotal ) uploadProgressHandler</Declaration>
+			
+			
+			<Anchor>//api/name/uploadProgressHandler</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketAsyncRequest/setDownloadProgressHandler:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) void ( ^ ) ( long long bytesLoaded , long long bytesTotal ) downloadProgressHandler</Declaration>
+			
+			
+			<Anchor>//api/name/downloadProgressHandler</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/MTPocketAsyncRequest/downloadProgressHandler</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>@property (strong, nonatomic) void ( ^ ) ( long long bytesLoaded , long long bytesTotal ) downloadProgressHandler</Declaration>
+			
+			
+			<Anchor>//api/name/downloadProgressHandler</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketAsyncRequest/asyncRequestForURL:format:success:failure:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)URL format:(MTPocketFormat)format success:(void ( ^ ) ( MTPocketResponse *response ))successBlock failure:(void ( ^ ) ( MTPocketResponse *response ))failureBlock</Declaration>
+			
+			
+			<Anchor>//api/name/asyncRequestForURL:format:success:failure:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketAsyncRequest/asyncRequestForURL:method:format:body:success:failure:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)URL method:(MTPocketMethod)method format:(MTPocketFormat)format body:(id)body success:(void ( ^ ) ( MTPocketResponse *response ))successBlock failure:(void ( ^ ) ( MTPocketResponse *response ))failureBlock</Declaration>
+			
+			
+			<Anchor>//api/name/asyncRequestForURL:method:format:body:success:failure:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketAsyncRequest/asyncRequestForURL:method:format:username:password:body:success:failure:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)URL method:(MTPocketMethod)method format:(MTPocketFormat)format username:(NSString *)username password:(NSString *)password body:(id)body success:(void ( ^ ) ( MTPocketResponse *response ))successBlock failure:(void ( ^ ) ( MTPocketResponse *response ))failureBlock</Declaration>
+			
+			
+			<Anchor>//api/name/asyncRequestForURL:method:format:username:password:body:success:failure:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketAsyncRequest/asyncRequestForURL:downloadProgress:success:failure:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)URL downloadProgress:(void ( ^ ) ( long long bytesLoaded , long long bytesTotal ))downloadProgressBlock success:(void ( ^ ) ( MTPocketResponse *response ))successBlock failure:(void ( ^ ) ( MTPocketResponse *response ))failureBlock</Declaration>
+			
+			
+			<Anchor>//api/name/asyncRequestForURL:downloadProgress:success:failure:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketAsyncRequest/asyncRequestForURL:destinationPath:downloadProgress:success:failure:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)URL destinationPath:(NSString *)filePath downloadProgress:(void ( ^ ) ( long long bytesLoaded , long long bytesTotal ))downloadProgressBlock success:(void ( ^ ) ( MTPocketResponse *response ))successBlock failure:(void ( ^ ) ( MTPocketResponse *response ))failureBlock</Declaration>
+			
+			
+			<Anchor>//api/name/asyncRequestForURL:destinationPath:downloadProgress:success:failure:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/MTPocketAsyncRequest/asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>+ (MTPocketAsyncRequest *)asyncRequestForURL:(NSURL *)URL format:(MTPocketFormat)format body:(id)body uploadFilename:(NSString *)filename uploadFormField:(NSString *)fieldName uploadMIMEType:(NSString *)MIMEType uploadProgress:(void ( ^ ) ( long long bytesLoaded , long long bytesTotal ))uploadProgressBlock success:(void ( ^ ) ( MTPocketResponse *response ))successBlock failure:(void ( ^ ) ( MTPocketResponse *response ))failureBlock</Declaration>
+			
+			
+			<Anchor>//api/name/asyncRequestForURL:format:body:uploadFilename:uploadFormField:uploadMIMEType:uploadProgress:success:failure:</Anchor>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/MTPocketAsyncRequest/send</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>MTPocketAsyncRequest.h</DeclaredIn>			
+			
+			<Declaration>- (NSURLConnection *)send</Declaration>
+			
+			
+			<Anchor>//api/name/send</Anchor>
+		</Token>
+		
+	</File>
+</Tokens>

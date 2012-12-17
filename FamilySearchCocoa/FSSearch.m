@@ -172,7 +172,8 @@
 							  params:0
 								misc:[params componentsJoinedByString:@"&"]];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
+
 
 	if (response.success) {
 		

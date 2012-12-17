@@ -45,7 +45,7 @@
 						 identifiers:nil
 							  params:0
 								misc:[NSString stringWithFormat:@"key=%@", _devKey]];
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:un password:pw body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:un password:pw body:nil].send;
 	if (response.success) {
 		_sessionID = NILL([response.body valueForKeyPath:@"session.id"]);
         _url.sessionID = _sessionID;
@@ -56,7 +56,7 @@
 - (MTPocketResponse *)logout
 {
 	NSURL *url = [_url urlWithModule:@"identity" version:2 resource:@"logout" identifiers:nil params:0 misc:nil];
-	return [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    return [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 }
 
 
@@ -70,7 +70,7 @@
 							  params:0
 								misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
         NSDictionary *userDict                  = [response.body[@"users"] lastObject];
@@ -94,7 +94,7 @@
                        params:0
                          misc:@"product=FamilyTree"];
 
-	response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
         NSArray *permissions = response.body[@"permissions"];

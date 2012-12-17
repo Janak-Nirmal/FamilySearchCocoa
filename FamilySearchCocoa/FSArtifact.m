@@ -77,7 +77,8 @@
                                        params:0
                                          misc:[params componentsJoinedByString:@"&"]];
 
-    MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
+
 
     if (resp.success) {
         NSMutableArray *artifactsArray = [NSMutableArray array];
@@ -104,15 +105,21 @@
                                         params:0
                                           misc:@"includePortraitArtifact=true"];
 
-    MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
+
 
     if (resp.success) {
-        NSDictionary *portraitArtifactDict = [resp.body valueForComplexKeyPath:@"taggedPerson[first].portraitArtifact"];
-        FSArtifact *portraitArtifact = [FSArtifact artifactWithIdentifier:nil sessionID:person.sessionID];
-        [portraitArtifact populateFromDictionary:portraitArtifactDict];
-        return portraitArtifact;
+        NSArray *taggedPersons = resp.body[@"taggedPerson"];
+        for (NSDictionary *taggedPersonDict in taggedPersons) {
+            NSDictionary *portraitArtifactDict = NILL(taggedPersonDict[@"portraitArtifact"]);
+            if (portraitArtifactDict) {
+                FSArtifact *portraitArtifact = [FSArtifact artifactWithIdentifier:nil sessionID:person.sessionID];
+                [portraitArtifact populateFromDictionary:portraitArtifactDict];
+                return portraitArtifact;
+            }
+        }
     }
-    
+
     return nil;
 }
 
@@ -126,7 +133,7 @@
                                         params:0
                                           misc:@"includeTags=true"];
 
-    MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
     if (resp.success) {
         NSMutableArray *artifacts = [NSMutableArray array];
@@ -156,7 +163,7 @@
 											params:0
 											  misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
         [self populateFromDictionary:response.body];
@@ -181,13 +188,9 @@
 											params:0
 											  misc:[params componentsJoinedByString:@"&"]];
 
-	MTPocketRequest *request = [[MTPocketRequest alloc] initWithURL:url];
-	request.method		= MTPocketMethodPOST;
-	request.format		= MTPocketFormatJSON;
-	request.headers		= @{ @"Content-Type" : _MIMEType };
-	request.body		= _data;
-    
-	MTPocketResponse *response = [request fetch];
+	MTPocketRequest *request = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:_data];
+	request.headers = @{ @"Content-Type" : _MIMEType };
+	MTPocketResponse *response = [request send];
 
 	if (response.success) {
 
@@ -224,7 +227,7 @@
 											params:0
 											  misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
         [self populateFromDictionary:@{}];
@@ -232,6 +235,7 @@
 
 	return response;
 }
+
 
 
 
@@ -271,7 +275,7 @@
 											params:0
 											  misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
         [self populateFromDictionary:@{}];
@@ -302,7 +306,7 @@
 											  misc:nil];
 
 	NSDictionary *body = @{ @"title" : NUL(_title), @"description" : NUL(_description) };
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
     if (response.success) {
         [self populateFromDictionary:response.body];
@@ -418,7 +422,8 @@
 											params:0
 											  misc:[params componentsJoinedByString:@"&"]];
 
-    MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:[self dictionaryValue]];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:[self dictionaryValue]].send;
+
 
     if (response.success) {
         [self populateFromDictionary:response.body];
@@ -439,8 +444,8 @@
                                                  params:0
                                                    misc:nil];
 
-    MTPocketResponse *resp = *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:nil];
-    
+    MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:nil].send;
+
     if (resp.success) {
         FSArtifact *createdArtifact = [FSArtifact artifactWithIdentifier:nil sessionID:_artifact.sessionID];
         [createdArtifact populateFromDictionary:resp.body[@"artifact"]];
@@ -462,8 +467,9 @@
                                                  params:0
                                                    misc:nil];
 
-    MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil];
-    
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil].send;
+
+
     if (response.success) {
         [self populateFromDictionary:@{}];
     }

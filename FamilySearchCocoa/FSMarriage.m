@@ -95,10 +95,7 @@
 								  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
 									misc:nil];
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
-
-
-
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
 		NSArray *spouses = NILL([response.body valueForComplexKeyPath:@"persons[first].relationships.spouse"]);
@@ -327,8 +324,7 @@
 								  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
 									misc:nil];
 
-
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 	if (response.success) {
 		_changed = NO;
@@ -349,7 +345,7 @@
 									misc:nil];
 
 
-	MTPocketResponse *response = [MTPocketRequest objectAtURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil];
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
 		NSMutableDictionary *relationshipTypesToDelete = [NSMutableDictionary dictionary];
@@ -382,7 +378,7 @@
 								}]
 							};
 
-		response = [MTPocketRequest objectAtURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body];
+        response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
 		if (response.success) {
 			_changed = NO;

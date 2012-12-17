@@ -1,0 +1,885 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>MTPocketResponse Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<meta name="viewport" content="width=550" />
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.0.5 (build 789)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">MTPocket 0.8.0 </a></h1>
+				<a id="developerHome" href="../index.html">Adam Kirk</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">MTPocketResponse Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	<option value="properties">Properties</option>
+	
+	<option value="//api/name/MIMEType">&nbsp;&nbsp;&nbsp;&nbsp;MIMEType</option>
+	
+	<option value="//api/name/body">&nbsp;&nbsp;&nbsp;&nbsp;body</option>
+	
+	<option value="//api/name/data">&nbsp;&nbsp;&nbsp;&nbsp;data</option>
+	
+	<option value="//api/name/error">&nbsp;&nbsp;&nbsp;&nbsp;error</option>
+	
+	<option value="//api/name/expectedContentLength">&nbsp;&nbsp;&nbsp;&nbsp;expectedContentLength</option>
+	
+	<option value="//api/name/fileDownloadedPath">&nbsp;&nbsp;&nbsp;&nbsp;fileDownloadedPath</option>
+	
+	<option value="//api/name/format">&nbsp;&nbsp;&nbsp;&nbsp;format</option>
+	
+	<option value="//api/name/isFileDownload">&nbsp;&nbsp;&nbsp;&nbsp;isFileDownload</option>
+	
+	<option value="//api/name/request">&nbsp;&nbsp;&nbsp;&nbsp;request</option>
+	
+	<option value="//api/name/requestData">&nbsp;&nbsp;&nbsp;&nbsp;requestData</option>
+	
+	<option value="//api/name/requestHeaders">&nbsp;&nbsp;&nbsp;&nbsp;requestHeaders</option>
+	
+	<option value="//api/name/requestText">&nbsp;&nbsp;&nbsp;&nbsp;requestText</option>
+	
+	<option value="//api/name/status">&nbsp;&nbsp;&nbsp;&nbsp;status</option>
+	
+	<option value="//api/name/statusCode">&nbsp;&nbsp;&nbsp;&nbsp;statusCode</option>
+	
+	<option value="//api/name/success">&nbsp;&nbsp;&nbsp;&nbsp;success</option>
+	
+	<option value="//api/name/text">&nbsp;&nbsp;&nbsp;&nbsp;text</option>
+	
+	
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/setData:">&nbsp;&nbsp;&nbsp;&nbsp;- setData:</option>
+	
+	<option value="//api/name/setError:">&nbsp;&nbsp;&nbsp;&nbsp;- setError:</option>
+	
+	<option value="//api/name/setExpectedContentLength:">&nbsp;&nbsp;&nbsp;&nbsp;- setExpectedContentLength:</option>
+	
+	<option value="//api/name/setFileDownloadedPath:">&nbsp;&nbsp;&nbsp;&nbsp;- setFileDownloadedPath:</option>
+	
+	<option value="//api/name/setFormat:">&nbsp;&nbsp;&nbsp;&nbsp;- setFormat:</option>
+	
+	<option value="//api/name/setMIMEType:">&nbsp;&nbsp;&nbsp;&nbsp;- setMIMEType:</option>
+	
+	<option value="//api/name/setRequest:">&nbsp;&nbsp;&nbsp;&nbsp;- setRequest:</option>
+	
+	<option value="//api/name/setRequestData:">&nbsp;&nbsp;&nbsp;&nbsp;- setRequestData:</option>
+	
+	<option value="//api/name/setRequestHeaders:">&nbsp;&nbsp;&nbsp;&nbsp;- setRequestHeaders:</option>
+	
+	<option value="//api/name/setRequestText:">&nbsp;&nbsp;&nbsp;&nbsp;- setRequestText:</option>
+	
+	<option value="//api/name/setStatus:">&nbsp;&nbsp;&nbsp;&nbsp;- setStatus:</option>
+	
+	<option value="//api/name/setStatusCode:">&nbsp;&nbsp;&nbsp;&nbsp;- setStatusCode:</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Extension Methods">Extension Methods</a></span></li>
+	
+</ul></li>
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#properties">Properties</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/MIMEType">MIMEType</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/body">body</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/data">data</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/error">error</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/expectedContentLength">expectedContentLength</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/fileDownloadedPath">fileDownloadedPath</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/format">format</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/isFileDownload">isFileDownload</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/request">request</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/requestData">requestData</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/requestHeaders">requestHeaders</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/requestText">requestText</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/status">status</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/statusCode">statusCode</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/success">success</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/text">text</a></span></li>
+	
+</ul></li>
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setData:">setData:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setError:">setError:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setExpectedContentLength:">setExpectedContentLength:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setFileDownloadedPath:">setFileDownloadedPath:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setFormat:">setFormat:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setMIMEType:">setMIMEType:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setRequest:">setRequest:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setRequestData:">setRequestData:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setRequestHeaders:">setRequestHeaders:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setRequestText:">setRequestText:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setStatus:">setStatus:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setStatusCode:">setStatusCode:</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="MTPocketResponse Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">MTPocketResponse Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value">NSObject</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">MTPocketResponse.h</td>
+</tr>
+						</tbody></table></div>
+					
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						<h3 class="subsubtitle task-title">Other Methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/success">&nbsp;&nbsp;success</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/status">&nbsp;&nbsp;status</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/format">&nbsp;&nbsp;format</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/body">&nbsp;&nbsp;body</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/error">&nbsp;&nbsp;error</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/request">&nbsp;&nbsp;request</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/data">&nbsp;&nbsp;data</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/text">&nbsp;&nbsp;text</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/requestData">&nbsp;&nbsp;requestData</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/requestText">&nbsp;&nbsp;requestText</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/requestHeaders">&nbsp;&nbsp;requestHeaders</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/statusCode">&nbsp;&nbsp;statusCode</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/MIMEType">&nbsp;&nbsp;MIMEType</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/expectedContentLength">&nbsp;&nbsp;expectedContentLength</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/fileDownloadedPath">&nbsp;&nbsp;fileDownloadedPath</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li>
+						</ul>
+						
+						
+						<a title="Extension Methods" name="task_Extension Methods"></a>
+						<h3 class="subsubtitle task-title">Extension Methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setStatusCode:">&ndash;&nbsp;setStatusCode:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setStatus:">&ndash;&nbsp;setStatus:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setError:">&ndash;&nbsp;setError:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setRequestData:">&ndash;&nbsp;setRequestData:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setRequestText:">&ndash;&nbsp;setRequestText:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setRequest:">&ndash;&nbsp;setRequest:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setFormat:">&ndash;&nbsp;setFormat:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setData:">&ndash;&nbsp;setData:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setRequestHeaders:">&ndash;&nbsp;setRequestHeaders:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setMIMEType:">&ndash;&nbsp;setMIMEType:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setExpectedContentLength:">&ndash;&nbsp;setExpectedContentLength:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setFileDownloadedPath:">&ndash;&nbsp;setFileDownloadedPath:</a></code>
+		
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/isFileDownload">&nbsp;&nbsp;isFileDownload</a></code>
+		
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Properties" name="properties"></a>
+						<h2 class="subtitle subtitle-methods">Properties</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/MIMEType" title="MIMEType"></a>
+	<h3 class="subsubtitle method-title">MIMEType</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSString *MIMEType</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/body" title="body"></a>
+	<h3 class="subsubtitle method-title">body</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) id body</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/data" title="data"></a>
+	<h3 class="subsubtitle method-title">data</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSData *data</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/error" title="error"></a>
+	<h3 class="subsubtitle method-title">error</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSError *error</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/expectedContentLength" title="expectedContentLength"></a>
+	<h3 class="subsubtitle method-title">expectedContentLength</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSInteger expectedContentLength</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/fileDownloadedPath" title="fileDownloadedPath"></a>
+	<h3 class="subsubtitle method-title">fileDownloadedPath</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSString *fileDownloadedPath</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/format" title="format"></a>
+	<h3 class="subsubtitle method-title">format</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) MTPocketFormat format</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/isFileDownload" title="isFileDownload"></a>
+	<h3 class="subsubtitle method-title">isFileDownload</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property BOOL isFileDownload</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/request" title="request"></a>
+	<h3 class="subsubtitle method-title">request</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSURLRequest *request</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/requestData" title="requestData"></a>
+	<h3 class="subsubtitle method-title">requestData</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSData *requestData</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/requestHeaders" title="requestHeaders"></a>
+	<h3 class="subsubtitle method-title">requestHeaders</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSDictionary *requestHeaders</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/requestText" title="requestText"></a>
+	<h3 class="subsubtitle method-title">requestText</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSString *requestText</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/status" title="status"></a>
+	<h3 class="subsubtitle method-title">status</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) MTPocketStatus status</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/statusCode" title="statusCode"></a>
+	<h3 class="subsubtitle method-title">statusCode</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSInteger statusCode</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/success" title="success"></a>
+	<h3 class="subsubtitle method-title">success</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) BOOL success</code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/text" title="text"></a>
+	<h3 class="subsubtitle method-title">text</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>@property (readonly) NSString *text</code></div>
+
+    
+</div>
+						
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/setData:" title="setData:"></a>
+	<h3 class="subsubtitle method-title">setData:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setData:(NSData *)<em>data</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setError:" title="setError:"></a>
+	<h3 class="subsubtitle method-title">setError:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setError:(NSError *)<em>error</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setExpectedContentLength:" title="setExpectedContentLength:"></a>
+	<h3 class="subsubtitle method-title">setExpectedContentLength:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setExpectedContentLength:(NSInteger)<em>expectedContentLength</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setFileDownloadedPath:" title="setFileDownloadedPath:"></a>
+	<h3 class="subsubtitle method-title">setFileDownloadedPath:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setFileDownloadedPath:(NSString *)<em>fileDownloadedPath</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setFormat:" title="setFormat:"></a>
+	<h3 class="subsubtitle method-title">setFormat:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setFormat:(MTPocketFormat)<em>format</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setMIMEType:" title="setMIMEType:"></a>
+	<h3 class="subsubtitle method-title">setMIMEType:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setMIMEType:(NSString *)<em>MIMEType</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setRequest:" title="setRequest:"></a>
+	<h3 class="subsubtitle method-title">setRequest:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setRequest:(NSURLRequest *)<em>request</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setRequestData:" title="setRequestData:"></a>
+	<h3 class="subsubtitle method-title">setRequestData:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setRequestData:(NSData *)<em>requestData</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setRequestHeaders:" title="setRequestHeaders:"></a>
+	<h3 class="subsubtitle method-title">setRequestHeaders:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setRequestHeaders:(NSDictionary *)<em>requestHeaders</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setRequestText:" title="setRequestText:"></a>
+	<h3 class="subsubtitle method-title">setRequestText:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setRequestText:(NSString *)<em>requestText</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setStatus:" title="setStatus:"></a>
+	<h3 class="subsubtitle method-title">setStatus:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setStatus:(MTPocketStatus)<em>status</em></code></div>
+
+    
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setStatusCode:" title="setStatusCode:"></a>
+	<h3 class="subsubtitle method-title">setStatusCode:</h3>
+	
+	
+
+	<div class="method-subsection method-declaration"><code>- (void)setStatusCode:(NSInteger)<em>statusCode</em></code></div>
+
+    
+</div>
+						
+					</div>
+					
+					
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2012 Adam Kirk. All rights reserved. (Last updated: 2012-12-17)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.0.5 (build 789)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

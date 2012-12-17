@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>MTPocket 0.8.0 Reference</title>
+		<link rel="stylesheet" type="text/css" href="css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.0.5 (build 789)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="index.html">MTPocket 0.8.0 </a></h1>
+				<a id="developerHome" href="index.html">Adam Kirk</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">MTPocket 0.8.0 Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar"></ul>
+		</header>
+		<article>
+			<div id="overview_contents" role="main">
+				<div class="main-navigation navigation-top">
+					<a href="hierarchy.html">Next</a>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">MTPocket 0.8.0 Reference</h1>
+					</div>		
+				</div>
+				<div id="container">
+					
+					<div class="section section-overview index-overview">
+						
+						
+						<h1>MTPocket</h1>
+
+<p>A objective-c networking library that doesn&rsquo;t suck.
+Gives you a request object that does all the work for you and a response object that has all the info you&rsquo;d ever want to know about the transaction.
+SUPER easy to use, see examples below.</p>
+
+<h3>Advantages</h3>
+
+<ol>
+<li>It gives you comprehensive response object that contains all the info you&rsquo;d ever want to know about the response:
+
+<ul>
+<li>a boolean success property, yes or no if successful.</li>
+<li>the dictionary/array object generated from the response data.</li>
+<li>the raw data returned by the server (for debugging).</li>
+<li>the raw data returned by the server converted to a UTF-8 encoded string (for even easier debugging).</li>
+<li>the original request object.</li>
+<li>the apple response object (has status codes, etc.).</li>
+<li>an error object, nil if no error.</li>
+<li>a status property with common status codes mapped to easy to remember/autocompleted enums.</li>
+<li>the format the response is in (JSON/XML/TEXT).</li>
+</ul>
+</li>
+<li>It allows you to have fine grained control, if you want it, or you can use convenience methods.</li>
+<li>It allows you to either call it synchronously so you can control what queue its on, which I like, or asynchronously if you want to monitor progress, etc.</li>
+<li>It&rsquo;s dead simple, two simple components, a request and response object.</li>
+<li>The enums help a lot and clearly imply your options.</li>
+<li>Easily upload files as multipart/form-data.</li>
+<li>Track the progress of a large download or upload.</li>
+</ol>
+
+
+<h3>Installation</h3>
+
+<p>In your Podfile, add this line:</p>
+
+<pre><code>pod "MTPocket"
+</code></pre>
+
+<p>pod? => <a href="https://github.com/CocoaPods/CocoaPods/">https://github.com/CocoaPods/CocoaPods/</a></p>
+
+<p>NOTE: You may need to add <code>-all_load</code> to &ldquo;Other Linker Flags&rdquo; in your targets build settings if the pods library only contains categories.</p>
+
+<h3>Example Usage</h3>
+
+<p>Let&rsquo;s start simple:</p>
+
+<pre><code>MTPocketResponse *response = [MTPocketRequest requestForURL:URL format:MTPocketFormatHTML].send;
+
+if (response.success) {
+    // yeah!
+}
+else {
+    if (response.status == MTPocketResultNoConnection) {
+        NSLog(@"No internets.");
+    }
+}
+</code></pre>
+
+<p>Next steps:</p>
+
+<pre><code>MTPocketResponse *response = [MTPocketRequest requestForURL:[NSURL URLWithString:@"stitches" relativeToURL:_baseURL]
+                                                     method:MTPocketMethodGET
+                                                     format:MTPocketFormatJSON
+                                                   username:@"username"
+                                                   password:@"password"
+                                                       body:nil].send;
+
+if (response.success) {
+    NSLog(@"%@", [[response.body firstObject] objectForKey:@"thread_color"]); // =&gt; red
+}
+else if (response.status == MTPocketStatusUnauthorized) {
+    // code to let user update their login info
+}
+</code></pre>
+
+<p>Post to the server:</p>
+
+<pre><code>NSDictionary *dict = @{ @"stitch" : @{ @"thread_color" : @"blue", @"length" : @3 } };
+MTPocketResponse *response   = [MTPocketRequest requestForURL:[NSURL URLWithString:@"stitches" relativeToURL:_baseURL]
+                                                      method:MTPocketMethodPOST
+                                                      format:MTPocketFormatJSON
+                                                    username:nil
+                                                    password:nil
+                                                        body:dict].send;
+</code></pre>
+
+<p>An easy async example:</p>
+
+<pre><code>NSURLConnection *connection = [MTPocketAsyncRequest asyncRequestForURL:BASE_URL
+                                                                method:MTPocketMethodGET
+                                                                format:MTPocketFormatHTML
+                                                                  body:nil
+                                                               success:^(MTPocketResponse *successResponse) {
+                                                                    NSLog(@"%@", response.body);
+                                                               } failure:^(MTPocketResponse *response) {
+                                                                    NSLog(@"%@", response.error);
+                                                               }
+                               ].send;
+</code></pre>
+
+<p>Let&rsquo;s monitor the progress of a large request:</p>
+
+<pre><code>NSURLConnection *connection = [MTPocketAsyncRequest asyncRequestForURL:BASE_URL
+                                                      downloadProgress:^(long long bytesLoaded, long long bytesTotal) {
+                                                          NSLog(@"%@/%@", @(bytesLoaded), @(bytesTotal));
+                                                      }
+                                                               success:^(MTPocketResponse *successResponse) {
+                                                                   NSLog(@"%@", response.body);
+                                                               }
+                                                               failure:^(MTPocketResponse *response) {
+                                                                    NSLog(@"%@", response.error);
+                                                               }
+                               ].send;
+</code></pre>
+
+<p>Easy enough, now let&rsquo;s download a file and save it to disk:</p>
+
+<pre><code>NSString *location = [DOCS_DIR stringByAppendingPathComponent:@"test.mp3"];
+
+NSURLConnection *connection = [MTPocketAsyncRequest asyncRequestForURL:DOWNLOAD_FILE_URL
+                                                       destinationPath:location
+                                                      downloadProgress:^(long long bytesLoaded, long long bytesTotal) {
+                                                          NSLog(@"%@/%@", @(bytesLoaded), @(bytesTotal));
+                                                      }
+                                                               success:^(MTPocketResponse *successResponse) {
+                                                                   NSLog(@"%@", response.body);
+                                                               }
+                                                               failure:^(MTPocketResponse *response) {
+                                                                    NSLog(@"%@", response.error);
+                                                               }
+                               ].send;
+</code></pre>
+
+<p>Ok, now this is cool, because normally it would be a lot of work:</p>
+
+<pre><code>NSString *imagePath = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"jpg"];
+NSData *fileData = [NSData dataWithContentsOfFile:imagePath];
+
+NSURLConnection *connection = [MTPocketAsyncRequest asyncRequestForURL:UPLOAD_FILE_URL
+                                                                format:MTPocketFormatJSON
+                                                                  body:fileData
+                                                        uploadFilename:@"test.jpg"
+                                                       uploadFormField:@"files[]"
+                                                        uploadMIMEType:@"image/jpeg"
+                                                        uploadProgress:^(long long bytesLoaded, long long bytesTotal) {
+                                                              NSLog(@"%@/%@", @(bytesLoaded), @(bytesTotal));
+                                                        }
+                                                               success:^(MTPocketResponse *successResponse) {
+                                                                   NSLog(@"%@", response.body);
+                                                               }
+                                                               failure:^(MTPocketResponse *response) {
+                                                                    NSLog(@"%@", response.error);
+                                                               }
+                               ].send;
+</code></pre>
+
+<p>That&rsquo;s just the standard stuff. say you want to cook your own totally custom request:</p>
+
+<pre><code>NSURLConnection *connection = [MTPocketAsyncRequest asyncRequestForURL:BASE_URL
+                                                                method:MTPocketMethodGET
+                                                                format:MTPocketFormatHTML
+                                                                  body:nil
+                                                               success:^(MTPocketResponse *successResponse) {
+                                                                      NSLog(@"%@", response.body);
+                                                               } failure:^(MTPocketResponse *response) {
+                                                                    NSLog(@"%@", response.error);
+                                                               }];
+
+request.username = @"custom";
+request.password = @"request";
+request.headers = @{ @"Super-Rare-Header" : @"Value" };
+request.timeout = 15; // seconds
+
+// then fire it off (this is different than above where we create the request and fire it off at the same time).
+NSURLConnection *connection = [request send];
+</code></pre>
+
+<h3>Screenshots</h3>
+
+<p>As you can see, while debugging, MTPocket provides you with a LOT of very useful information about responses from server:</p>
+
+<p>!<a href="https://dl.dropbox.com/u/2771219/github/MTPocket/1.png" title="XCode Debugger Interface">Alt screenshot of debugger in XCode</a></p>
+
+<p>Printing the body of the response:</p>
+
+<p>!<a href="https://dl.dropbox.com/u/2771219/github/MTPocket/2.png" title="Printing body of response">Alt screenshot of console in XCode</a></p>
+
+<h3>Enums</h3>
+
+<pre><code>// MTPocketResult
+typedef enum {
+    MTPocketResultSuccess,
+    MTPocketResultCreated,
+    MTPocketResultUnauthorized,
+    MTPocketResultUnprocessable,
+    MTPocketResultNotFound,
+    MTPocketResultNoConnection,
+    MTPocketStatusServerError,
+    MTPocketResultOther,
+} MTPocketResult;
+
+// MTPocketFormat
+typedef enum {
+    MTPocketFormatJSON,
+    MTPocketFormatXML,
+    MTPocketFormatHTML,
+    MTPocketFormatTEXT
+} MTPocketFormat;
+
+// MTPocketMethod
+typedef enum {
+    MTPocketMethodGET,
+    MTPocketMethodPOST,
+    MTPocketMethodPUT,
+    MTPocketMethodDELETE
+} MTPocketMethod;
+</code></pre>
+
+<h3>The Request Object</h3>
+
+<pre><code>@property (readonly)            NSURL           *URL;                                           // (Required, Read-only)
+@property (        nonatomic)   MTPocketMethod  method;                                         // Default: MTPocketMethodGET
+@property (        nonatomic)   MTPocketFormat  format;                                         // Defaut: MTPocketFormatJSON
+@property (strong, nonatomic)   NSString        *username;                                      // (optional) HTTP Basic auth
+@property (strong, nonatomic)   NSString        *password;
+@property (strong, nonatomic)   id              body;                                           // Can be an NSDictionary, NSArray, NSString, NSData, or nil
+@property (strong, nonatomic)   NSDictionary    *headers;                                       // (optional)
+@property (        nonatomic)   NSTimeInterval  timeout;                                        // (optional)
+</code></pre>
+
+<h3>The Response Object</h3>
+
+<pre><code>@property (readonly) BOOL              success;                 // Easily determine if the request was 100% sucessful. Otherwise, lots of data in other properties to deal with the failure.
+@property (readonly) MTPocketStatus    status;                  // A Mapping of common HTTP status codes to enum.
+@property (readonly) MTPocketFormat    format;                  // The format of the original content. Will always be the same as the request format.
+@property (readonly) id                body;                    // The response body. Depending on the format, could be an NSString, NSArray, NSDictionary or nil.
+
+@property (readonly) NSError           *error;                  // Could be nil, but should check this for important info if its not nil.
+@property (readonly) NSURLRequest      *request;                // The original request made to the server (for debugging).
+@property (readonly) NSData            *data;                   // The data returned form the server (for debugging).
+@property (readonly) NSString          *text;                   // The data converted to a string returned form the server (for debugging).
+@property (readonly) NSData            *requestData;            // The data that was sent as the body with the request (for debugging).
+@property (readonly) NSString          *requestText;            // The data sent with the request converted to a string (for debugging).
+@property (readonly) NSDictionary      *requestHeaders;
+@property (readonly) NSInteger         statusCode;              // The actual integer status code of the response.
+@property (readonly) NSString          *MIMEType;               // What the server reports as the content type of the response.
+@property (readonly) NSInteger         expectedContentLength;   // What the server reports as the expected content length of the response.
+@property (readonly) NSString          *fileDownloadedPath;     // The path of the file if it successfully downloaded and is guaranteed to exist at the path.
+</code></pre>
+						
+						
+					</div>
+					
+                        
+                    
+					
+					
+					<div class="index-column">
+						<h2 class="index-title">Class References</h2>
+						<ul>
+							
+							<li><a href="Classes/MTPocketAsyncRequest.html">MTPocketAsyncRequest</a></li>
+							
+							<li><a href="Classes/MTPocketRequest.html">MTPocketRequest</a></li>
+							
+							<li><a href="Classes/MTPocketResponse.html">MTPocketResponse</a></li>
+							
+						</ul>
+					</div>
+					
+					
+					
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<a href="hierarchy.html">Next</a>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2012 Adam Kirk. All rights reserved. (Last updated: 2012-12-17)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.0.5 (build 789)</a>.</span></p>
+						
+	
+					</div>
+				</div>
+			</div>
+		</article>		
+	</body>
+</html>
