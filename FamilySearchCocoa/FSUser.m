@@ -15,6 +15,7 @@
 
 
 @interface FSUser ()
+@property (strong, nonatomic) NSString *password;
 @property (strong, nonatomic) NSString *devKey;
 @property (strong, nonatomic) FSPerson *treePerson;
 @end
@@ -27,19 +28,23 @@
 
 @implementation FSUser
 
-- (id)initWithDeveloperKey:(NSString *)devKey
+
+- (id)initWithUsername:(NSString *)username password:(NSString *)password developerKey:(NSString *)devKey
 {
     self = [super init];
     if (self) {
-        _devKey = devKey;
+        _username   = username;
+        _password   = password;
+        _devKey     = devKey;
     }
     return self;
 }
 
-- (MTPocketResponse *)loginWithUsername:(NSString *)un password:(NSString *)pw
+- (MTPocketResponse *)login
 {
     _treePerson = nil;
     [FSURL setSessionID:nil];
+
 	NSURL *url = [FSURL urlWithModule:@"identity"
                               version:2
                              resource:@"login"
@@ -47,10 +52,9 @@
                                params:0
                                  misc:[NSString stringWithFormat:@"key=%@", _devKey]];
 
-    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:un password:pw body:nil].send;
+    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:_username password:_password body:nil].send;
 
 	if (response.success) {
-        _username = un;
 		NSString *sessionID = NILL([response.body valueForKeyPath:@"session.id"]);
         [FSURL setSessionID:sessionID];
 	}
