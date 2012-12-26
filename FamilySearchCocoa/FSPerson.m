@@ -95,6 +95,11 @@
 	return [[FSPerson alloc] initWithIdentifier:identifier];
 }
 
++ (FSPerson *)newPerson
+{
+    return [[FSPerson alloc] initWithIdentifier:nil];
+}
+
 
 
 

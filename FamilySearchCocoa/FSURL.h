@@ -10,5 +10,6 @@
 @interface FSURL : NSObject
 
 + (void)setSandboxed:(BOOL)sandboxed;
++ (NSString *)sessionID;
 
 @end

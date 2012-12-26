@@ -31,8 +31,9 @@ extern NSString *const FSUserPermissionAccessDiscussionForums;
 
 @interface FSUser : NSObject
 
-@property (strong, nonatomic) NSDictionary *info;
-@property (strong, nonatomic) NSDictionary *permissions;
+@property (strong, nonatomic) NSString      *username;
+@property (strong, nonatomic) NSDictionary  *info;
+@property (strong, nonatomic) NSDictionary  *permissions;
 
 - (id)initWithDeveloperKey:(NSString *)devKey;
 - (MTPocketResponse *)loginWithUsername:(NSString *)un password:(NSString *)pw;

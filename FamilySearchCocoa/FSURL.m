@@ -73,6 +73,11 @@ static NSString *__sessionID = nil;
     __sessionID = sessionID;
 }
 
++ (NSString *)sessionID
+{
+    return __sessionID;
+}
+
 + (NSURL *)urlWithModule:(NSString *)module
 				 version:(NSUInteger)version
 				resource:(NSString *)resource

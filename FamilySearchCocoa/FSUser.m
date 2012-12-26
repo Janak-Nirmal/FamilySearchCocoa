@@ -16,6 +16,7 @@
 
 @interface FSUser ()
 @property (strong, nonatomic) NSString *devKey;
+@property (strong, nonatomic) FSPerson *treePerson;
 @end
 
 
@@ -35,11 +36,9 @@
     return self;
 }
 
-static FSPerson *__treePerson = nil;
-
 - (MTPocketResponse *)loginWithUsername:(NSString *)un password:(NSString *)pw
 {
-    __treePerson = nil;
+    _treePerson = nil;
     [FSURL setSessionID:nil];
 	NSURL *url = [FSURL urlWithModule:@"identity"
                               version:2
@@ -51,6 +50,7 @@ static FSPerson *__treePerson = nil;
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:un password:pw body:nil].send;
 
 	if (response.success) {
+        _username = un;
 		NSString *sessionID = NILL([response.body valueForKeyPath:@"session.id"]);
         [FSURL setSessionID:sessionID];
 	}
@@ -60,7 +60,8 @@ static FSPerson *__treePerson = nil;
 
 - (FSPerson *)treePerson
 {
-    return __treePerson ? __treePerson : [FSPerson personWithIdentifier:@"me"];
+    if (!_treePerson) _treePerson = [FSPerson personWithIdentifier:@"me"];
+    return _treePerson;
 }
 
 - (MTPocketResponse *)fetch
@@ -122,7 +123,10 @@ static FSPerson *__treePerson = nil;
 	NSURL *url = [FSURL urlWithModule:@"identity" version:2 resource:@"logout" identifiers:nil params:0 misc:nil];
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
     if (response.success) {
-        __treePerson = nil;
+        _username       = nil;
+        _treePerson     = nil;
+        _info           = nil;
+        _permissions    = nil;
         [FSURL setSessionID:nil];
     }
     return response;

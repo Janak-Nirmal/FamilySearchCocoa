@@ -104,6 +104,7 @@ typedef enum {
 
 #pragma mark - Getting A Person
 + (FSPerson *)personWithIdentifier:(NSString *)identifier;
++ (FSPerson *)newPerson;
 
 
 #pragma mark - Syncing
