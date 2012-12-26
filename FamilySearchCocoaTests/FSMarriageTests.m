@@ -18,7 +18,6 @@
 #import "private.h"
 
 @interface FSMarriageTests ()
-@property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
@@ -30,9 +29,8 @@
 
 	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
 	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-	_sessionID = user.sessionID;
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";
 	_person.gender = @"Male";
 	MTPocketResponse *response = [_person save];
@@ -47,7 +45,7 @@
 	STAssertTrue(_person.marriages.count == 0, nil);
 
 	// add a spouse
-	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *spouse = [FSPerson personWithIdentifier:nil];
 	spouse.name = @"She Guest";
 	spouse.gender = @"Female";
 	FSMarriage *marriage = [FSMarriage marriageWithHusband:(spouse.isMale ? spouse : _person) wife:(spouse.isMale ? _person : spouse)];
@@ -65,7 +63,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert marriage event was added
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(_person.marriages.count == 1, nil);
@@ -79,7 +77,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert marriage event was removed
-	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
+	person = [FSPerson personWithIdentifier:person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.children.count == 0, nil);
@@ -92,7 +90,7 @@
 	MTPocketResponse *response;
 
 	// add a spouse
-	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *spouse = [FSPerson personWithIdentifier:nil];
 	spouse.name = @"She Guest";
 	spouse.gender = @"Female";
 	FSMarriage *marriage = [FSMarriage marriageWithHusband:_person wife:spouse];
@@ -108,7 +106,7 @@
 	STAssertTrue(response.success, nil);
 
 	// read and check the properties were added on the server
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	FSMarriage *m = [person marriageWithSpouse:spouse];

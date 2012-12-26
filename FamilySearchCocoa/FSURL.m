@@ -59,15 +59,6 @@ NSString *queryStringWithParameters(FSQueryParameter parameters)
 @implementation FSURL
 
 
-- (id)initWithSessionID:(NSString *)sessionID
-{
-    self = [super init];
-    if (self) {
-        _sessionID = sessionID;
-    }
-    return self;
-}
-
 static BOOL __sandboxed = YES;
 
 + (void)setSandboxed:(BOOL)sandboxed
@@ -75,7 +66,14 @@ static BOOL __sandboxed = YES;
 	__sandboxed = sandboxed;
 }
 
-- (NSURL *)urlWithModule:(NSString *)module
+static NSString *__sessionID = nil;
+
++ (void)setSessionID:(NSString *)sessionID
+{
+    __sessionID = sessionID;
+}
+
++ (NSURL *)urlWithModule:(NSString *)module
 				 version:(NSUInteger)version
 				resource:(NSString *)resource
 			 identifiers:(NSArray *)identifiers
@@ -95,7 +93,7 @@ static BOOL __sandboxed = YES;
 	if (params)		[paramsArray addObject:queryStringWithParameters(params)];
 	if (misc)		[paramsArray addObject:misc];
 
-	if (_sessionID) [paramsArray addObject:[NSString stringWithFormat:@"sessionId=%@", _sessionID]];
+	if (__sessionID) [paramsArray addObject:[NSString stringWithFormat:@"sessionId=%@", __sessionID]];
 	[paramsArray addObject:@"agent=akirk-at-familysearch-dot-org/1.0"];
 	[url appendString:[paramsArray componentsJoinedByString:@"&"]];
 

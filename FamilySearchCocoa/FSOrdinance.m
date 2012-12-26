@@ -53,16 +53,13 @@
 + (MTPocketResponse *)fetchOrdinancesForPeople:(NSArray *)people
 {
 	if (people.count == 0) return nil;
-	FSPerson *anyPerson = [people lastObject];
-	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in 'people' must have a valid 'sessionID'");
 
 	NSMutableArray *identifiers = [NSMutableArray array];
 	for (FSPerson *person in people) {
 		if (person.identifier) [identifiers addObject:person.identifier];
 	}
 
-	FSURL *fsURL = [[FSURL alloc] initWithSessionID:anyPerson.sessionID];
-	NSURL *url = [fsURL urlWithModule:@"reservation"
+	NSURL *url = [FSURL urlWithModule:@"reservation"
 							  version:1
 							 resource:@"person"
 						  identifiers:identifiers
@@ -76,7 +73,7 @@
 		NSArray *peopleDictionaries = NILL([response.body valueForKeyPath:@"persons.person"]);
 		for (NSDictionary *personDictionary in peopleDictionaries) {
 			
-			FSPerson *person = [FSPerson personWithSessionID:anyPerson.sessionID identifier:personDictionary[@"ref"]];
+			FSPerson *person = [FSPerson personWithIdentifier:personDictionary[@"ref"]];
 
 			NSString *notes = NILL([personDictionary valueForComplexKeyPath:@"userNotifications.userNotification[first].message"]);
 
@@ -121,7 +118,7 @@
 					// PREREQS
 					NSArray *preReqPeople = NILL([ordinanceDictionary valueForKeyPath:@"prerequisitesForTrip"]);
 					for (NSDictionary *preReqPersonDictionary in preReqPeople) {
-						FSPerson *preReqPerson = [FSPerson personWithSessionID:anyPerson.sessionID identifier:preReqPersonDictionary[@"ref"]];
+						FSPerson *preReqPerson = [FSPerson personWithIdentifier:preReqPersonDictionary[@"ref"]];
 						for (NSString *ordName in [FSOrdinance ordinanceTypes]) {
 							NSString *reservationType = [FSOrdinance reservationTypeFromOrdinanceType:ordName];
 							NSArray *preReqOrdinanceDictionaries = [preReqPersonDictionary valueForComplexKeyPath:reservationType];
@@ -139,7 +136,7 @@
 					// PARENTS
 					NSArray *parents = NILL([ordinanceDictionary valueForKeyPath:@"parent"]);
 					for (NSDictionary *parent in parents) {
-						FSPerson *p = [FSPerson personWithSessionID:anyPerson.sessionID identifier:parent[@"ref"]];
+						FSPerson *p = [FSPerson personWithIdentifier:parent[@"ref"]];
 						p.name = NILL([parent valueForKeyPath:@"qualification.name.fullText"]);
 						[p addOrReplaceOrdinance:ordinance];
 					}
@@ -147,7 +144,7 @@
 					// SPOUSES
 					NSArray *spouses = NILL([ordinanceDictionary valueForKeyPath:@"spouses"]);
 					for (NSDictionary *spouse in spouses) {
-						FSPerson *p = [FSPerson personWithSessionID:anyPerson.sessionID identifier:spouse[@"ref"]];
+						FSPerson *p = [FSPerson personWithIdentifier:spouse[@"ref"]];
 						p.name = NILL([spouse valueForKeyPath:@"qualification.name.fullText"]);
 						[p addOrReplaceOrdinance:ordinance];
 					}
@@ -163,31 +160,30 @@
 	return response;
 }
 
-+ (MTPocketResponse *)people:(NSArray **)people reservedByCurrentUserWithSessionID:(NSString *)sessionID;
++ (NSArray *)peopleReservedByCurrentUserWithResponse:(MTPocketResponse **)response
 {
-	if (!sessionID) raiseParamException(@"sessionID");
-
-	FSURL *fsURL = [[FSURL alloc] initWithSessionID:sessionID];
-	NSURL *url = [fsURL urlWithModule:@"reservation"
+	NSURL *url = [FSURL urlWithModule:@"reservation"
 							  version:1
 							 resource:@"person"
 						  identifiers:nil
 							   params:0
 								 misc:nil];
 
-    MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
+    MTPocketResponse *resp = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
-	if (response.success) {
-		*people = [NSMutableArray array];
-		NSArray *persons = NILL([response.body valueForKeyPath:@"persons.person"]);
+    NSMutableArray *people = [NSMutableArray array];
+	if (resp.success) {
+		NSArray *persons = NILL([resp.body valueForKeyPath:@"persons.person"]);
 		for (NSDictionary *personDictionary in persons) {
 			NSString *identifier = NILL([personDictionary valueForKeyPath:@"ref"]);
-			FSPerson *person = [FSPerson personWithSessionID:sessionID identifier:identifier];
-			[(NSMutableArray *)*people addObject:person];
+			FSPerson *person = [FSPerson personWithIdentifier:identifier];
+			[people addObject:person];
 		}
 	}
 
-	return response;
+    *response = resp;
+
+    return people;
 }
 
 
@@ -198,8 +194,6 @@
 + (MTPocketResponse *)reserveOrdinancesForPeople:(NSArray *)people inventory:(FSOrdinanceInventoryType)inventory
 {
 	if (people.count == 0) raiseParamException(@"people");
-	FSPerson *anyPerson = [people lastObject];
-	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in 'people' must have a valid 'sessionID'");
 
 	// For each person, reserve the ordinances
 	NSMutableArray *personDictionaries = [NSMutableArray array];
@@ -229,7 +223,7 @@
 
 
 					if (!foundSpouse) {
-						FSPerson *spouse = [FSPerson personWithSessionID:anyPerson.sessionID identifier:nil];
+						FSPerson *spouse = [FSPerson personWithIdentifier:nil];
 						spouse.name			= @"No Name";
 						spouse.gender		= parent.isMale ? @"Female" : @"Male";
 						spouse.deathDate	= [NSDateComponents componentsFromString:@"1 January 1900"];
@@ -311,8 +305,7 @@
 	
 	NSDictionary *body = @{ @"persons" : @{ @"person" : personDictionaries } };
 
-	FSURL *fsURL = [[FSURL alloc] initWithSessionID:anyPerson.sessionID];
-	NSURL *url = [fsURL urlWithModule:@"reservation"
+	NSURL *url = [FSURL urlWithModule:@"reservation"
 							  version:1
 							 resource:@"person"
 						  identifiers:nil
@@ -327,8 +320,6 @@
 + (MTPocketResponse *)unreserveOrdinancesForPeople:(NSArray *)people
 {
 	if (people.count == 0) raiseParamException(@"people");
-	FSPerson *anyPerson = [people lastObject];
-	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in 'people' must have a valid 'sessionID'");
 
 	// For each person, reserve the ordinances
 	NSMutableArray *personDictionaries = [NSMutableArray array];
@@ -341,8 +332,7 @@
 	
 	NSDictionary *body = @{ @"persons" : @{ @"person" : personDictionaries } };
 
-	FSURL *fsURL = [[FSURL alloc] initWithSessionID:anyPerson.sessionID];
-	NSURL *url = [fsURL urlWithModule:@"reservation"
+	NSURL *url = [FSURL urlWithModule:@"reservation"
 							  version:1
 							 resource:@"person"
 						  identifiers:nil
@@ -362,8 +352,6 @@
 + (NSURL *)familyOrdinanceRequestPDFURLForPeople:(NSArray *)people response:(MTPocketResponse **)response
 {
 	if (people.count == 0) raiseParamException(@"people");
-	FSPerson *anyPerson = [people lastObject];
-	if (!anyPerson.sessionID) raiseException(@"Required sessionID nil", @"Every FSPerson in 'people' must have a valid 'sessionID'");
 
     NSURL *PDFURL = nil;
 
@@ -422,8 +410,7 @@
 								}
 							};
 
-		FSURL *fsURL = [[FSURL alloc] initWithSessionID:anyPerson.sessionID];
-		NSURL *url = [fsURL urlWithModule:@"reservation"
+		NSURL *url = [FSURL urlWithModule:@"reservation"
 								  version:1
 								 resource:@"trip"
 							  identifiers:nil
@@ -434,12 +421,12 @@
 
 		if (resp.success) {
 			NSString *identifier = NILL([resp.body valueForComplexKeyPath:@"trips.trip[first].id"]);
-			PDFURL = [fsURL urlWithModule:@"reservation"
-								   version:1
-								  resource:[NSString stringWithFormat:@"trip/%@/pdf", identifier]
-							   identifiers:nil
-									params:0
-									  misc:nil];
+			PDFURL = [FSURL urlWithModule:@"reservation"
+                                  version:1
+                                 resource:[NSString stringWithFormat:@"trip/%@/pdf", identifier]
+                              identifiers:nil
+                                   params:0
+                                     misc:nil];
 		}
 	}
 	

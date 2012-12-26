@@ -17,7 +17,6 @@
 
 
 @interface FSArtifactTests ()
-@property (strong, nonatomic) NSString  *sessionID;
 @property (strong, nonatomic) FSPerson  *person;
 @end
 
@@ -31,9 +30,8 @@
 
     FSUser *user = [[FSUser alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
 	[user loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
-    _sessionID = user.sessionID;
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:PRODUCTION_PERSON_ID];
+	_person = [FSPerson personWithIdentifier:PRODUCTION_PERSON_ID];
 }
 
 - (void)testArtifacts
@@ -44,7 +42,7 @@
 	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
 
     // upload
-	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG];
     artifact.title = @"test";
     artifact.description = @"testdescription";
     artifact.originalFilename = @"unit_test.jpg";
@@ -63,7 +61,7 @@
 
 
     // fetch
-    FSArtifact *fetchedArtifact = [FSArtifact artifactWithIdentifier:artifact.identifier sessionID:_sessionID];
+    FSArtifact *fetchedArtifact = [FSArtifact artifactWithIdentifier:artifact.identifier];
     response = [fetchedArtifact fetch];
     STAssertTrue(response.success, nil);
     STAssertNotNil(fetchedArtifact.category, nil);
@@ -83,7 +81,7 @@
     artifact.description = testDesc;
     response = [artifact save];
     STAssertTrue(response.success, nil);
-    fetchedArtifact = [FSArtifact artifactWithIdentifier:artifact.identifier sessionID:_sessionID];
+    fetchedArtifact = [FSArtifact artifactWithIdentifier:artifact.identifier];
     response = [fetchedArtifact fetch];
     STAssertTrue(response.success, nil);
     STAssertTrue([fetchedArtifact.title isEqualToString:testTitle], nil);
@@ -102,7 +100,7 @@
 	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
 
     // create artifact
-	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG];
     artifact.originalFilename = @"unit_test.jpg";
 
     // add tag
@@ -135,7 +133,7 @@
 	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
 
     // create artifact
-	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG];
 
     // add tag
     FSArtifactTag *tag = [FSArtifactTag tagWithPerson:_person title:@"Don Kirk" rect:CGRectMake(0, 0, 1, 1)];
@@ -166,7 +164,7 @@
 	NSString *imagePath = [bundle pathForResource:@"arthur-young" ofType:@"jpg"];
 
     // create artifact
-	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG sessionID:_sessionID];
+	FSArtifact *artifact = [FSArtifact artifactWithData:[NSData dataWithContentsOfFile:imagePath] MIMEType:FSArtifactMIMETypeImagePNG];
     artifact.originalFilename = @"unit_test.jpg";
 
     // add tag
@@ -176,7 +174,7 @@
 	STAssertTrue(response.success, nil);
     STAssertNotNil(tag.identifier, nil);
 
-    NSArray *artifacts = [FSArtifact artifactsUploadedByCurrentUserWithSessionID:_sessionID response:&response];
+    NSArray *artifacts = [FSArtifact artifactsUploadedByCurrentUserWithResponse:&response];
     STAssertTrue(response.success, nil);
     STAssertTrue(artifacts.count > 0, nil);
 }

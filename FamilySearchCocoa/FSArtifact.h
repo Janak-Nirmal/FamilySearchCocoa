@@ -79,11 +79,11 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 
 
 #pragma mark - Creating Artifacts
-+ (FSArtifact *)artifactWithData:(NSData *)data MIMEType:(FSArtifactMIMEType)MIMEType sessionID:(NSString *)sessionID;              // For creating and uploading a new artifact
-+ (FSArtifact *)artifactWithIdentifier:(NSString *)identifier sessionID:(NSString *)sessiongID;                                     // For fetching an existing artifact
++ (FSArtifact *)artifactWithData:(NSData *)data MIMEType:(FSArtifactMIMEType)MIMEType;                                              // For creating and uploading a new artifact
++ (FSArtifact *)artifactWithIdentifier:(NSString *)identifier;                                                                      // For fetching an existing artifact
 + (NSArray *)artifactsForPerson:(FSPerson *)person category:(FSArtifactCategory)category response:(MTPocketResponse **)response;    // This will block, do not call on main thread.
 + (FSArtifact *)portraitArtifactForPerson:(FSPerson *)person response:(MTPocketResponse **)response;                                // This will block, do not call on main thread.
-+ (NSArray *)artifactsUploadedByCurrentUserWithSessionID:(NSString *)sessionID response:(MTPocketResponse **)response;              // This will block, do not call on main thread.
++ (NSArray *)artifactsUploadedByCurrentUserWithResponse:(MTPocketResponse **)response;              // This will block, do not call on main thread.
 
 
 #pragma mark - Syncing

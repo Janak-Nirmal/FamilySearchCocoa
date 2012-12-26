@@ -14,7 +14,6 @@
 
 
 @interface FSSearchTests ()
-@property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
@@ -27,9 +26,8 @@
 
 	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
 	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-	_sessionID = user.sessionID;
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";
 	_person.gender = @"Male";
 	MTPocketResponse *response = [_person save];
@@ -40,7 +38,7 @@
 {
 	MTPocketResponse *response;
 
-	FSSearch *search = [[FSSearch alloc] initWithSessionID:_sessionID];
+	FSSearch *search = [[FSSearch alloc] init];
 	[search addValue:@"Nathan" forCriteria:FSSearchCriteriaName onRelative:FSSearchRelativeTypeSelf matchingExactly:NO];
 	FSSearchResults *results = [search results];
 

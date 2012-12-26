@@ -41,9 +41,6 @@ typedef NSString * FSSearchCriteria;
 
 @property (nonatomic) NSUInteger batchSize;			// Default: 10
 
-#pragma mark - Create Search
-- (id)initWithSessionID:(NSString *)sessionID;
-
 #pragma mark - Criteria
 - (void)addValue:(NSString *)value forCriteria:(FSSearchCriteria)criteria onRelative:(FSSearchRelativeType)relative matchingExactly:(BOOL)exact;
 

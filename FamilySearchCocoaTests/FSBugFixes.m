@@ -13,7 +13,6 @@
 
 
 @interface FSBugFixes ()
-@property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
@@ -28,9 +27,8 @@
 
 	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
 	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-	_sessionID = user.sessionID;
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";
 	_person.gender = @"Male";
 	MTPocketResponse *response = [_person save];
@@ -41,7 +39,7 @@
 {
 	MTPocketResponse *response = nil;
 
-	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *father = [FSPerson personWithIdentifier:nil];
 	father.name = @"Nathan Kirk";
 	father.gender = @"Male";
 	response = [father save];
@@ -51,7 +49,7 @@
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
-	FSPerson *mother = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *mother = [FSPerson personWithIdentifier:nil];
 	mother.name = @"Jackie Taylor";
 	mother.gender = @"Female";
 	response = [mother save];
@@ -61,7 +59,7 @@
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetchAncestors:2];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 2, nil);
