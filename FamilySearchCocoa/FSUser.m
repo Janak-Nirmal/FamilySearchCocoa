@@ -36,6 +36,7 @@
         _username   = username;
         _password   = password;
         _devKey     = devKey;
+        _loggedIn   = NO;
     }
     return self;
 }
@@ -55,6 +56,7 @@
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON username:_username password:_password body:nil].send;
 
 	if (response.success) {
+        _loggedIn = YES;
 		NSString *sessionID = NILL([response.body valueForKeyPath:@"session.id"]);
         [FSURL setSessionID:sessionID];
 	}
@@ -127,6 +129,7 @@
 	NSURL *url = [FSURL urlWithModule:@"identity" version:2 resource:@"logout" identifiers:nil params:0 misc:nil];
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
     if (response.success) {
+        _loggedIn       = NO;
         _username       = nil;
         _treePerson     = nil;
         _info           = nil;
