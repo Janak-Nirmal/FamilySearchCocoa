@@ -38,7 +38,8 @@
 }
 
 - (MTPocketResponse *)loginWithUsername:(NSString *)un password:(NSString *)pw
-{	
+{
+    _url.sessionID = nil;
 	NSURL *url = [_url urlWithModule:@"identity"
 							 version:2
 							resource:@"login"
