@@ -132,4 +132,6 @@
 	STAssertTrue([person.deathPlace	isEqualToString:deathPlace],		nil);
 }
 
+
+
 @end
