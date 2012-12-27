@@ -28,8 +28,8 @@
 {
 	[FSURL setSandboxed:NO];
 
-    FSUser *user = [[FSUser alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
-	[user loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
+    FSUser *user = [[FSUser alloc] initWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD developerKey:PRODUCTION_DEV_KEY];
+	[user login];
 
 	_person = [FSPerson personWithIdentifier:PRODUCTION_PERSON_ID];
 }

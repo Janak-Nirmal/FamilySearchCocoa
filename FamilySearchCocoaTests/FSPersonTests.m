@@ -27,8 +27,8 @@
 {
 	[FSURL setSandboxed:YES];
 
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	[user login];
 
 	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";
@@ -41,8 +41,8 @@
 {
 	[FSURL setSandboxed:NO];
 
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
-	[user loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
+	FSUser *user = [[FSUser alloc] initWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD developerKey:PRODUCTION_DEV_KEY];
+    [user login];
 
 	_person = [FSPerson personWithIdentifier:@"KPQH-N6L"]; // Don Kirk, my real grandpa
 }
@@ -60,8 +60,8 @@
 
 	}
 
-    FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+    FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	[user login];
     FSPerson *me = [user treePerson];
 
     response = [me fetch];

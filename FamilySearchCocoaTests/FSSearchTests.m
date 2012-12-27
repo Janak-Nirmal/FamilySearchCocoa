@@ -24,8 +24,8 @@
 {
 	[FSURL setSandboxed:YES];
 
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	[user login];
 
 	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";

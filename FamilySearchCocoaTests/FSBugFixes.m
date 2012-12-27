@@ -7,6 +7,7 @@
 //
 
 #import "FSBugFixes.h"
+#import <NSDateComponents+MTDates.h>
 #import "private.h"
 #import "FSSearch.h"
 #import "constants.h"
@@ -25,8 +26,8 @@
 {
 	[FSURL setSandboxed:YES];
 
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	[user login];
 
 	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";
@@ -63,6 +64,39 @@
 	response = [person fetchAncestors:2];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 2, nil);
+}
+
+- (void)testSaveAPersonMultipleTimes
+{
+    MTPocketResponse *response = nil;
+
+    // create and add event to person
+	FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeBirth identifier:nil];
+	event.date = [NSDateComponents componentsFromString:@"11 August 1994"];
+	event.place = @"Kennewick, WA";
+	[_person addEvent:event];
+	response = [_person save];
+	STAssertTrue(response.success, nil);
+
+    response = [_person fetch];
+    STAssertTrue(response.success, nil);
+
+    event = [_person.events lastObject];
+    event.place = @"Farmington, UT";
+
+    response = [_person save];
+    STAssertTrue(response.success, nil);
+
+	event.date = [NSDateComponents componentsFromString:@"11 July 1994"];
+
+    response = [_person save];
+    STAssertTrue(response.success, nil);
+
+    response = [_person save];
+    STAssertTrue(response.success, nil);
+
+    response = [_person save];
+    STAssertTrue(response.success, nil);
 }
 
 @end

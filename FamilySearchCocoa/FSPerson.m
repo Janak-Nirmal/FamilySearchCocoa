@@ -19,6 +19,7 @@
 
 
 @interface FSPerson ()
+@property (strong, nonatomic)   NSString            *version;
 @property (strong, nonatomic)	NSMutableArray		*properties;
 @property (strong, nonatomic)	NSMutableDictionary	*characteristics;
 @property (strong, nonatomic)	NSMutableArray		*relationships;
@@ -219,6 +220,7 @@
 
 	NSMutableDictionary *personDict = [NSMutableDictionary dictionary];
 	if (_identifier)				personDict[@"id"] = _identifier;
+    if (_version)                   personDict[@"version"] = _version;
 	if (assertions.count > 0)		personDict[@"assertions"] = assertions;
 
 	NSDictionary *body = @{ @"persons" : @[ personDict ] };
@@ -1045,6 +1047,7 @@
 {
 	// GENERAL INFO
 	_identifier			= person[@"id"];
+    _version            = NILL([person valueForKeyPath:@"version"]);
 	_isAlive			= [NILL([person valueForKeyPath:@"properties.living"]) intValue] == YES;
 	_isModifiable		= [NILL([person valueForKeyPath:@"properties.modifiable"]) intValue] == YES;
 	_lastModifiedDate	= [NSDate dateWithTimeIntervalSince1970:[NILL([person valueForKeyPath:@"properties.modified"]) intValue]];
