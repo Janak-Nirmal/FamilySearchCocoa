@@ -243,6 +243,7 @@
 
 		for (FSEvent *event in [_events copy]) {
 			if (event.isDeleted) [(NSMutableArray *)_events removeObject:event];
+            event.changed = NO;
 		}
 
 		// RELATIONSHIPS

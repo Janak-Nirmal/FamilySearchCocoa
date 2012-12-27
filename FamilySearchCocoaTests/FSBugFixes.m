@@ -66,37 +66,5 @@
 	STAssertTrue(person.parents.count == 2, nil);
 }
 
-- (void)testSaveAPersonMultipleTimes
-{
-    MTPocketResponse *response = nil;
-
-    // create and add event to person
-	FSEvent *event = [FSEvent eventWithType:FSPersonEventTypeBirth identifier:nil];
-	event.date = [NSDateComponents componentsFromString:@"11 August 1994"];
-	event.place = @"Kennewick, WA";
-	[_person addEvent:event];
-	response = [_person save];
-	STAssertTrue(response.success, nil);
-
-    response = [_person fetch];
-    STAssertTrue(response.success, nil);
-
-    event = [_person.events lastObject];
-    event.place = @"Farmington, UT";
-
-    response = [_person save];
-    STAssertTrue(response.success, nil);
-
-	event.date = [NSDateComponents componentsFromString:@"11 July 1994"];
-
-    response = [_person save];
-    STAssertTrue(response.success, nil);
-
-    response = [_person save];
-    STAssertTrue(response.success, nil);
-
-    response = [_person save];
-    STAssertTrue(response.success, nil);
-}
 
 @end

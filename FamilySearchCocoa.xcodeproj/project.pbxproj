@@ -165,7 +165,6 @@
 		C2ABA77415D573EF000A34A1 = {
 			isa = PBXGroup;
 			children = (
-				C2626F0416664BFC001AD7BB /* UIKit.framework */,
 				C2ABA78415D573EF000A34A1 /* FamilySearchCocoa */,
 				C2ABA79915D573EF000A34A1 /* FamilySearchCocoaTests */,
 				C2ABA78115D573EF000A34A1 /* Frameworks */,
@@ -186,6 +185,7 @@
 		C2ABA78115D573EF000A34A1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2626F0416664BFC001AD7BB /* UIKit.framework */,
 				C2626F0016664035001AD7BB /* CoreGraphics.framework */,
 				C2ABA78215D573EF000A34A1 /* Foundation.framework */,
 				C2ABA79115D573EF000A34A1 /* SenTestingKit.framework */,
