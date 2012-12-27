@@ -90,9 +90,8 @@ FSQueryParameter defaultQueryParameters();
 FSQueryParameter familyQueryParameters();
 
 @interface FSURL ()
-@property (strong, nonatomic) NSString *sessionID;
-- (id)initWithSessionID:(NSString *)sessionID;
-- (NSURL *)urlWithModule:(NSString *)module
++ (void)setSessionID:(NSString *)sessionID;
++ (NSURL *)urlWithModule:(NSString *)module
 				 version:(NSUInteger)version
 				resource:(NSString *)resource
 			 identifiers:(NSArray *)identifiers
@@ -116,7 +115,6 @@ FSQueryParameter familyQueryParameters();
 
 
 @interface FSMarriage ()
-@property (strong, nonatomic)	FSURL				*url;
 @property (strong, nonatomic)	NSMutableDictionary	*characteristics;
 @property (nonatomic)			NSInteger			version;
 @property (getter = isChanged)	BOOL				changed;	// is newly created or updated and needs to be updated on the server

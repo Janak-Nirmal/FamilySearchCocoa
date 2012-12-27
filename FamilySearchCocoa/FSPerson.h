@@ -87,7 +87,6 @@ typedef enum {
 @interface FSPerson : NSObject
 
 @property (readonly)		  NSString	*identifier;
-@property (strong, nonatomic) NSString	*sessionID;
 @property (readonly)		  BOOL		isAlive;				// Default: YES. You must add a death event for the system to return NO. Not editable by user.
 @property (readonly)		  BOOL		isModifiable;			// Can be modified by the current logged in contributor
 @property (readonly)		  BOOL		isNew;					// Has been created on the client but has not be saved to the server
@@ -104,8 +103,8 @@ typedef enum {
 
 
 #pragma mark - Getting A Person
-+ (FSPerson *)currentUserWithSessionID:(NSString *)sessionID;
-+ (FSPerson *)personWithSessionID:(NSString *)sessionID identifier:(NSString *)identifier;
++ (FSPerson *)personWithIdentifier:(NSString *)identifier;
++ (FSPerson *)newPerson;
 
 
 #pragma mark - Syncing

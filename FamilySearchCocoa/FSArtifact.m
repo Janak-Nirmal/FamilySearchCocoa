@@ -28,8 +28,6 @@
 
 
 @interface FSArtifact ()
-@property (strong, nonatomic) NSString *sessionID;
-@property (strong, nonatomic) FSURL *connectionURL;
 @property (strong, nonatomic) NSArray *tags;
 @end
 
@@ -39,27 +37,26 @@
 @implementation FSArtifact
 
 
-- (id)initWithIdentifier:(NSString *)identifier data:(NSData *)data MIMEType:(FSArtifactMIMEType)MIMEType sessionID:(NSString *)sessionID
+- (id)initWithIdentifier:(NSString *)identifier data:(NSData *)data MIMEType:(FSArtifactMIMEType)MIMEType
 {
     self = [super init];
     if (self) {
         _identifier = identifier;
 		_data       = data;
 		_MIMEType	= MIMEType;
-        _sessionID  = sessionID;
         _tags       = [NSMutableArray array];
     }
     return self;
 }
 
-+ (FSArtifact *)artifactWithData:(NSData *)data MIMEType:(FSArtifactMIMEType)MIMEType sessionID:(NSString *)sessionID
++ (FSArtifact *)artifactWithData:(NSData *)data MIMEType:(FSArtifactMIMEType)MIMEType
 {
-	return [[FSArtifact alloc] initWithIdentifier:nil data:data MIMEType:MIMEType sessionID:sessionID];
+	return [[FSArtifact alloc] initWithIdentifier:nil data:data MIMEType:MIMEType];
 }
 
-+ (FSArtifact *)artifactWithIdentifier:(NSString *)identifier sessionID:(NSString *)sessiongID
++ (FSArtifact *)artifactWithIdentifier:(NSString *)identifier
 {
-    return [[FSArtifact alloc] initWithIdentifier:identifier data:nil MIMEType:FSArtifactMIMETypeImagePNG sessionID:sessiongID];
+    return [[FSArtifact alloc] initWithIdentifier:identifier data:nil MIMEType:FSArtifactMIMETypeImagePNG];
 }
 
 + (NSArray *)artifactsForPerson:(FSPerson *)person category:(FSArtifactCategory)category response:(MTPocketResponse **)response
@@ -69,13 +66,12 @@
     NSMutableArray *params = [NSMutableArray array];
     if (category) [params addObject:[NSString stringWithFormat:@"artifactCategory=%@", category]];
 
-    FSURL *connectionURL = [[FSURL alloc] initWithSessionID:person.sessionID];
-    NSURL *url = [connectionURL  urlWithModule:@"artifactmanager"
-                                      version:0
-                                     resource:[NSString stringWithFormat:@"persons/personsByTreePersonId/%@/artifacts", person.identifier]
-                                  identifiers:nil
-                                       params:0
-                                         misc:[params componentsJoinedByString:@"&"]];
+    NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:[NSString stringWithFormat:@"persons/personsByTreePersonId/%@/artifacts", person.identifier]
+                          identifiers:nil
+                               params:0
+                                 misc:[params componentsJoinedByString:@"&"]];
 
     MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
@@ -83,7 +79,7 @@
     if (resp.success) {
         NSMutableArray *artifactsArray = [NSMutableArray array];
         for (NSDictionary *artifactDict in resp.body[@"artifact"]) {
-            FSArtifact *artifact = [FSArtifact artifactWithIdentifier:artifactDict[@"id"] sessionID:person.sessionID];
+            FSArtifact *artifact = [FSArtifact artifactWithIdentifier:artifactDict[@"id"]];
             [artifact populateFromDictionary:artifactDict];
             [artifactsArray addObject:artifact];
         }
@@ -97,13 +93,12 @@
 {
     if (!person || !person.identifier) raiseParamException(@"person");
 
-    FSURL *connectionURL = [[FSURL alloc] initWithSessionID:person.sessionID];
-    NSURL *url = [connectionURL  urlWithModule:@"artifactmanager"
-                                       version:0
-                                      resource:[NSString stringWithFormat:@"persons/personsByTreePersonId/%@", person.identifier]
-                                   identifiers:nil
-                                        params:0
-                                          misc:@"includePortraitArtifact=true"];
+    NSURL *url = [FSURL  urlWithModule:@"artifactmanager"
+                               version:0
+                              resource:[NSString stringWithFormat:@"persons/personsByTreePersonId/%@", person.identifier]
+                           identifiers:nil
+                                params:0
+                                  misc:@"includePortraitArtifact=true"];
 
     MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
@@ -113,7 +108,7 @@
         for (NSDictionary *taggedPersonDict in taggedPersons) {
             NSDictionary *portraitArtifactDict = NILL(taggedPersonDict[@"portraitArtifact"]);
             if (portraitArtifactDict) {
-                FSArtifact *portraitArtifact = [FSArtifact artifactWithIdentifier:nil sessionID:person.sessionID];
+                FSArtifact *portraitArtifact = [FSArtifact artifactWithIdentifier:nil];
                 [portraitArtifact populateFromDictionary:portraitArtifactDict];
                 return portraitArtifact;
             }
@@ -123,22 +118,21 @@
     return nil;
 }
 
-+ (NSArray *)artifactsUploadedByCurrentUserWithSessionID:(NSString *)sessionID response:(MTPocketResponse **)response
++ (NSArray *)artifactsUploadedByCurrentUserWithResponse:(MTPocketResponse **)response
 {
-    FSURL *connectionURL = [[FSURL alloc] initWithSessionID:sessionID];
-    NSURL *url = [connectionURL  urlWithModule:@"artifactmanager"
-                                       version:0
-                                      resource:@"users/unknown/artifacts"
-                                   identifiers:nil
-                                        params:0
-                                          misc:@"includeTags=true"];
+    NSURL *url = [FSURL  urlWithModule:@"artifactmanager"
+                               version:0
+                              resource:@"users/unknown/artifacts"
+                           identifiers:nil
+                                params:0
+                                  misc:@"includeTags=true"];
 
     MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
     if (resp.success) {
         NSMutableArray *artifacts = [NSMutableArray array];
         for (NSDictionary *artifactDict in resp.body[@"artifact"]) {
-            FSArtifact *artifact = [FSArtifact artifactWithIdentifier:nil sessionID:sessionID];
+            FSArtifact *artifact = [FSArtifact artifactWithIdentifier:nil];
             [artifact populateFromDictionary:artifactDict];
             [artifacts addObject:artifact];
         }
@@ -156,12 +150,12 @@
 {
 	if (!_identifier) raiseException(@"Nil identifier", @"You must set the identifier before you can call fetch.");
 
-    NSURL *url = [self.connectionURL urlWithModule:@"artifactmanager"
-										   version:0
-										  resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
-									   identifiers:nil
-											params:0
-											  misc:nil];
+    NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
+                          identifiers:nil
+                               params:0
+                                 misc:nil];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
@@ -181,12 +175,12 @@
 	[params addObject:[NSString stringWithFormat:@"filename=%@", (_originalFilename ? _originalFilename : [[NSUUID UUID] UUIDString])]];
     if (_category) 	[params addObject:[NSString stringWithFormat:@"artifactCategory=%@", _category]];
 
-	NSURL *url = [self.connectionURL urlWithModule:@"artifactmanager"
-										   version:0
-										  resource:@"artifacts/files"
-									   identifiers:nil
-											params:0
-											  misc:[params componentsJoinedByString:@"&"]];
+	NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:@"artifacts/files"
+                          identifiers:nil
+                               params:0
+                                 misc:[params componentsJoinedByString:@"&"]];
 
 	MTPocketRequest *request = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:_data];
 	request.headers = @{ @"Content-Type" : _MIMEType };
@@ -220,12 +214,12 @@
 {
     if (!_identifier) raiseException(@"Nil identifier", @"You must set the identifier before you can call fetch.");
 
-	NSURL *url = [self.connectionURL urlWithModule:@"artifactmanager"
-										   version:0
-										  resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
-									   identifiers:nil
-											params:0
-											  misc:nil];
+	NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
+                          identifiers:nil
+                               params:0
+                                 misc:nil];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil].send;
 
@@ -268,12 +262,12 @@
 
 - (MTPocketResponse *)fetchAsPortraitForPerson:(FSPerson *)person
 {
-	NSURL *url = [self.connectionURL urlWithModule:@"artifactmanager"
-										   version:0
-										  resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
-									   identifiers:nil
-											params:0
-											  misc:nil];
+	NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
+                          identifiers:nil
+                               params:0
+                                 misc:nil];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil].send;
 
@@ -290,20 +284,14 @@
 
 #pragma mark - Private
 
-- (FSURL *)connectionURL
-{
-	if (!_connectionURL) _connectionURL = [[FSURL alloc] initWithSessionID:_sessionID];
-	return _connectionURL;
-}
-
 - (MTPocketResponse *)update
 {
-	NSURL *url = [self.connectionURL urlWithModule:@"artifactmanager"
-										   version:0
-										  resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
-									   identifiers:nil
-											params:0
-											  misc:nil];
+	NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
+                          identifiers:nil
+                               params:0
+                                 misc:nil];
 
 	NSDictionary *body = @{ @"title" : NUL(_title), @"description" : NUL(_description) };
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
@@ -415,12 +403,12 @@
     NSMutableArray *params = [NSMutableArray array];
     [params addObject:[NSString stringWithFormat:@"treePersonId=%@", _person.identifier]];
 
-    NSURL *url = [_artifact.connectionURL urlWithModule:@"artifactmanager"
-										   version:0
-										  resource:[NSString stringWithFormat:@"artifacts/%@/tags", _artifact.identifier]
-									   identifiers:nil
-											params:0
-											  misc:[params componentsJoinedByString:@"&"]];
+    NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:[NSString stringWithFormat:@"artifacts/%@/tags", _artifact.identifier]
+                          identifiers:nil
+                               params:0
+                                 misc:[params componentsJoinedByString:@"&"]];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:[self dictionaryValue]].send;
 
@@ -437,17 +425,17 @@
     if (!_artifact) raiseException(@"No artifact", @"This tag must be added to an artifact before it can be saved");
     if (!_person) raiseException(@"No Person", @"You cannot save a tag until you've set the 'person' property");
 
-    NSURL *url = [_artifact.connectionURL urlWithModule:@"artifactmanager"
-                                                version:0
-                                               resource:[NSString stringWithFormat:@"artifacts/%@/tags/%@/portrait", _artifact.identifier, _identifier]
-                                            identifiers:nil
-                                                 params:0
-                                                   misc:nil];
+    NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:[NSString stringWithFormat:@"artifacts/%@/tags/%@/portrait", _artifact.identifier, _identifier]
+                          identifiers:nil
+                               params:0
+                                 misc:nil];
 
     MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:nil].send;
 
     if (resp.success) {
-        FSArtifact *createdArtifact = [FSArtifact artifactWithIdentifier:nil sessionID:_artifact.sessionID];
+        FSArtifact *createdArtifact = [FSArtifact artifactWithIdentifier:nil];
         [createdArtifact populateFromDictionary:resp.body[@"artifact"]];
         return createdArtifact;
     }
@@ -460,12 +448,12 @@
     if (!_artifact) raiseException(@"No artifact", @"This tag must be added to an artifact before it can be deleted from the server.");
     if (!_identifier) raiseException(@"No identifier", @"You cannot delete a tag with no identifier");
 
-    NSURL *url = [_artifact.connectionURL urlWithModule:@"artifactmanager"
-                                                version:0
-                                               resource:[NSString stringWithFormat:@"artifacts/%@/tags/%@", _artifact.identifier, _identifier]
-                                            identifiers:nil
-                                                 params:0
-                                                   misc:nil];
+    NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                              version:0
+                             resource:[NSString stringWithFormat:@"artifacts/%@/tags/%@", _artifact.identifier, _identifier]
+                          identifiers:nil
+                               params:0
+                                 misc:nil];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodDELETE format:MTPocketFormatJSON body:nil].send;
 

@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 FamilySearch.org. All rights reserved.
 //
 
-@class MTPocketResponse;
+@class MTPocketResponse, FSPerson;
 
 
 extern NSString *const FSUserInfoIDKey;
@@ -31,13 +31,15 @@ extern NSString *const FSUserPermissionAccessDiscussionForums;
 
 @interface FSUser : NSObject
 
-@property (strong, nonatomic) NSString *sessionID;
-@property (strong, nonatomic) NSDictionary *info;
-@property (strong, nonatomic) NSDictionary *permissions;
+@property (strong, nonatomic) NSString      *username;
+@property (strong, nonatomic) NSDictionary  *info;
+@property (strong, nonatomic) NSDictionary  *permissions;
+@property (readonly, getter=isLoggedIn) BOOL loggedIn;
 
-- (id)initWithDeveloperKey:(NSString *)devKey;
-- (MTPocketResponse *)loginWithUsername:(NSString *)un password:(NSString *)pw;
+- (id)initWithUsername:(NSString *)username password:(NSString *)password developerKey:(NSString *)devKey;
+- (MTPocketResponse *)login;
 - (MTPocketResponse *)fetch;
+- (FSPerson *)treePerson;
 - (MTPocketResponse *)logout;
 
 @end

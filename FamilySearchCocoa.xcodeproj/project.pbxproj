@@ -16,7 +16,6 @@
 		C232766915D585C7004EDE08 /* FSUser.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B715D5744F000A34A1 /* FSUser.h */; };
 		C232766A15D585C7004EDE08 /* FSPerson.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C2ABA7B915D5744F000A34A1 /* FSPerson.h */; };
 		C23E813A15FE87C300A92A44 /* FSOrdinanceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C23E813915FE87C300A92A44 /* FSOrdinanceTests.m */; };
-		C24DAA311600EB6A00CB46B9 /* FSTestSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = C24DAA301600EB6A00CB46B9 /* FSTestSupport.m */; };
 		C2626EF716663F48001AD7BB /* FSArtifactTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C2626EF616663F48001AD7BB /* FSArtifactTests.m */; };
 		C2626EFB16663F5F001AD7BB /* FSArtifact.m in Sources */ = {isa = PBXBuildFile; fileRef = C2626EFA16663F5F001AD7BB /* FSArtifact.m */; };
 		C2626F0216664045001AD7BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2626F0016664035001AD7BB /* CoreGraphics.framework */; };
@@ -79,8 +78,6 @@
 		C237CADB15FF7601008CA24B /* FamilySearchCocoa-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FamilySearchCocoa-Prefix.pch"; sourceTree = "<group>"; };
 		C23E813815FE87C300A92A44 /* FSOrdinanceTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSOrdinanceTests.h; sourceTree = "<group>"; };
 		C23E813915FE87C300A92A44 /* FSOrdinanceTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSOrdinanceTests.m; sourceTree = "<group>"; };
-		C24DAA2F1600EB6A00CB46B9 /* FSTestSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSTestSupport.h; sourceTree = "<group>"; };
-		C24DAA301600EB6A00CB46B9 /* FSTestSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSTestSupport.m; sourceTree = "<group>"; };
 		C2626EF516663F48001AD7BB /* FSArtifactTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSArtifactTests.h; sourceTree = "<group>"; };
 		C2626EF616663F48001AD7BB /* FSArtifactTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSArtifactTests.m; sourceTree = "<group>"; };
 		C2626EF916663F5F001AD7BB /* FSArtifact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSArtifact.h; sourceTree = "<group>"; };
@@ -150,8 +147,6 @@
 		C23276DF15D58EF3004EDE08 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				C24DAA2F1600EB6A00CB46B9 /* FSTestSupport.h */,
-				C24DAA301600EB6A00CB46B9 /* FSTestSupport.m */,
 				C23276E015D58F1F004EDE08 /* en.lproj */,
 				C23276E315D58F1F004EDE08 /* FamilySearchCocoaTests-Info.plist */,
 			);
@@ -392,7 +387,6 @@
 				C26EEDB015E7D90E00C7714F /* FSMarriageTests.m in Sources */,
 				C2E8510115F922100027C027 /* FSSearchTests.m in Sources */,
 				C23E813A15FE87C300A92A44 /* FSOrdinanceTests.m in Sources */,
-				C24DAA311600EB6A00CB46B9 /* FSTestSupport.m in Sources */,
 				C2C23DD316446A6800971B0F /* FSBugFixes.m in Sources */,
 				C2626EF716663F48001AD7BB /* FSArtifactTests.m in Sources */,
 			);

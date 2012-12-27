@@ -17,7 +17,6 @@
 #import <NSObject+MTJSONUtils.h>
 
 @interface FSEventTests ()
-@property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
@@ -27,11 +26,10 @@
 {
 	[FSURL setSandboxed:YES];
 
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-	_sessionID = user.sessionID;
+	FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	[user login];
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";
 	_person.gender = @"Male";
 	MTPocketResponse *response = [_person save];
@@ -61,7 +59,7 @@
 	STAssertTrue(response.success, nil);
 
 	// fetch the person and assert the events were added
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.events.count == 2, nil);
@@ -72,7 +70,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert event was removed
-	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
+	person = [FSPerson personWithIdentifier:person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.events.count == 1, nil);
@@ -120,7 +118,7 @@
 	STAssertTrue(response.success, nil);
 
 	// fetch the person and assert the events were added
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.events.count == 2, nil);

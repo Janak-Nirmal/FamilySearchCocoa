@@ -19,16 +19,16 @@
 {
 	[FSURL setSandboxed:YES];
 	
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	MTPocketResponse *response = [user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	MTPocketResponse *response = [user login];
 
 	STAssertNotNil(response.body, @"sessionID was nil");
 }
 
 - (void)testLogout
 {
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	MTPocketResponse *response = [user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+	FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	MTPocketResponse *response = [user login];
     STAssertTrue(response.success, nil);
 
     response = [user logout];
@@ -37,8 +37,8 @@
 
 - (void)testFetch
 {
-    FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-    MTPocketResponse *response = [user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
+    FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+    MTPocketResponse *response = [user login];
     STAssertTrue(response.success, nil);
 
     response = [user fetch];

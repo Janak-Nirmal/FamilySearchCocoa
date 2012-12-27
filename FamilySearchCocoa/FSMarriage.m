@@ -61,7 +61,6 @@
 
     self = [super init];
     if (self) {
-		_url				= [[FSURL alloc] initWithSessionID:husband.sessionID];
 		_husband			= husband;
 		_wife				= wife;
 		_characteristics	= [NSMutableDictionary dictionary];
@@ -88,12 +87,12 @@
 	// empty out this object so it only contains what's on the server
 	[self empty];
 
-	NSURL *url = [self.url urlWithModule:@"familytree"
-								 version:2
-								resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
-							 identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
-								  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
-									misc:nil];
+	NSURL *url = [FSURL urlWithModule:@"familytree"
+                              version:2
+                             resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+                          identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+                               params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+                                 misc:nil];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
@@ -317,12 +316,12 @@
 							}]
 						};
 
-	NSURL *url = [self.url urlWithModule:@"familytree"
-								 version:2
-								resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
-							 identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
-								  params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
-									misc:nil];
+	NSURL *url = [FSURL urlWithModule:@"familytree"
+                              version:2
+                             resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+                          identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+                               params:defaultQueryParameters() | familyQueryParameters() | FSQProperties | FSQCharacteristics
+                                 misc:nil];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodPOST format:MTPocketFormatJSON body:body].send;
 
@@ -337,12 +336,12 @@
 
 - (MTPocketResponse *)deleteMarriage
 {
-	NSURL *url = [self.url urlWithModule:@"familytree"
-								 version:2
-								resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
-							 identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
-								  params:defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors
-									misc:nil];
+	NSURL *url = [FSURL urlWithModule:@"familytree"
+                              version:2
+                             resource:[NSString stringWithFormat:@"person/%@/spouse", self.husband.identifier]
+                          identifiers:(self.wife.identifier ? @[ self.wife.identifier ] : nil)
+                               params:defaultQueryParameters() | FSQValues | FSQExists | FSQEvents | FSQCharacteristics | FSQOrdinances | FSQContributors
+                                 misc:nil];
 
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;

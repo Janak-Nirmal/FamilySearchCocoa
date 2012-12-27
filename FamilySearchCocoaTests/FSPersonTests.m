@@ -17,7 +17,6 @@
 
 
 @interface FSPersonTests ()
-@property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
@@ -28,11 +27,10 @@
 {
 	[FSURL setSandboxed:YES];
 
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-	_sessionID = user.sessionID;
+	FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	[user login];
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";
 	_person.gender = @"Male";
 	MTPocketResponse *response = [_person save];
@@ -43,11 +41,10 @@
 {
 	[FSURL setSandboxed:NO];
 
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:PRODUCTION_DEV_KEY];
-	[user loginWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD];
-	_sessionID = user.sessionID;
+	FSUser *user = [[FSUser alloc] initWithUsername:PRODUCTION_USERNAME password:PRODUCTION_PASSWORD developerKey:PRODUCTION_DEV_KEY];
+    [user login];
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:@"KPQH-N6L"]; // Don Kirk, my real grandpa
+	_person = [FSPerson personWithIdentifier:@"KPQH-N6L"]; // Don Kirk, my real grandpa
 }
 
 - (void)testCurrentUserFetch
@@ -55,7 +52,7 @@
 	MTPocketResponse *response = nil;
 
 	@try {
-		FSPerson *p = [FSPerson personWithSessionID:_sessionID identifier:nil];
+		FSPerson *p = [FSPerson personWithIdentifier:nil];
 		[p fetch];
 		STFail(@"Was able to fetch person with nil identifier");
 	}
@@ -63,13 +60,11 @@
 
 	}
 
-	FSPerson *me = [FSPerson currentUserWithSessionID:_sessionID];
-	FSPerson *me2 = [FSPerson currentUserWithSessionID:_sessionID];
-	STAssertTrue(me == me2, nil);
+    FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	[user login];
+    FSPerson *me = [user treePerson];
 
-	response = [me fetch];
-	response = [me2 fetch];
-	STAssertTrue(me == me2, nil);
+    response = [me fetch];
 	STAssertTrue(response.success, nil);
 	STAssertNotNil(me.identifier, nil);
 	STAssertNotNil(me.name, nil);
@@ -90,7 +85,7 @@
 	MTPocketResponse *response;
 
 	// create and add the father
-	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *father = [FSPerson personWithIdentifier:nil];
 	father.name = @"Nathan Kirk";
 	father.gender = @"Male";
 
@@ -119,7 +114,7 @@
 //{
 //	MTPocketResponse *response;
 //
-//	FSPerson *p1 = [FSPerson personWithSessionID:_sessionID identifier:nil];
+//	FSPerson *p1 = [FSPerson personWithIdentifier:nil];
 //	p1.name = @"Adam Taylor";
 //	p1.gender = @"Male";
 //	response = [p1 save];
@@ -135,19 +130,19 @@
 {
 	MTPocketResponse *response;
 
-	FSPerson *p1 = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *p1 = [FSPerson personWithIdentifier:nil];
 	p1.name = @"Adam Taylor";
 	p1.gender = @"Male";
 	response = [p1 save];
 	STAssertTrue(response.success, nil);
 
-	FSPerson *p2 = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *p2 = [FSPerson personWithIdentifier:nil];
 	p2.name = @"Adam Kirko";
 	p2.gender = @"Male";
 	response = [p2 save];
 	STAssertTrue(response.success, nil);
 
-	FSPerson *p3 = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *p3 = [FSPerson personWithIdentifier:nil];
 	p3.name = @"Adumb Kirk";
 	p3.gender = @"Male";
 	response = [p3 save];
@@ -197,7 +192,7 @@
 	response = [_person saveSummary];
 	STAssertTrue(response.success, nil);
 
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue([person.name isEqualToString:@"Adam Kirk Jr."], nil);
@@ -243,7 +238,7 @@
 	STAssertTrue(response.success, nil);
 
 	// read and check the properties were added on the server
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue([[person characteristicForKey:FSCharacteristicTypeCasteName] isEqualToString:@"Kirk"], nil);
@@ -255,7 +250,7 @@
 	MTPocketResponse *response;
 
 	// create and add the father
-	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *father = [FSPerson personWithIdentifier:nil];
 	father.name = @"Nathan Kirk";
 	father.gender = @"Male";
 
@@ -264,7 +259,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert father was added
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 1, nil);
@@ -274,7 +269,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert father was removed
-	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
+	person = [FSPerson personWithIdentifier:person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 0, nil);
@@ -285,7 +280,7 @@
 	MTPocketResponse *response;
 
 	// create and add the mother
-	FSPerson *mother = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *mother = [FSPerson personWithIdentifier:nil];
 	mother.name = @"Jackie Kirk";
 	mother.gender = @"Female";
 
@@ -294,7 +289,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert mother was added
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 1, nil);
@@ -305,7 +300,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert mother was removed
-	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
+	person = [FSPerson personWithIdentifier:person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 0, nil);
@@ -317,12 +312,12 @@
 	MTPocketResponse *response;
 
 	// create and add the father
-	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *father = [FSPerson personWithIdentifier:nil];
 	father.name = @"Nathan Kirk";
 	father.gender = @"Male";
 
 	// create and add the mother
-	FSPerson *mother = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *mother = [FSPerson personWithIdentifier:nil];
 	mother.name = @"Jackie Kirk";
 	mother.gender = @"Female";
 
@@ -332,7 +327,7 @@
 	STAssertTrue(response.success, nil);
 
 	// read the father
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 2, nil);
@@ -355,7 +350,7 @@
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
-	FSPerson *person = [FSPerson personWithSessionID:_person.sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.parents.count == 0, nil);
@@ -367,7 +362,7 @@
 	MTPocketResponse *response;
 
 	// create and add the child
-	FSPerson *child = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *child = [FSPerson personWithIdentifier:nil];
 	child.name = @"Jack Kirk";
 	child.gender = @"Male";
 
@@ -376,7 +371,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert child was added
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.children.count == 1, nil);
@@ -387,7 +382,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert child was removed
-	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
+	person = [FSPerson personWithIdentifier:person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.children.count == 0, nil);
@@ -398,7 +393,7 @@
 	MTPocketResponse *response;
 
 	// create and add the spouse
-	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *spouse = [FSPerson personWithIdentifier:nil];
 	spouse.name = @"She Kirk";
 	spouse.gender = @"Female";
 
@@ -407,7 +402,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert spouse was added
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:_person.identifier];
+	FSPerson *person = [FSPerson personWithIdentifier:_person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.marriages.count == 1, nil);
@@ -418,7 +413,7 @@
 	STAssertTrue(response.success, nil);
 
 	// assert spouse was removed
-	person = [FSPerson personWithSessionID:_sessionID identifier:person.identifier];
+	person = [FSPerson personWithIdentifier:person.identifier];
 	response = [person fetch];
 	STAssertTrue(response.success, nil);
 	STAssertTrue(person.marriages.count == 0, nil);
@@ -429,7 +424,7 @@
 	MTPocketResponse *response;
 
 	// create person to match
-	FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *person = [FSPerson personWithIdentifier:nil];
 	person.name = @"Adam Kirk";
 	person.gender = @"Male";
 	person.deathDate = [NSDateComponents componentsFromString:@"11 July 1950"];

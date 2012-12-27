@@ -80,7 +80,7 @@ typedef enum {
 #pragma mark - Reserving Ordinances
 + (MTPocketResponse *)reserveOrdinancesForPeople:(NSArray *)people inventory:(FSOrdinanceInventoryType)inventory;
 + (MTPocketResponse *)unreserveOrdinancesForPeople:(NSArray *)people;
-+ (MTPocketResponse *)people:(NSArray **)people reservedByCurrentUserWithSessionID:(NSString *)sessionID;	// All the people this current user has reserved ordinances for.
++ (NSArray *)peopleReservedByCurrentUserWithResponse:(MTPocketResponse **)response;	// All the people this current user has reserved ordinances for.
 
 
 #pragma mark - Printing Ordinance Requests

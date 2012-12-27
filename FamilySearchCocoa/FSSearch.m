@@ -16,7 +16,6 @@
 
 
 @interface FSSearch ()
-@property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) NSMutableArray *criteria;
 @end
 
@@ -25,9 +24,7 @@
 
 
 @interface FSSearchResults ()
-- (id)initWithSessionID:(NSString *)sessionID;
 @property (strong, nonatomic)	NSMutableArray	*backingStore;
-@property (strong, nonatomic)	NSString		*sessionID;
 @property (strong, nonatomic)	FSURL			*url;
 @property (strong, nonatomic)	NSString		*contextID;
 @property (nonatomic)			NSUInteger		currentIndex;
@@ -46,11 +43,10 @@
 
 #pragma mark - Create Search
 
-- (id)initWithSessionID:(NSString *)sessionID
+- (id)init
 {
     self = [super init];
     if (self) {
-		_sessionID		= sessionID;
         _criteria		= [NSMutableArray array];
 		_batchSize		= 10;
     }
@@ -90,7 +86,7 @@
 
 - (FSSearchResults *)results
 {
-	FSSearchResults *results = [[FSSearchResults alloc] initWithSessionID:_sessionID];
+	FSSearchResults *results = [[FSSearchResults alloc] init];
 	results.batchSize = _batchSize;
 	results.criteria = _criteria;
 	return results;
@@ -130,14 +126,12 @@
 
 @implementation FSSearchResults
 
-- (id)initWithSessionID:(NSString *)sessionID
+- (id)init
 {
     self = [super init];
     if (self) {
 		_backingStore	= [NSMutableArray array];
-		_sessionID		= sessionID;
         _currentIndex	= 0;
-		_url			= [[FSURL alloc] initWithSessionID:_sessionID];
 		_contextID		= nil;
     }
     return self;
@@ -165,12 +159,12 @@
 		}
 	}
 
-	NSURL *url = [_url urlWithModule:@"familytree"
-							 version:2
-							resource:@"search"
-						 identifiers:nil
-							  params:0
-								misc:[params componentsJoinedByString:@"&"]];
+	NSURL *url = [FSURL urlWithModule:@"familytree"
+                              version:2
+                             resource:@"search"
+                          identifiers:nil
+                               params:0
+                                 misc:[params componentsJoinedByString:@"&"]];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
@@ -186,13 +180,13 @@
 		NSArray *searches = NILL([search valueForKeyPath:@"search"]);
 		for (NSDictionary *searchDictionary in searches) {
 			NSDictionary *personDictionary = searchDictionary[@"person"];
-			FSPerson *person = [FSPerson personWithSessionID:_sessionID identifier:personDictionary[@"id"]];
+			FSPerson *person = [FSPerson personWithIdentifier:personDictionary[@"id"]];
 			[person populateFromPersonDictionary:personDictionary];
 
 			// Add parents
 			NSArray *parents = personDictionary[@"parent"];
 			for (NSDictionary *parentDictionary in parents) {
-				FSPerson *parent = [FSPerson personWithSessionID:_sessionID identifier:parentDictionary[@"id"]];
+				FSPerson *parent = [FSPerson personWithIdentifier:parentDictionary[@"id"]];
 				[parent populateFromPersonDictionary:parentDictionary];
 				[person addParent:parent withLineage:FSLineageTypeBiological];
 			}
@@ -200,7 +194,7 @@
 			// Add children
 			NSArray *children = personDictionary[@"child"];
 			for (NSDictionary *childDictionary in children) {
-				FSPerson *child = [FSPerson personWithSessionID:_sessionID identifier:childDictionary[@"id"]];
+				FSPerson *child = [FSPerson personWithIdentifier:childDictionary[@"id"]];
 				[child populateFromPersonDictionary:childDictionary];
 				[person addChild:child withLineage:FSLineageTypeBiological];
 			}
@@ -208,7 +202,7 @@
 			// Add spouses
 			NSArray *spouses = personDictionary[@"spouse"];
 			for (NSDictionary *spouseDictionary in spouses) {
-				FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:spouseDictionary[@"id"]];
+				FSPerson *spouse = [FSPerson personWithIdentifier:spouseDictionary[@"id"]];
 				[spouse populateFromPersonDictionary:spouseDictionary];
 				[person addMarriage:[FSMarriage marriageWithHusband:(spouse.isMale ? spouse : person) wife:(spouse.isMale ? person : spouse)]];
 			}
@@ -262,5 +256,6 @@
 {
     _backingStore[index] = anObject;
 }
+
 
 @end

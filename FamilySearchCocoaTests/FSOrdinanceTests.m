@@ -18,7 +18,6 @@
 
 
 @interface FSOrdinanceTests ()
-@property (strong, nonatomic) NSString *sessionID;
 @property (strong, nonatomic) FSPerson *person;
 @end
 
@@ -29,11 +28,10 @@
 {
 	[FSURL setSandboxed:YES];
 
-	FSUser *user = [[FSUser alloc] initWithDeveloperKey:SANDBOXED_DEV_KEY];
-	[user loginWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD];
-	_sessionID = user.sessionID;
+	FSUser *user = [[FSUser alloc] initWithUsername:SANDBOXED_USERNAME password:SANDBOXED_PASSWORD developerKey:SANDBOXED_DEV_KEY];
+	[user login];
 
-	_person = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	_person = [FSPerson personWithIdentifier:nil];
 	_person.name = @"Adam Kirk";
 	_person.gender = @"Male";
 	MTPocketResponse *response = [_person save];
@@ -44,7 +42,7 @@
 {
 	MTPocketResponse *response = nil;
 
-	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *father = [FSPerson personWithIdentifier:nil];
 	father.name = @"Nathan Kirk";
 	father.gender = @"Male";
 	father.deathDate = [NSDateComponents componentsFromString:@"11 November 1970"];
@@ -66,7 +64,7 @@
 {
 	MTPocketResponse *response = nil;
 
-	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *father = [FSPerson personWithIdentifier:nil];
 	father.name			= @"Nathan Kirk";
 	father.gender		= @"Male";
 	father.deathDate	= [NSDateComponents componentsFromString:@"11 November 1970"];
@@ -89,7 +87,7 @@
 {
 	MTPocketResponse *response = nil;
 
-	FSPerson *father = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *father    = [FSPerson personWithIdentifier:nil];
 	father.name			= @"Nathan Kirk";
 	father.gender		= @"Male";
 	father.deathDate	= [NSDateComponents componentsFromString:@"11 November 1970"];
@@ -98,7 +96,7 @@
 	response = [_person save];
 	STAssertTrue(response.success, nil);
 
-	FSPerson *gFather	= [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *gFather	= [FSPerson personWithIdentifier:nil];
 	gFather.name		= @"Nathan Kirk";
 	gFather.gender		= @"Male";
 	gFather.deathDate	= [NSDateComponents componentsFromString:@"11 November 1910"];
@@ -107,7 +105,7 @@
 	response = [father save];
 	STAssertTrue(response.success, nil);
 
-	FSPerson *spouse = [FSPerson personWithSessionID:_sessionID identifier:nil];
+	FSPerson *spouse = [FSPerson personWithIdentifier:nil];
 	spouse.name = @"She Kirk";
 	spouse.gender = @"Female";
 	spouse.deathDate	= [NSDateComponents componentsFromString:@"11 November 1909"];
@@ -151,8 +149,7 @@
 {
 	MTPocketResponse *response = nil;
 
-	NSArray *people = nil;
-	response = [FSOrdinance people:&people reservedByCurrentUserWithSessionID:_sessionID];
+    NSArray *people = [FSOrdinance peopleReservedByCurrentUserWithResponse:&response];
 	STAssertTrue(response.success, nil);
 	STAssertNotNil(people, nil);
 	STAssertTrue(people.count > 0, nil);
@@ -168,8 +165,7 @@
 {
 	MTPocketResponse *response = nil;
 
-	NSArray *people = nil;
-	response = [FSOrdinance people:&people reservedByCurrentUserWithSessionID:_sessionID];
+    NSArray *people = [FSOrdinance peopleReservedByCurrentUserWithResponse:&response];
 	STAssertTrue(response.success, nil);
 
 	NSURL *url = [FSOrdinance familyOrdinanceRequestPDFURLForPeople:people response:&response];
