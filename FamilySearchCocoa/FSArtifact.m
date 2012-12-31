@@ -155,7 +155,7 @@
                              resource:[NSString stringWithFormat:@"artifacts/%@", _identifier]
                           identifiers:nil
                                params:0
-                                 misc:nil];
+                                 misc:@"includeTags=true"];
 
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 

@@ -115,6 +115,13 @@
     STAssertTrue(response.success, nil);
     STAssertTrue(artifacts.count > 0, nil);
 
+    // test tag is included in fetched artifact
+    FSArtifact *anyArtifact = [artifacts lastObject];
+    FSArtifact *fetchedArtifact = [FSArtifact artifactWithIdentifier:anyArtifact.identifier];
+    response = [fetchedArtifact fetch];
+    STAssertTrue(response.success, nil);
+    STAssertTrue(fetchedArtifact.tags.count > 0, nil);
+
     // remove tag
     [artifact removeTag:tag];
     response = [artifact save];
