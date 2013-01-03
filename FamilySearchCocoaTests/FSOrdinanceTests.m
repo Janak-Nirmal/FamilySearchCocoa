@@ -24,6 +24,7 @@
 
 @implementation FSOrdinanceTests
 
+
 - (void)setUp
 {
 	[FSURL setSandboxed:YES];
@@ -36,6 +37,18 @@
 	_person.gender = @"Male";
 	MTPocketResponse *response = [_person save];
 	STAssertTrue(response.success, nil);
+}
+
+- (void)tearDown
+{
+    MTPocketResponse *response = nil;
+    NSArray *people = [FSOrdinance peopleReservedByCurrentUserWithResponse:&response];
+	STAssertTrue(response.success, nil);
+
+    if (people && people.count > 0) {
+        response = [FSOrdinance unreserveOrdinances:[FSOrdinance ordinanceTypes] forPeople:people];
+        STAssertTrue(response.success, nil);
+    }
 }
 
 - (void)testFetchGetsOrdinances
@@ -120,7 +133,7 @@
 	response = [FSOrdinance fetchOrdinancesForPeople:@[father]];
 	STAssertTrue(response.success, nil);
 
-	response = [FSOrdinance reserveOrdinancesForPeople:@[ father ] inventory:FSOrdinanceInventoryTypePersonal];
+	response = [FSOrdinance reserveOrdinances:[FSOrdinance ordinanceTypes] forPeople:@[ father ] inventory:FSOrdinanceInventoryTypePersonal];
 	STAssertTrue(response.success, nil);
 
 	response = [FSOrdinance fetchOrdinancesForPeople:@[father]];
@@ -132,7 +145,7 @@
 	}
 	STAssertTrue(reservedOrdinances.count > 0, nil);
 
-	response = [FSOrdinance unreserveOrdinancesForPeople: @[ father ] ];
+	response = [FSOrdinance unreserveOrdinances:[FSOrdinance ordinanceTypes] forPeople: @[ father ] ];
 	STAssertTrue(response.success, nil);
 
 	response = [FSOrdinance fetchOrdinancesForPeople: @[ father ] ];
@@ -148,6 +161,18 @@
 - (void)testFetchListOfReservedPeopleByCurrentUser
 {
 	MTPocketResponse *response = nil;
+
+    FSPerson *father    = [FSPerson personWithIdentifier:nil];
+	father.name			= @"Nathan Kirk";
+	father.gender		= @"Male";
+	father.deathDate	= [NSDateComponents componentsFromString:@"11 November 1970"];
+	father.deathPlace	= @"Pasco, Franklin, Washington, United States";
+	[_person addParent:father withLineage:FSLineageTypeBiological];
+	response = [_person save];
+	STAssertTrue(response.success, nil);
+
+	response = [FSOrdinance reserveOrdinances:@[FSOrdinanceTypeBaptism] forPeople:@[ father ] inventory:FSOrdinanceInventoryTypePersonal];
+	STAssertTrue(response.success, nil);
 
     NSArray *people = [FSOrdinance peopleReservedByCurrentUserWithResponse:&response];
 	STAssertTrue(response.success, nil);
@@ -165,6 +190,18 @@
 {
 	MTPocketResponse *response = nil;
 
+    FSPerson *father    = [FSPerson personWithIdentifier:nil];
+	father.name			= @"Nathan Kirk";
+	father.gender		= @"Male";
+	father.deathDate	= [NSDateComponents componentsFromString:@"11 November 1970"];
+	father.deathPlace	= @"Pasco, Franklin, Washington, United States";
+	[_person addParent:father withLineage:FSLineageTypeBiological];
+	response = [_person save];
+	STAssertTrue(response.success, nil);
+
+	response = [FSOrdinance reserveOrdinances:[FSOrdinance ordinanceTypes] forPeople:@[ father ] inventory:FSOrdinanceInventoryTypePersonal];
+	STAssertTrue(response.success, nil);
+
     NSArray *people = [FSOrdinance peopleReservedByCurrentUserWithResponse:&response];
 	STAssertTrue(response.success, nil);
 
@@ -173,6 +210,7 @@
 	STAssertTrue(response.success, nil);
 	STAssertNotNil(url, nil);
 }
+
 
 @end
 

@@ -191,7 +191,7 @@
 
 #pragma mark - Reserving
 
-+ (MTPocketResponse *)reserveOrdinancesForPeople:(NSArray *)people inventory:(FSOrdinanceInventoryType)inventory
++ (MTPocketResponse *)reserveOrdinances:(NSArray *)ordinances forPeople:(NSArray *)people inventory:(FSOrdinanceInventoryType)inventory
 {
 	if (people.count == 0) raiseParamException(@"people");
 
@@ -200,7 +200,7 @@
 	for (FSPerson *person in people) {
 		NSMutableDictionary *personDictionary = [NSMutableDictionary dictionary];
 		personDictionary[@"ref"] = person.identifier;
-		for (FSOrdinanceType type in [FSOrdinance ordinanceTypes]) {
+		for (FSOrdinanceType type in ordinances) {
 
 			// SEALING TO PARENTS
 			if ([type isEqualToString:FSOrdinanceTypeSealingToParents]) {
@@ -317,7 +317,7 @@
 	return response;
 }
 
-+ (MTPocketResponse *)unreserveOrdinancesForPeople:(NSArray *)people
++ (MTPocketResponse *)unreserveOrdinances:(NSArray *)ordinances forPeople:(NSArray *)people
 {
 	if (people.count == 0) raiseParamException(@"people");
 

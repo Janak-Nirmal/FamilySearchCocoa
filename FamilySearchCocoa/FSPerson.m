@@ -91,15 +91,16 @@
 	return self;
 }
 
++ (FSPerson *)person
+{
+    return [[FSPerson alloc] initWithIdentifier:nil];
+}
+
 + (FSPerson *)personWithIdentifier:(NSString *)identifier
 {
 	return [[FSPerson alloc] initWithIdentifier:identifier];
 }
 
-+ (FSPerson *)newPerson
-{
-    return [[FSPerson alloc] initWithIdentifier:nil];
-}
 
 
 
