@@ -364,6 +364,7 @@
 			NSMutableDictionary *personDictionary = [NSMutableDictionary dictionary];
 			personDictionary[@"ref"] = person.identifier;
 			for (FSOrdinance *ordinance in person.ordinances) {
+                if (![ordinance.status isEqualToString:FSOrdinanceStatusReserved] && ![ordinance.status isEqualToString:FSOrdinanceStatusInProgress]) continue;
 
 				if ([ordinance.type isEqualToString:FSOrdinanceTypeSealingToParents]) {
 					NSMutableArray *parentDictionaries = [NSMutableArray array];
