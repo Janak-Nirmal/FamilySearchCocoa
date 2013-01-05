@@ -220,20 +220,6 @@
 							}
 						}
 					}
-
-
-					if (!foundSpouse) {
-						FSPerson *spouse = [FSPerson personWithIdentifier:nil];
-						spouse.name			= @"No Name";
-						spouse.gender		= parent.isMale ? @"Female" : @"Male";
-						spouse.deathDate	= [NSDateComponents componentsFromString:@"1 January 1900"];
-						[person addParent:spouse withLineage:FSLineageTypeBiological];
-						[parent addMarriage:[FSMarriage marriageWithHusband:(parent.isMale ? parent : spouse) wife:(parent.isMale ? spouse : parent)]];
-						MTPocketResponse *response = [person save];
-						if (response.success) {
-							[couples addObject:@[ @{ @"role" : (parent.isMale ? @"Father" : @"Mother"), @"ref" : parent.identifier}, @{ @"role" : (spouse.isMale ? @"Father" : @"Mother"), @"ref" : spouse.identifier} ]];
-						}
-					}
 				}
 
 				// if no information about either parent, don't reserve this ordinance
