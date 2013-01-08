@@ -32,6 +32,8 @@
 	[user login];
 
 	_person = [FSPerson personWithIdentifier:PRODUCTION_PERSON_ID];
+    MTPocketResponse *response = [_person fetch];
+    STAssertTrue(response.success, nil);
 }
 
 - (void)testArtifacts
@@ -115,12 +117,22 @@
     STAssertTrue(response.success, nil);
     STAssertTrue(artifacts.count > 0, nil);
 
+    // test tag is linked to a _person
+    FSArtifact *artifactForPerson = [artifacts lastObject];
+    FSArtifactTag *tagWithPerson = [artifactForPerson.tags lastObject];
+    STAssertNotNil(tagWithPerson.person, nil);
+
     // test tag is included in fetched artifact
     FSArtifact *anyArtifact = [artifacts lastObject];
     FSArtifact *fetchedArtifact = [FSArtifact artifactWithIdentifier:anyArtifact.identifier];
     response = [fetchedArtifact fetch];
     STAssertTrue(response.success, nil);
     STAssertTrue(fetchedArtifact.tags.count > 0, nil);
+
+    // test tag is linked to a _person
+    artifactForPerson = [artifacts lastObject];
+    tagWithPerson = [artifactForPerson.tags lastObject];
+    STAssertNotNil(tagWithPerson.person, nil);
 
     // remove tag
     [artifact removeTag:tag];

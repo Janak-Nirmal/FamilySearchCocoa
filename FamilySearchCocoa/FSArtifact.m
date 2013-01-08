@@ -65,6 +65,7 @@
 
     NSMutableArray *params = [NSMutableArray array];
     if (category) [params addObject:[NSString stringWithFormat:@"artifactCategory=%@", category]];
+    // TODO: I've asked cameraon to add 'includeTags' to this call so we can populate the tags
 
     NSURL *url = [FSURL urlWithModule:@"artifactmanager"
                               version:0
@@ -75,12 +76,13 @@
 
     MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
-
     if (resp.success) {
         NSMutableArray *artifactsArray = [NSMutableArray array];
         for (NSDictionary *artifactDict in resp.body[@"artifact"]) {
             FSArtifact *artifact = [FSArtifact artifactWithIdentifier:artifactDict[@"id"]];
             [artifact populateFromDictionary:artifactDict];
+            // HACK: If I had an includeTag param and the tags included a treePersonId, I would not need this.
+            [artifact addTag:[FSArtifactTag tagWithPerson:person title:person.name rect:CGRectMake(0, 0, 1, 1)]];
             [artifactsArray addObject:artifact];
         }
         return artifactsArray;
@@ -188,6 +190,7 @@
 
 	if (response.success) {
 
+        // HACK
         // when first creating the artifact, whatever is returned for title and desc should be
         // discarded in favor of the localy set _title and _description
         NSString *title          = [_title copy];
@@ -330,7 +333,6 @@
     _MIMEType				= NILL(dictionary[@"mimeType"]);
     _originalFilename		= NILL(dictionary[@"originalFilename"]);
     _screeningStatus        = NILL(dictionary[@"screeningState"]);
-    _status					= NILL(dictionary[@"status"]);
     if (dictionary[FSArtifactThumbnailStyleNormalKey]) {
         _thumbnails         = @{
                                     FSArtifactThumbnailStyleNormalKey   : dictionary[FSArtifactThumbnailStyleNormalKey],
@@ -339,6 +341,8 @@
                                 };
     }
     _title                  = NILL(dictionary[@"title"]);
+    _uploadedDate           = NILL(dictionary[@"uploadDatetime"]) ? [NSDate dateWithTimeIntervalSince1970:[dictionary[@"uploadedDatetime"] doubleValue]] : nil;
+    _status					= NILL(dictionary[@"uploadState"]);
     _uploaderID				= NILL(dictionary[@"uploaderId"]);
     _url					= [NSURL URLWithString:dictionary[@"url"]];
     _size.width				= [dictionary[@"width"] floatValue];
@@ -480,6 +484,22 @@
     _rect.origin.x      = [dictionary[@"x"] floatValue];
     _rect.origin.y      = [dictionary[@"y"] floatValue];
     _title              = dictionary[@"title"];
+
+    // TODO: I've asked Cameron to return treePersonId so i don't have to do this
+    if (_taggedPersonID) {
+        NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                                  version:0
+                                 resource:[NSString stringWithFormat:@"persons/%@", _taggedPersonID]
+                              identifiers:nil
+                                   params:0
+                                     misc:nil];
+
+        MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
+
+        if (response.success && !NILL(response.body[@"personId"])) {
+            _person = [FSPerson personWithIdentifier:response.body[@"personId"]];
+        }
+    }
 }
 
 - (NSDictionary *)dictionaryValue
