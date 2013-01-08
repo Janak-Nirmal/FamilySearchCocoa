@@ -81,8 +81,6 @@
         for (NSDictionary *artifactDict in resp.body[@"artifact"]) {
             FSArtifact *artifact = [FSArtifact artifactWithIdentifier:artifactDict[@"id"]];
             [artifact populateFromDictionary:artifactDict];
-            // HACK: If I had an includeTag param and the tags included a treePersonId, I would not need this.
-            [artifact addTag:[FSArtifactTag tagWithPerson:person title:person.name rect:CGRectMake(0, 0, 1, 1)]];
             [artifactsArray addObject:artifact];
         }
         return artifactsArray;
@@ -496,8 +494,10 @@
 
         MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
-        if (response.success && !NILL(response.body[@"personId"])) {
-            _person = [FSPerson personWithIdentifier:response.body[@"personId"]];
+        if (response.success) {
+            NSString *identifier = NILL(response.body[@"personId"]);
+            if (identifier)
+                _person = [FSPerson personWithIdentifier:identifier];
         }
     }
 }
