@@ -20,7 +20,7 @@
 @property (nonatomic)                       BOOL        deleted;
 - (MTPocketResponse *)save;
 - (MTPocketResponse *)destroy;
-- (void)populateFromDictionary:(NSDictionary *)dictionary;
+- (void)populateFromDictionary:(NSDictionary *)dictionary linkPerson:(BOOL)linkPerson;
 @end
 
 
@@ -80,7 +80,7 @@
         NSMutableArray *artifactsArray = [NSMutableArray array];
         for (NSDictionary *artifactDict in resp.body[@"artifact"]) {
             FSArtifact *artifact = [FSArtifact artifactWithIdentifier:artifactDict[@"id"]];
-            [artifact populateFromDictionary:artifactDict];
+            [artifact populateFromDictionary:artifactDict linkPerson:YES];
             [artifactsArray addObject:artifact];
         }
         return artifactsArray;
@@ -322,6 +322,11 @@
 
 - (void)populateFromDictionary:(NSDictionary *)dictionary
 {
+    [self populateFromDictionary:dictionary linkPerson:NO];
+}
+
+- (void)populateFromDictionary:(NSDictionary *)dictionary linkPerson:(BOOL)linkPerson
+{
     _apID					= NILL(dictionary[@"apid"]);
     _category				= NILL(dictionary[@"category"]);
     _description            = NILL(dictionary[@"description"]);
@@ -339,17 +344,17 @@
                                 };
     }
     _title                  = NILL(dictionary[@"title"]);
-    _uploadedDate           = NILL(dictionary[@"uploadDatetime"]) ? [NSDate dateWithTimeIntervalSince1970:[dictionary[@"uploadedDatetime"] doubleValue]] : nil;
+    _uploadedDate           = NILL(dictionary[@"uploadDatetime"]) ? [NSDate dateWithTimeIntervalSince1970:[dictionary[@"uploadDatetime"] doubleValue]] : nil;
     _status					= NILL(dictionary[@"uploadState"]);
     _uploaderID				= NILL(dictionary[@"uploaderId"]);
     _url					= [NSURL URLWithString:dictionary[@"url"]];
     _size.width				= [dictionary[@"width"] floatValue];
 
     // add tags
-    if (NILL(dictionary[@"photoTags"]) && ((NSArray *)dictionary[@"photoTags"]).count > 0) {
+    if (!NILL(dictionary[@"photoTags"]) && ((NSArray *)dictionary[@"photoTags"]).count > 0) {
         for (NSDictionary *tagDict in dictionary[@"photoTags"]) {
             FSArtifactTag *tag = [[FSArtifactTag alloc] init];
-            [tag populateFromDictionary:tagDict];
+            [tag populateFromDictionary:tagDict linkPerson:linkPerson];
             [self addTag:tag];
         }
     }
@@ -416,7 +421,7 @@
 
 
     if (response.success) {
-        [self populateFromDictionary:response.body];
+        [self populateFromDictionary:response.body linkPerson:YES];
     }
 
     return response;
@@ -461,7 +466,7 @@
 
 
     if (response.success) {
-        [self populateFromDictionary:@{}];
+        [self populateFromDictionary:@{} linkPerson:NO];
     }
     
     return response;
@@ -473,7 +478,7 @@
 
 #pragma mark - Private
 
-- (void)populateFromDictionary:(NSDictionary *)dictionary
+- (void)populateFromDictionary:(NSDictionary *)dictionary linkPerson:(BOOL)linkPerson
 {
     _identifier         = [dictionary[@"id"] stringValue];
     _taggedPersonID     = [dictionary[@"taggedPersonId"] stringValue];
@@ -484,7 +489,7 @@
     _title              = dictionary[@"title"];
 
     // TODO: I've asked Cameron to return treePersonId so i don't have to do this
-    if (_taggedPersonID) {
+    if (linkPerson && _taggedPersonID) {
         NSURL *url = [FSURL urlWithModule:@"artifactmanager"
                                   version:0
                                  resource:[NSString stringWithFormat:@"persons/%@", _taggedPersonID]
