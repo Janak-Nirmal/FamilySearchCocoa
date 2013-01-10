@@ -160,7 +160,7 @@
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
-        [self populateFromDictionary:response.body];
+        [self populateFromDictionary:response.body linkPerson:YES];
 	}
 
 	return response;
@@ -351,8 +351,9 @@
     _size.width				= [dictionary[@"width"] floatValue];
 
     // add tags
-    if (!NILL(dictionary[@"photoTags"]) && ((NSArray *)dictionary[@"photoTags"]).count > 0) {
-        for (NSDictionary *tagDict in dictionary[@"photoTags"]) {
+    NSArray *tags = NILL(dictionary[@"photoTags"]);
+    if (tags) {
+        for (NSDictionary *tagDict in tags) {
             FSArtifactTag *tag = [[FSArtifactTag alloc] init];
             [tag populateFromDictionary:tagDict linkPerson:linkPerson];
             [self addTag:tag];
