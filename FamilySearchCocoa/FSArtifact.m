@@ -9,6 +9,7 @@
 #import "FSArtifact.h"
 #import "private.h"
 #import <NSObject+MTJSONUtils.h>
+#import <NSDate+MTDates.h>
 
 
 
@@ -344,7 +345,10 @@
                                 };
     }
     _title                  = NILL(dictionary[@"title"]);
-    _uploadedDate           = NILL(dictionary[@"uploadDatetime"]) ? [NSDate dateWithTimeIntervalSince1970:[dictionary[@"uploadDatetime"] doubleValue]] : nil;
+    _uploadedDate           = NILL(dictionary[@"uploadDatetime"]);
+    if (_uploadedDate) {
+        _uploadedDate       = [NSDate dateWithTimeIntervalSince1970:([(NSNumber *)_uploadedDate doubleValue] / 1000.0)];
+    }
     _status					= NILL(dictionary[@"uploadState"]);
     _uploaderID				= NILL(dictionary[@"uploaderId"]);
     _url					= [NSURL URLWithString:dictionary[@"url"]];

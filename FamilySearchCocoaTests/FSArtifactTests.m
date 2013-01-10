@@ -58,6 +58,10 @@
     STAssertNotNil(artifact.thumbnails[FSArtifactThumbnailStyleNormalKey], nil);
     STAssertNotNil(artifact.thumbnails[FSArtifactThumbnailStyleIconKey], nil);
     STAssertNotNil(artifact.thumbnails[FSArtifactThumbnailStyleSquareKey], nil);
+    STAssertNotNil(artifact.uploadedDate, nil);
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval upl = [artifact.uploadedDate timeIntervalSince1970];
+    STAssertEqualsWithAccuracy(now, upl, 500, nil);
     STAssertTrue([artifact.title isEqualToString:@"test"], nil);
     STAssertTrue([artifact.description isEqualToString:@"testdescription"], nil);
 
@@ -71,6 +75,7 @@
     STAssertNotNil(fetchedArtifact.MIMEType, nil);
     STAssertNotNil(fetchedArtifact.screeningStatus, nil);
     STAssertNotNil(fetchedArtifact.status, nil);
+    STAssertNotNil(fetchedArtifact.uploadedDate, nil);
     STAssertNotNil(fetchedArtifact.thumbnails[FSArtifactThumbnailStyleNormalKey], nil);
     STAssertNotNil(fetchedArtifact.thumbnails[FSArtifactThumbnailStyleIconKey], nil);
     STAssertNotNil(fetchedArtifact.thumbnails[FSArtifactThumbnailStyleSquareKey], nil);
