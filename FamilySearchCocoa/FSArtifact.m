@@ -20,7 +20,7 @@
 @property (nonatomic)                       BOOL        deleted;
 - (MTPocketResponse *)save;
 - (MTPocketResponse *)destroy;
-- (void)populateFromDictionary:(NSDictionary *)dictionary;
+- (void)populateFromDictionary:(NSDictionary *)dictionary linkPerson:(BOOL)linkPerson;
 @end
 
 
@@ -65,6 +65,7 @@
 
     NSMutableArray *params = [NSMutableArray array];
     if (category) [params addObject:[NSString stringWithFormat:@"artifactCategory=%@", category]];
+    // TODO: I've asked cameraon to add 'includeTags' to this call so we can populate the tags
 
     NSURL *url = [FSURL urlWithModule:@"artifactmanager"
                               version:0
@@ -75,12 +76,11 @@
 
     MTPocketResponse *resp = *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
-
     if (resp.success) {
         NSMutableArray *artifactsArray = [NSMutableArray array];
         for (NSDictionary *artifactDict in resp.body[@"artifact"]) {
             FSArtifact *artifact = [FSArtifact artifactWithIdentifier:artifactDict[@"id"]];
-            [artifact populateFromDictionary:artifactDict];
+            [artifact populateFromDictionary:artifactDict linkPerson:YES];
             [artifactsArray addObject:artifact];
         }
         return artifactsArray;
@@ -160,7 +160,7 @@
     MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
 
 	if (response.success) {
-        [self populateFromDictionary:response.body];
+        [self populateFromDictionary:response.body linkPerson:YES];
 	}
 
 	return response;
@@ -188,6 +188,7 @@
 
 	if (response.success) {
 
+        // HACK
         // when first creating the artifact, whatever is returned for title and desc should be
         // discarded in favor of the localy set _title and _description
         NSString *title          = [_title copy];
@@ -321,6 +322,11 @@
 
 - (void)populateFromDictionary:(NSDictionary *)dictionary
 {
+    [self populateFromDictionary:dictionary linkPerson:NO];
+}
+
+- (void)populateFromDictionary:(NSDictionary *)dictionary linkPerson:(BOOL)linkPerson
+{
     _apID					= NILL(dictionary[@"apid"]);
     _category				= NILL(dictionary[@"category"]);
     _description            = NILL(dictionary[@"description"]);
@@ -330,7 +336,6 @@
     _MIMEType				= NILL(dictionary[@"mimeType"]);
     _originalFilename		= NILL(dictionary[@"originalFilename"]);
     _screeningStatus        = NILL(dictionary[@"screeningState"]);
-    _status					= NILL(dictionary[@"status"]);
     if (dictionary[FSArtifactThumbnailStyleNormalKey]) {
         _thumbnails         = @{
                                     FSArtifactThumbnailStyleNormalKey   : dictionary[FSArtifactThumbnailStyleNormalKey],
@@ -339,15 +344,18 @@
                                 };
     }
     _title                  = NILL(dictionary[@"title"]);
+    _uploadedDate           = NILL(dictionary[@"uploadDatetime"]) ? [NSDate dateWithTimeIntervalSince1970:[dictionary[@"uploadDatetime"] doubleValue]] : nil;
+    _status					= NILL(dictionary[@"uploadState"]);
     _uploaderID				= NILL(dictionary[@"uploaderId"]);
     _url					= [NSURL URLWithString:dictionary[@"url"]];
     _size.width				= [dictionary[@"width"] floatValue];
 
     // add tags
-    if (NILL(dictionary[@"photoTags"]) && ((NSArray *)dictionary[@"photoTags"]).count > 0) {
-        for (NSDictionary *tagDict in dictionary[@"photoTags"]) {
+    NSArray *tags = NILL(dictionary[@"photoTags"]);
+    if (tags) {
+        for (NSDictionary *tagDict in tags) {
             FSArtifactTag *tag = [[FSArtifactTag alloc] init];
-            [tag populateFromDictionary:tagDict];
+            [tag populateFromDictionary:tagDict linkPerson:linkPerson];
             [self addTag:tag];
         }
     }
@@ -414,7 +422,7 @@
 
 
     if (response.success) {
-        [self populateFromDictionary:response.body];
+        [self populateFromDictionary:response.body linkPerson:YES];
     }
 
     return response;
@@ -459,7 +467,7 @@
 
 
     if (response.success) {
-        [self populateFromDictionary:@{}];
+        [self populateFromDictionary:@{} linkPerson:NO];
     }
     
     return response;
@@ -471,7 +479,7 @@
 
 #pragma mark - Private
 
-- (void)populateFromDictionary:(NSDictionary *)dictionary
+- (void)populateFromDictionary:(NSDictionary *)dictionary linkPerson:(BOOL)linkPerson
 {
     _identifier         = [dictionary[@"id"] stringValue];
     _taggedPersonID     = [dictionary[@"taggedPersonId"] stringValue];
@@ -480,6 +488,24 @@
     _rect.origin.x      = [dictionary[@"x"] floatValue];
     _rect.origin.y      = [dictionary[@"y"] floatValue];
     _title              = dictionary[@"title"];
+
+    // TODO: I've asked Cameron to return treePersonId so i don't have to do this
+    if (linkPerson && _taggedPersonID) {
+        NSURL *url = [FSURL urlWithModule:@"artifactmanager"
+                                  version:0
+                                 resource:[NSString stringWithFormat:@"persons/%@", _taggedPersonID]
+                              identifiers:nil
+                                   params:0
+                                     misc:nil];
+
+        MTPocketResponse *response = [MTPocketRequest requestForURL:url method:MTPocketMethodGET format:MTPocketFormatJSON body:nil].send;
+
+        if (response.success) {
+            NSString *identifier = NILL(response.body[@"personId"]);
+            if (identifier)
+                _person = [FSPerson personWithIdentifier:identifier];
+        }
+    }
 }
 
 - (NSDictionary *)dictionaryValue

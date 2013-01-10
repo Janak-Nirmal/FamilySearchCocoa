@@ -64,6 +64,7 @@ extern NSString *const FSArtifactThumbnailStyleSquareKey;
 @property (readonly, nonatomic) NSString			*identifier;
 @property (strong,   nonatomic) NSURL               *url;
 @property (readonly, nonatomic) NSData              *data;
+@property (readonly, nonatomic) NSDate              *uploadedDate;
 @property (readonly, nonatomic) NSString			*MIMEType;
 @property (strong,	 nonatomic) NSString			*title;
 @property (strong,   nonatomic) NSString            *originalFilename;
