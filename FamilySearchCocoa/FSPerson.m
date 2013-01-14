@@ -165,7 +165,7 @@
 	for (FSCharacteristicType key in [_characteristics allKeys]) {
 		FSCharacteristic *characteristic = _characteristics[key];
 		NSMutableDictionary *characteristicDict = [NSMutableDictionary dictionary];
-		if (characteristic.identifier) characteristicDict[@"id"] = characteristic.identifier;
+//		if (characteristic.identifier) characteristicDict[@"id"] = characteristic.identifier;
 		if (characteristic.key) characteristicDict[@"type"] = characteristic.key;
 		if (characteristic.value) characteristicDict[@"detail"] = characteristic.value;
 		[characteristics addObject: @{ @"value" : characteristicDict } ];
@@ -182,7 +182,7 @@
 
 		if (event.date || event.place) {
 			if (event.identifier) {
-				eventInfo[@"id"] = event.identifier;
+//				eventInfo[@"id"] = event.identifier;
 				if (event.isDeleted)
 					[events addObject: @{ @"value" : eventInfo, @"action" : @"Delete" } ];
 				else if (event.isChanged) {
@@ -260,12 +260,6 @@
 				[marriage save];
 			}
 		}
-
-        // this is so the person can be saved again without version number errors
-        id t = _onSync;
-        _onSync	= ^(FSPerson *p, FSPersonSyncResult status){};
-        [self fetch];
-        _onSync = t;
 
 		_onSync(self, status);
 	}
