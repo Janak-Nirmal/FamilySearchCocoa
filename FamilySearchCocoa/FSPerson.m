@@ -108,9 +108,9 @@
 
 #pragma mark - Syncing
 
-- (BOOL)isNew
+- (BOOL)isSaved
 {
-	return _identifier == nil;
+	return _identifier != nil;
 }
 
 - (MTPocketResponse *)fetch
@@ -260,6 +260,12 @@
 				[marriage save];
 			}
 		}
+
+        // this is so the person can be saved again without version number errors
+        id t = _onSync;
+        _onSync	= ^(FSPerson *p, FSPersonSyncResult status){};
+        [self fetch];
+        _onSync = t;
 
 		_onSync(self, status);
 	}
@@ -1248,9 +1254,9 @@
 		return nil;
 
 	// make sure the each is saved. If it is not, return because that save will also save this relationship.
-	if (self.parent.isNew)
+	if (!self.parent.isSaved)
 		return [self.parent save];
-	if (self.child.isNew)
+	if (!self.child.isSaved)
 		return [self.child save];
 
 	NSURL *url = [FSURL urlWithModule:@"familytree"
