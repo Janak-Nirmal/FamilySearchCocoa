@@ -1248,9 +1248,9 @@
 		return nil;
 
 	// make sure the each is saved. If it is not, return because that save will also save this relationship.
-	if (!self.parent.isSaved)
+	if (!self.parent.identifier)
 		return [self.parent save];
-	if (!self.child.isSaved)
+	if (!self.child.identifier)
 		return [self.child save];
 
 	NSURL *url = [FSURL urlWithModule:@"familytree"

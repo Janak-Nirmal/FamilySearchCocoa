@@ -257,9 +257,9 @@
 		return nil;
 
 	// make sure the each is saved. If it is not, return because that save will also save this relationship.
-	if (!self.husband.isSaved)
+	if (!self.husband.identifier)
 		return [self.husband save];
-	if (!self.wife.isSaved)
+	if (!self.wife.identifier)
 		return [self.wife save];
 
 	NSMutableDictionary *assertions = [NSMutableDictionary dictionary];
