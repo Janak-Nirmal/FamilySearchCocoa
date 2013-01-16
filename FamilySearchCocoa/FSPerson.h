@@ -89,6 +89,7 @@ typedef enum {
 @property (readonly)		  NSString	*identifier;
 @property (readonly)		  BOOL		isAlive;				// Default: YES. You must add a death event for the system to return NO. Not editable by user.
 @property (readonly)		  BOOL		isModifiable;			// Can be modified by the current logged in contributor
+@property (readonly)		  BOOL		isSaved;					// Has been created on the client but has not be saved to the server
 @property (readonly)          BOOL      isFetched;              // Has been fetched from the server.
 @property (readonly)		  NSDate	*lastModifiedDate;
 @property (readonly)		  NSArray	*parents;				// Returns array of FSPerson objects

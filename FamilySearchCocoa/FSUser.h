@@ -38,6 +38,7 @@ extern NSString *const FSUserPermissionAccessDiscussionForums;
 
 - (id)initWithUsername:(NSString *)username password:(NSString *)password developerKey:(NSString *)devKey;
 - (MTPocketResponse *)login;
++ (FSUser *)currentUser;            // You have to log in first before this is not nil.
 - (MTPocketResponse *)fetch;
 - (FSPerson *)treePerson;
 - (MTPocketResponse *)logout;

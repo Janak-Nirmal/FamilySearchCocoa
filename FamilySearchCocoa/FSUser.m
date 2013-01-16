@@ -28,6 +28,12 @@
 
 @implementation FSUser
 
+static FSUser *__currentUser = nil;
+
++ (FSUser *)currentUser
+{
+    return __currentUser;
+}
 
 - (id)initWithUsername:(NSString *)username password:(NSString *)password developerKey:(NSString *)devKey
 {
@@ -57,6 +63,7 @@
 
 	if (response.success) {
         _loggedIn = YES;
+        __currentUser = self;
 		NSString *sessionID = NILL([response.body valueForKeyPath:@"session.id"]);
         [FSURL setSessionID:sessionID];
 	}
