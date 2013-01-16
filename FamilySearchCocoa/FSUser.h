@@ -42,5 +42,6 @@ extern NSString *const FSUserPermissionAccessDiscussionForums;
 - (MTPocketResponse *)fetch;
 - (FSPerson *)treePerson;
 - (MTPocketResponse *)logout;
+- (BOOL)LDSPermissions;
 
 @end

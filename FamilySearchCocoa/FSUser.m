@@ -146,7 +146,20 @@ static FSUser *__currentUser = nil;
     return response;
 }
 
-
+- (BOOL)LDSPermissions
+{
+    static NSArray *ldsPermissions = nil;
+    if (!ldsPermissions) {
+        ldsPermissions = @[ FSUserPermissionAccessLDSInterface, FSUserPermissionModifyLDSInformation, FSUserPermissionViewLDSInformation ];
+    }
+    BOOL allTrue = YES;
+    for (NSString *permission in ldsPermissions) {
+        if (![_permissions[permission] boolValue]) {
+            allTrue = NO;
+        }
+    }
+    return allTrue;
+}
 
 
 
